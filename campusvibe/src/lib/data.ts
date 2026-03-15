@@ -12,6 +12,8 @@ export const newsArticles = [
     readTime: "4 min",
     featured: true,
     trending: true,
+    imageUrl:
+      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=80",
     slug: "udsm-students-ai-farming-hub",
   },
   {
@@ -25,6 +27,8 @@ export const newsArticles = [
     readTime: "3 min",
     featured: false,
     trending: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1400&q=80",
     slug: "scholarships-tanzanian-students-2026",
   },
   {
@@ -38,6 +42,8 @@ export const newsArticles = [
     readTime: "5 min",
     featured: false,
     trending: true,
+    imageUrl:
+      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1400&q=80",
     slug: "udom-campus-council-elections-2026",
   },
   {
@@ -51,6 +57,8 @@ export const newsArticles = [
     readTime: "4 min",
     featured: false,
     trending: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1400&q=80",
     slug: "ardhi-university-football-championship-2026",
   },
   {
@@ -64,6 +72,8 @@ export const newsArticles = [
     readTime: "6 min",
     featured: false,
     trending: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1400&q=80",
     slug: "muhas-students-free-clinic-kinondoni",
   },
   {
@@ -77,6 +87,8 @@ export const newsArticles = [
     readTime: "5 min",
     featured: false,
     trending: true,
+    imageUrl:
+      "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80",
     slug: "sua-smart-irrigation-smallholder-farmers",
   },
 ]
@@ -94,6 +106,8 @@ export const events = [
     category: "Awards",
     attendees: 2400,
     featured: true,
+    imageUrl:
+      "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1400&q=80",
     slug: "campusvibe-awards-2026",
   },
   {
@@ -108,6 +122,8 @@ export const events = [
     category: "Conference",
     attendees: 850,
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1400&q=80",
     slug: "ea-tech-summit-student-edition-2026",
   },
   {
@@ -122,6 +138,8 @@ export const events = [
     category: "Academic",
     attendees: 400,
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=80",
     slug: "inter-university-debate-championship-2026",
   },
   {
@@ -136,6 +154,8 @@ export const events = [
     category: "Culture",
     attendees: 1200,
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1400&q=80",
     slug: "campus-fashion-week-2026",
   },
 ]
@@ -150,6 +170,8 @@ export const mediaItems = [
     views: "34K",
     date: "Mar 13, 2026",
     featured: true,
+    imageUrl:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
     slug: "rise-student-entrepreneurship-tanzania",
   },
   {
@@ -161,6 +183,8 @@ export const mediaItems = [
     views: "18K",
     date: "Mar 10, 2026",
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1400&q=80",
     slug: "campus-life-podcast-ep-23",
   },
   {
@@ -172,6 +196,8 @@ export const mediaItems = [
     views: "61K",
     date: "Mar 8, 2026",
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=1400&q=80",
     slug: "inter-university-sports-day-highlights",
   },
   {
@@ -183,6 +209,8 @@ export const mediaItems = [
     views: "12K",
     date: "Mar 5, 2026",
     featured: false,
+    imageUrl:
+      "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1400&q=80",
     slug: "student-voices-campus-transport-future",
   },
 ]
@@ -196,6 +224,8 @@ export const marketplaceItems = [
     university: "UDSM",
     category: "Stationery",
     condition: "Good",
+    imageUrl:
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80",
     slug: "casio-fx-991ex-calculator",
   },
   {
@@ -206,6 +236,8 @@ export const marketplaceItems = [
     university: "NIT",
     category: "Books",
     condition: "Very Good",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
     slug: "data-structures-textbook-3rd-ed",
   },
   {
@@ -216,6 +248,8 @@ export const marketplaceItems = [
     university: "UDOM",
     category: "Electronics",
     condition: "Like New",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
     slug: "laptop-stand-cooling-pad-bundle",
   },
   {
@@ -226,6 +260,8 @@ export const marketplaceItems = [
     university: "All Campuses",
     category: "Clothing",
     condition: "New",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
     slug: "custom-university-hoodies-bulk",
   },
 ]
