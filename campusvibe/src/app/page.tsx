@@ -1,17 +1,41 @@
-import Image from "next/image";
+import Hero from "@/components/home/Hero"
+import BreakingNewsTicker from "@/components/home/BreakingNewsTicker"
+import NewsFeed from "@/components/home/NewsFeed"
+import MediaHighlights from "@/components/home/MediaHighlights"
+import FeaturedEvents from "@/components/home/FeaturedEvents"
+import MarketplacePreview from "@/components/home/MarketplacePreview"
+import AwardsBlock from "@/components/home/AwardsBlock"
+import GetInvolvedCTA from "@/components/home/GetInvolvedCTA"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
+    <>
+      {/* 1. Hero — full viewport brand statement */}
+      <Hero />
+
+      {/* 2. Breaking News ticker */}
+      <BreakingNewsTicker />
+
+      {/* 3. Latest news feed */}
+      <NewsFeed />
+
+      {/* 4. Media highlights */}
+      <MediaHighlights />
+
+      {/* 5. Featured events */}
+      <FeaturedEvents />
+
+      {/* 6. Marketplace preview */}
+      <MarketplacePreview />
+
+      {/* 7. CampusVibe Awards */}
+      <AwardsBlock />
+
+      {/* 8. Get Involved CTA */}
+      <GetInvolvedCTA />
+    </>
+  )
+}
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
