@@ -7,7 +7,7 @@ export default function BreakingNewsTicker() {
   const doubled = [...breakingNews, ...breakingNews]
 
   return (
-    <div className="bg-white border-y border-gray-100 overflow-hidden">
+    <div className="bg-[#ECECEC] border-y border-gray-100 overflow-hidden">
       <div className="flex items-stretch h-11">
 
         {/* Label */}
