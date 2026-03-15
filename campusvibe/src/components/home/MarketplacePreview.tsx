@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Tag, UserCircle, ArrowRight, ShoppingBag } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { marketplaceItems } from "@/lib/data"
@@ -44,7 +45,14 @@ export default function MarketplacePreview() {
 
                 {/* Thumbnail placeholder */}
                 <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 relative flex items-center justify-center">
-                  <ShoppingBag size={32} className="text-gray-300" />
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent" />
                   <span
                     className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-section font-semibold uppercase tracking-wide ${
                       conditionColor[item.condition] ?? "text-gray-600 bg-gray-100"
@@ -91,7 +99,7 @@ export default function MarketplacePreview() {
           </p>
           <a
             href="#"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-dark text-white text-sm font-semibold hover:bg-dark/90 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-[#5a52e0] transition-colors"
           >
             Open in CampusVibe App
           </a>
