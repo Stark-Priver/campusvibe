@@ -35,7 +35,6 @@ export function AnimatedSection({
       initial={hidden}
       animate={inView ? visible : hidden}
       transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
-        transition={{ duration: 0.65, delay, ease: EASE }}
     >
       {children}
     </motion.div>
