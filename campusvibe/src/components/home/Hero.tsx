@@ -1,12 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Download, ArrowRight, TrendingUp } from "lucide-react"
 import { stats } from "@/lib/data"
-
-const words = ["Connected."]
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -27,20 +24,6 @@ const fadeUp = {
 }
 
 export default function Hero() {
-  const [wordIdx, setWordIdx] = useState(0)
-  const [wordVisible, setWordVisible] = useState(true)
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setWordVisible(false)
-      setTimeout(() => {
-        setWordIdx((i) => (i + 1) % words.length)
-        setWordVisible(true)
-      }, 380)
-    }, 2800)
-    return () => clearInterval(id)
-  }, [])
-
   return (
     <section className="relative min-h-screen bg-[#ECECEC] overflow-hidden flex flex-col justify-center">
 
@@ -65,28 +48,13 @@ export default function Hero() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 lg:pt-32 lg:pb-28">
         <motion.div className="max-w-4xl" variants={stagger} initial="hidden" animate="show">
 
-          {/* Live badge */}
-          <motion.div variants={fadeUp} className="mb-8">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/20 bg-brand/5 text-brand text-[11px] font-section font-semibold uppercase tracking-[0.16em]">
-              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-              Tanzania&apos;s University Super-App · Live Now
-            </span>
-          </motion.div>
-
           {/* Headline */}
           <motion.div variants={fadeUp}>
             <h1 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[4.6rem] xl:text-[5.1rem] text-dark leading-[1.04] tracking-tight">
               Your Campus,
               <br />
-              <span
-                className="text-brand inline-block relative"
-                style={{
-                  transition: "opacity 0.38s ease, transform 0.38s ease",
-                  opacity: wordVisible ? 1 : 0,
-                  transform: wordVisible ? "translateY(0)" : "translateY(10px)",
-                }}
-              >
-                {words[wordIdx]}
+              <span className="text-brand inline-block relative">
+                Connected.
                 <span className="absolute -bottom-1.5 left-0 h-[5px] w-[70%] rounded-full bg-brand/18" />
               </span>
             </h1>
