@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Play, Headphones, Eye, ArrowRight, Tv } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { mediaItems } from "@/lib/data"
@@ -17,18 +18,18 @@ export default function MediaPage() {
   return (
     <>
       {/* Hero */}
-      <div className="pt-16 bg-canvas">
+      <div className="pt-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <AnimatedSection>
-            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-white/40 mb-4">
+            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
               <Tv size={12} className="text-brand" />
               CampusVibe Media Hub
             </span>
-            <h1 className="font-heading font-black text-4xl sm:text-5xl text-white leading-tight">
+            <h1 className="font-heading font-black text-4xl sm:text-5xl text-dark leading-tight">
               Watch. Listen.
               <span className="text-brand block">Stay Informed.</span>
             </h1>
-            <p className="mt-4 text-white/50 text-base font-body max-w-lg">
+            <p className="mt-4 text-gray-600 text-base font-body max-w-lg">
               Original videos, podcasts, and student creator content produced for and by Tanzania&apos;s
               university community.
             </p>
@@ -39,7 +40,7 @@ export default function MediaPage() {
             {["CampusVibe TV", "Podcasts", "Student Creators"].map((platform) => (
               <button
                 key={platform}
-                className="px-4 py-2 rounded-full text-xs font-section font-semibold border border-white/10 text-white/60 hover:bg-white/5 hover:text-white transition-colors first:bg-brand first:text-white first:border-brand"
+                className="px-4 py-2 rounded-full text-xs font-section font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-dark transition-colors first:bg-brand first:text-white first:border-brand"
               >
                 {platform}
               </button>
@@ -68,9 +69,16 @@ export default function MediaPage() {
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <Link
                   href={`/media/${item.slug}`}
-                  className="group relative block aspect-video bg-dark rounded-2xl overflow-hidden card-hover"
+                  className="group relative block aspect-video rounded-2xl overflow-hidden card-hover"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-canvas to-gray-800" />
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
                   <span className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-xs font-section font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     {item.channel}
