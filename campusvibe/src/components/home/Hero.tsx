@@ -19,6 +19,19 @@ const fadeUp = {
   hidden: { opacity: 0, y: 26 },
   show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] } },
 }
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
+
+const stagger = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.14, delayChildren: 0.15 },
+  },
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 26 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: EASE } },
+}
 
 export default function Hero() {
   const [wordIdx, setWordIdx] = useState(0)
