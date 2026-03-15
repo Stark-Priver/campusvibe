@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Play, Headphones, ArrowRight, Eye } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { mediaItems } from "@/lib/data"
@@ -34,10 +35,15 @@ export default function MediaHighlights() {
           <AnimatedSection className="lg:col-span-3" delay={0.05}>
             <Link
               href={`/media/${featured.slug}`}
-              className="group relative block aspect-video bg-dark rounded-2xl overflow-hidden card-hover"
+              className="group relative block aspect-video rounded-2xl overflow-hidden card-hover"
             >
-              {/* Placeholder thumbnail */}
-              <div className="absolute inset-0 bg-gradient-to-br from-canvas to-gray-800" />
+              <Image
+                src={featured.imageUrl}
+                alt={featured.title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                sizes="(max-width: 1024px) 100vw, 60vw"
+              />
 
               {/* Channel label */}
               <span className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-xs font-section font-semibold uppercase tracking-wider">
@@ -81,9 +87,15 @@ export default function MediaHighlights() {
                 >
                   {/* Thumbnail */}
                   <div className="relative shrink-0 w-24 h-16 rounded-xl bg-surface overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200" />
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="96px"
+                    />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-7 h-7 rounded-full bg-dark/80 flex items-center justify-center">
+                      <div className="w-7 h-7 rounded-full bg-black/75 flex items-center justify-center">
                         {item.type === "video" ? (
                           <Play size={11} className="text-white fill-white ml-0.5" />
                         ) : (
