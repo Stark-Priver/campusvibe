@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, Clock, TrendingUp } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { newsArticles } from "@/lib/data"
@@ -34,7 +35,14 @@ function NewsCard({
         <div
           className={`bg-surface relative overflow-hidden ${large ? "aspect-[16/9]" : "aspect-video"}`}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200" />
+          <Image
+            src={article.imageUrl}
+            alt={article.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            sizes="(max-width: 1024px) 100vw, 40vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent" />
           {/* Category badge */}
           <span
             className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-section font-semibold uppercase tracking-wide ${catClass}`}
