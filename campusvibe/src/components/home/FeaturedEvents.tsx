@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { events } from "@/lib/data"
@@ -41,6 +42,16 @@ export default function FeaturedEvents() {
                 href={`/events/${event.slug}`}
                 className="group relative flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
               >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image
+                    src={event.imageUrl}
+                    alt={event.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    sizes="(max-width: 1024px) 100vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                </div>
                 {/* Color stripe */}
                 <div
                   className={`h-1.5 w-full ${categoryDot[event.category] ?? "bg-gray-200"}`}
