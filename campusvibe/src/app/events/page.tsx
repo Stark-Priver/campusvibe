@@ -1,0 +1,175 @@
+import Link from "next/link"
+import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react"
+import { AnimatedSection } from "@/components/ui/AnimatedSection"
+import { events } from "@/lib/data"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Events — CampusVibe",
+  description: "Upcoming campus events across Tanzanian universities — awards, conferences, sports, culture, and more.",
+}
+
+const categoryDot: Record<string, string> = {
+  Awards: "bg-accent",
+  Conference: "bg-brand",
+  Academic: "bg-interactive",
+  Culture: "bg-success",
+}
+
+const categoryBg: Record<string, string> = {
+  Awards: "bg-accent/10 text-dark border-accent/20",
+  Conference: "bg-brand/10 text-brand border-brand/20",
+  Academic: "bg-interactive/10 text-interactive border-interactive/20",
+  Culture: "bg-success/10 text-green-700 border-green-200",
+}
+
+export default function EventsPage() {
+  const [featured] = events.filter((e) => e.featured)
+  const rest = events.filter((e) => !e.featured)
+
+  return (
+    <>
+      {/* Page hero */}
+      <div className="pt-16 bg-canvas">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <AnimatedSection>
+            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-white/40 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+              Campus Events
+            </span>
+            <h1 className="font-heading font-black text-4xl sm:text-5xl text-white leading-tight">
+              What&apos;s happening
+              <span className="text-brand block">on campus.</span>
+            </h1>
+            <p className="mt-4 text-white/50 text-base font-body max-w-lg">
+              Discover events, conferences, award ceremonies, and cultural showcases happening
+              across universities in Tanzania.
+            </p>
+          </AnimatedSection>
+        </div>
+      </div>
+
+      {/* Featured event */}
+      {featured && (
+        <div className="bg-white py-14 border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AnimatedSection>
+              <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted mb-6 block">
+                Featured Event
+              </span>
+              <Link
+                href={`/events/${featured.slug}`}
+                className="group grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover"
+              >
+                {/* Visual */}
+                <div className="lg:col-span-2 min-h-[200px] bg-gradient-to-br from-brand/10 to-accent/10 relative flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="text-5xl font-heading font-black text-brand/30 leading-none">
+                      APR<br />15
+                    </div>
+                  </div>
+                  <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-accent text-dark text-[10px] font-section font-bold uppercase tracking-wide">
+                    Featured
+                  </span>
+                </div>
+
+                {/* Info */}
+                <div className="lg:col-span-3 p-6 lg:p-8 flex flex-col justify-center">
+                  <span
+                    className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-xs font-section font-semibold border mb-4 ${
+                      categoryBg[featured.category] ?? "bg-gray-100 text-gray-600 border-gray-200"
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${categoryDot[featured.category] ?? "bg-gray-400"}`} />
+                    {featured.category}
+                  </span>
+
+                  <h2 className="font-section font-bold text-2xl sm:text-3xl text-dark group-hover:text-brand transition-colors leading-snug">
+                    {featured.title}
+                  </h2>
+                  <p className="text-muted text-sm mt-3 font-body leading-relaxed max-w-md">
+                    {featured.description}
+                  </p>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-muted font-body">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={13} className="text-brand" />
+                      {featured.date}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock size={13} className="text-brand" />
+                      {featured.time}
+                    </div>
+                    <div className="flex items-center gap-2 col-span-2">
+                      <MapPin size={13} className="text-brand shrink-0" />
+                      {featured.location}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users size={13} className="text-brand" />
+                      {featured.attendees.toLocaleString()} expected
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <span className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-semibold">
+                      RSVP / Register <ArrowRight size={14} />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </AnimatedSection>
+          </div>
+        </div>
+      )}
+
+      {/* All other events */}
+      <div className="bg-surface py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnimatedSection className="mb-8">
+            <h2 className="font-section font-bold text-xl text-dark">More Upcoming Events</h2>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {rest.map((event, i) => (
+              <AnimatedSection key={event.id} delay={0.07 * i}>
+                <Link
+                  href={`/events/${event.slug}`}
+                  className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
+                >
+                  <div className={`h-1.5 ${categoryDot[event.category] ?? "bg-gray-200"}`} />
+                  <div className="flex flex-col flex-1 p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] uppercase tracking-wide font-section font-semibold text-muted flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${categoryDot[event.category] ?? "bg-gray-400"}`} />
+                        {event.category}
+                      </span>
+                    </div>
+                    <h3 className="font-section font-semibold text-dark group-hover:text-brand transition-colors text-base leading-snug">
+                      {event.title}
+                    </h3>
+                    <p className="text-muted text-xs mt-2 font-body line-clamp-2">{event.description}</p>
+                    <div className="mt-4 space-y-1.5 text-xs text-muted font-body">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={11} className="text-brand" />
+                        {event.date} · {event.time}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin size={11} className="text-brand" />
+                        <span className="line-clamp-1">{event.location}</span>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-gray-50">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand">
+                        View Details <ArrowRight size={11} />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
