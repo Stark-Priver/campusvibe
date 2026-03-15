@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, Clock, TrendingUp, Search } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { newsArticles, newsCategories } from "@/lib/data"
@@ -80,7 +81,14 @@ export default function NewsPage() {
                     className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
                   >
                     <div className="aspect-video bg-surface relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-50" />
+                      <Image
+                        src={article.imageUrl}
+                        alt={article.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        sizes="(max-width: 1024px) 100vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                       <span className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-section font-semibold uppercase tracking-wide ${catClass}`}>
                         {article.category}
                       </span>
