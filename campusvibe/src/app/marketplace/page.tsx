@@ -67,7 +67,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Listings */}
-      <section className="bg-white py-14">
+      <section className="bg-[#ECECEC] py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="mb-8 flex items-center justify-between">
             <p className="text-sm text-muted font-body">

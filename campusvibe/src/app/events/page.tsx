@@ -31,7 +31,7 @@ export default function EventsPage() {
   return (
     <>
       {/* Page hero */}
-      <div className="pt-16 bg-white border-b border-gray-100">
+      <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <AnimatedSection>
             <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
@@ -52,7 +52,7 @@ export default function EventsPage() {
 
       {/* Featured event */}
       {featured && (
-        <div className="bg-white py-14 border-b border-gray-100">
+        <div className="bg-[#ECECEC] py-14 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection>
               <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted mb-6 block">

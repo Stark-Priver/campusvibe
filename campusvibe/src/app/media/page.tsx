@@ -18,7 +18,7 @@ export default function MediaPage() {
   return (
     <>
       {/* Hero */}
-      <div className="pt-16 bg-white border-b border-gray-100">
+      <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <AnimatedSection>
             <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
@@ -50,7 +50,7 @@ export default function MediaPage() {
       </div>
 
       {/* Videos */}
-      <section className="bg-white py-16">
+      <section className="bg-[#ECECEC] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="flex items-center justify-between mb-8">
             <div>
@@ -161,7 +161,7 @@ export default function MediaPage() {
       </section>
 
       {/* Creator CTA */}
-      <section className="bg-white py-14 border-t border-gray-100">
+      <section className="bg-[#ECECEC] py-14 border-t border-gray-100">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <AnimatedSection>
             <h2 className="font-section font-bold text-2xl text-dark">Are you a student creator?</h2>
