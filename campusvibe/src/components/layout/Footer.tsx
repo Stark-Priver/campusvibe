@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Zap, Twitter, Instagram, Youtube, Linkedin, MapPin } from "lucide-react"
+import Image from "next/image"
+import { Twitter, Instagram, Youtube, Linkedin, MapPin } from "lucide-react"
 
 const footerLinks = {
   Platform: [
@@ -37,23 +38,24 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="bg-dark text-white">
+    <footer className="bg-white text-dark border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
 
         {/* ── Top Grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-gray-100">
 
           {/* Brand column */}
           <div className="lg:col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5 w-fit group">
-              <span className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
-              </span>
-              <span className="font-heading font-bold text-lg tracking-tight text-white">
-                Campus<span className="text-brand">Vibe</span>
-              </span>
+              <Image
+                src="/media/campusvibe-logo.svg"
+                alt="CampusVibe"
+                width={160}
+                height={34}
+                className="h-8 w-auto"
+              />
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-[280px] font-body">
+            <p className="text-gray-500 text-sm leading-relaxed max-w-[280px] font-body">
               Tanzania&apos;s #1 university super-app. Ride. Eat. Connect. Earn.{" "}
               Everything campus life, in one platform.
             </p>
@@ -63,7 +65,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors duration-150"
+                  className="w-9 h-9 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 hover:text-brand hover:border-brand/25 hover:bg-brand/5 transition-colors duration-150"
                 >
                   <Icon size={15} />
                 </a>
@@ -75,6 +77,7 @@ export default function Footer() {
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h4 className="font-section font-semibold text-[10px] uppercase tracking-widest text-white/35 mb-4">
+              <h4 className="font-section font-semibold text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 {category}
               </h4>
               <ul className="space-y-2.5">
@@ -82,7 +85,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/55 hover:text-white transition-colors duration-150 font-body"
+                      className="text-sm text-gray-500 hover:text-brand transition-colors duration-150 font-body"
                     >
                       {link.label}
                     </Link>
@@ -95,10 +98,10 @@ export default function Footer() {
 
         {/* ── Bottom Row ── */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/35 text-sm font-body">
+          <p className="text-gray-400 text-sm font-body">
             &copy; {new Date().getFullYear()} CampusVibe Limited. All rights reserved.
           </p>
-          <div className="flex items-center gap-1.5 text-white/35 text-sm font-body">
+          <div className="flex items-center gap-1.5 text-gray-400 text-sm font-body">
             <MapPin size={12} />
             <span>Dar es Salaam, Tanzania</span>
           </div>

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Menu, X, Zap } from "lucide-react"
+import { Menu, X } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -31,20 +32,22 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300 ${
-        scrolled ? "shadow-[0_1px_0_0_#E5E7EB]" : ""
+      className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 transition-shadow duration-300 ${
+        scrolled ? "shadow-[0_8px_24px_-18px_rgba(17,24,39,0.22)]" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-          <span className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-            <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
-          </span>
-          <span className="font-heading font-bold text-[1.1rem] tracking-tight text-dark">
-            Campus<span className="text-brand">Vibe</span>
-          </span>
+          <Image
+            src="/media/campusvibe-logo.svg"
+            alt="CampusVibe"
+            width={148}
+            height={32}
+            priority
+            className="h-8 w-auto"
+          />
         </Link>
 
         {/* ── Desktop links ── */}
