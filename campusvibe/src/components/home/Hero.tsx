@@ -147,7 +147,7 @@ export default function Hero() {
 
       {/* Bottom edge fade into white */}
       <div className="absolute bottom-0 inset-x-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,1))" }} />
+        style={{ background: "linear-gradient(to bottom, transparent, rgba(236,236,236,1))" }} />
     </section>
   )
 }
