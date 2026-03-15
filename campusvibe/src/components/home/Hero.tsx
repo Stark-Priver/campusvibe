@@ -19,6 +19,8 @@ const fadeUp = {
   hidden: { opacity: 0, y: 26 },
   show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] } },
 }
+// cubic-bezier as a proper tuple to satisfy framer-motion TS types
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export default function Hero() {
   const [wordIdx, setWordIdx] = useState(0)
