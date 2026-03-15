@@ -2,6 +2,8 @@
 
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
 
 interface AnimatedSectionProps {
   children: React.ReactNode
