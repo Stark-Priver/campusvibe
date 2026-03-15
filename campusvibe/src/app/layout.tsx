@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${poppins.variable} ${montserrat.variable} ${inter.variable}`}
     >
-      <body className="antialiased bg-white text-dark">
+      <body className="antialiased bg-[#ECECEC] text-dark">
         <Navbar />
         <main>{children}</main>
         <Footer />
