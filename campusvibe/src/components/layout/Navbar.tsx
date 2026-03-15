@@ -16,17 +16,18 @@ const navLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuState, setMenuState] = useState({
+    open: false,
+    pathname: "",
+  })
   const pathname = usePathname()
+  const menuOpen = menuState.open && menuState.pathname === pathname
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
-
-  // Close mobile menu on route change
-  useEffect(() => { setMenuOpen(false) }, [pathname])
 
   return (
     <header
@@ -72,7 +73,12 @@ export default function Navbar() {
             Join Now
           </Link>
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() =>
+              setMenuState((prev) => ({
+                open: !(prev.open && prev.pathname === pathname),
+                pathname,
+              }))
+            }
             aria-label={menuOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={menuOpen}
             className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-dark hover:bg-gray-100 transition-colors"
@@ -90,6 +96,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={() => setMenuState({ open: false, pathname })}
                 className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? "text-brand bg-brand/5"
@@ -102,6 +109,7 @@ export default function Navbar() {
             <div className="pt-2 pb-1">
               <Link
                 href="/get-involved"
+                onClick={() => setMenuState({ open: false, pathname })}
                 className="flex items-center justify-center w-full py-2.5 rounded-lg text-sm font-semibold bg-brand text-white hover:bg-[#5a52e0] transition-colors"
               >
                 Join Now
