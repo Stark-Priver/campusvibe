@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { Download, ArrowRight, TrendingUp } from "lucide-react"
 import { stats } from "@/lib/data"
 
-const words = ["Connected.", "Alive.", "Unstoppable.", "Yours."]
+const words = ["Connected."]
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -50,7 +50,7 @@ export default function Hero() {
       {/* Subtle brand ambient glow */}
       <div
         className="absolute top-1/2 left-[40%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at center, rgba(61,155,233,0.08) 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(ellipse at center, rgba(108,99,255,0.11) 0%, transparent 68%)" }}
       />
 
       {/* Floating decorative badge — top right */}
@@ -75,11 +75,11 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.div variants={fadeUp}>
-            <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] text-dark leading-[1.02] tracking-tight">
+            <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] text-dark leading-[1.01] tracking-tight">
               Your Campus,
               <br />
               <span
-                className="text-brand inline-block"
+                className="text-brand inline-block relative"
                 style={{
                   transition: "opacity 0.38s ease, transform 0.38s ease",
                   opacity: wordVisible ? 1 : 0,
@@ -87,6 +87,7 @@ export default function Hero() {
                 }}
               >
                 {words[wordIdx]}
+                <span className="absolute -bottom-2 left-0 h-[6px] w-[74%] rounded-full bg-brand/20" />
               </span>
             </h1>
           </motion.div>
@@ -103,9 +104,9 @@ export default function Hero() {
           {/* Brand line */}
           <motion.p
             variants={fadeUp}
-            className="mt-3 text-sm font-section font-semibold uppercase tracking-widest text-brand"
+            className="mt-3 text-sm font-section font-semibold uppercase tracking-[0.26em] text-brand"
           >
-            Ride. Eat. Connect. Earn.
+            Celebrate. Connect. Thrive.
           </motion.p>
 
           {/* CTAs */}
@@ -132,11 +133,11 @@ export default function Hero() {
             className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-8"
           >
             {stats.map((stat) => (
-              <div key={stat.label}>
-                <div className="font-heading font-bold text-2xl sm:text-3xl text-dark">
+              <div key={stat.label} className="rounded-2xl border border-gray-100 bg-white/75 backdrop-blur-sm px-4 py-4 shadow-[0_8px_28px_-24px_rgba(26,26,26,0.5)]">
+                <div className="font-heading font-bold text-2xl sm:text-3xl text-dark leading-none">
                   {stat.value}
                 </div>
-                <div className="text-gray-500 text-sm mt-1 font-body">{stat.label}</div>
+                <div className="text-gray-500 text-sm mt-2 font-body">{stat.label}</div>
               </div>
             ))}
           </motion.div>
