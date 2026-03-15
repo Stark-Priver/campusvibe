@@ -76,7 +76,6 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="font-section font-semibold text-[10px] uppercase tracking-widest text-white/35 mb-4">
               <h4 className="font-section font-semibold text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 {category}
               </h4>
