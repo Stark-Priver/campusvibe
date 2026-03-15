@@ -40,6 +40,10 @@ export default function Navbar() {
 
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <span className="font-section font-bold uppercase tracking-[0.14em] text-[0.72rem] sm:text-[0.78rem] text-gray-700 leading-none">
+            <span className="text-dark">Campus</span>{" "}
+            <span className="text-brand">Vibe</span>
+          </span>
           <Image
             src="/media/logo.jpeg"
             alt="CampusVibe"
