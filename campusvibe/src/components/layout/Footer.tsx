@@ -48,11 +48,11 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-2.5 w-fit group">
               <Image
-                src="/media/campusvibe-logo.svg"
+                src="/media/logo.jpeg"
                 alt="CampusVibe"
-                width={160}
-                height={34}
-                className="h-8 w-auto"
+                width={180}
+                height={42}
+                className="h-10 w-auto rounded-sm"
               />
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed max-w-[280px] font-body">

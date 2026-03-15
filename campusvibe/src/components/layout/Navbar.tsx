@@ -41,12 +41,12 @@ export default function Navbar() {
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
           <Image
-            src="/media/campusvibe-logo.svg"
+            src="/media/logo.jpeg"
             alt="CampusVibe"
-            width={148}
-            height={32}
+            width={172}
+            height={40}
             priority
-            className="h-8 w-auto"
+            className="h-9 w-auto rounded-sm"
           />
         </Link>
 
