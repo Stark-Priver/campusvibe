@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Calendar, Clock, MapPin, Users, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { events } from "@/lib/data"
@@ -30,18 +31,18 @@ export default function EventsPage() {
   return (
     <>
       {/* Page hero */}
-      <div className="pt-16 bg-canvas">
+      <div className="pt-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <AnimatedSection>
-            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-white/40 mb-4">
+            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-accent" />
               Campus Events
             </span>
-            <h1 className="font-heading font-black text-4xl sm:text-5xl text-white leading-tight">
+            <h1 className="font-heading font-black text-4xl sm:text-5xl text-dark leading-tight">
               What&apos;s happening
               <span className="text-brand block">on campus.</span>
             </h1>
-            <p className="mt-4 text-white/50 text-base font-body max-w-lg">
+            <p className="mt-4 text-gray-600 text-base font-body max-w-lg">
               Discover events, conferences, award ceremonies, and cultural showcases happening
               across universities in Tanzania.
             </p>
@@ -62,9 +63,17 @@ export default function EventsPage() {
                 className="group grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover"
               >
                 {/* Visual */}
-                <div className="lg:col-span-2 min-h-[200px] bg-gradient-to-br from-brand/10 to-accent/10 relative flex items-center justify-center">
+                <div className="lg:col-span-2 min-h-[200px] relative flex items-center justify-center">
+                  <Image
+                    src={featured.imageUrl}
+                    alt={featured.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
                   <div className="text-center p-8">
-                    <div className="text-5xl font-heading font-black text-brand/30 leading-none">
+                    <div className="text-5xl font-heading font-black text-white/90 leading-none relative z-10">
                       APR<br />15
                     </div>
                   </div>
@@ -136,6 +145,16 @@ export default function EventsPage() {
                   href={`/events/${event.slug}`}
                   className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
                 >
+                  <div className="relative aspect-video">
+                    <Image
+                      src={event.imageUrl}
+                      alt={event.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-black/10" />
+                  </div>
                   <div className={`h-1.5 ${categoryDot[event.category] ?? "bg-gray-200"}`} />
                   <div className="flex flex-col flex-1 p-5">
                     <div className="flex items-center justify-between mb-3">
