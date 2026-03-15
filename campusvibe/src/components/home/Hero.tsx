@@ -42,7 +42,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen bg-canvas overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-screen bg-white overflow-hidden flex flex-col justify-center">
 
       {/* Dot-grid background */}
       <div className="absolute inset-0 hero-grid pointer-events-none select-none" />
@@ -50,14 +50,14 @@ export default function Hero() {
       {/* Subtle brand ambient glow */}
       <div
         className="absolute top-1/2 left-[40%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at center, rgba(108,99,255,0.07) 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(ellipse at center, rgba(61,155,233,0.08) 0%, transparent 65%)" }}
       />
 
       {/* Floating decorative badge — top right */}
       <div className="absolute top-28 right-8 lg:right-20 animate-float hidden lg:flex">
-        <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-gray-200 shadow-sm">
           <TrendingUp size={13} className="text-accent" />
-          <span className="text-white/70 text-xs font-body font-medium">#1 Campus App in Tanzania</span>
+          <span className="text-gray-600 text-xs font-body font-medium">#1 Campus App in Tanzania</span>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export default function Hero() {
 
           {/* Live badge */}
           <motion.div variants={fadeUp} className="mb-8">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/65 text-xs font-section font-medium uppercase tracking-widest">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand/20 bg-brand/5 text-brand text-xs font-section font-medium uppercase tracking-widest">
               <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               Tanzania&apos;s University Super-App — Live Now
             </span>
@@ -75,7 +75,7 @@ export default function Hero() {
 
           {/* Headline */}
           <motion.div variants={fadeUp}>
-            <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] text-white leading-[1.02] tracking-tight">
+            <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] text-dark leading-[1.02] tracking-tight">
               Your Campus,
               <br />
               <span
@@ -94,7 +94,7 @@ export default function Hero() {
           {/* Subheadline */}
           <motion.p
             variants={fadeUp}
-            className="mt-6 text-lg sm:text-xl text-white/55 max-w-lg leading-relaxed font-body"
+            className="mt-6 text-lg sm:text-xl text-gray-600 max-w-lg leading-relaxed font-body"
           >
             Transport, food, marketplace, events, news, and campus community — one platform
             built entirely for Tanzanian students.
@@ -103,7 +103,7 @@ export default function Hero() {
           {/* Brand line */}
           <motion.p
             variants={fadeUp}
-            className="mt-3 text-sm font-section font-semibold uppercase tracking-widest text-brand/80"
+            className="mt-3 text-sm font-section font-semibold uppercase tracking-widest text-brand"
           >
             Ride. Eat. Connect. Earn.
           </motion.p>
@@ -119,7 +119,7 @@ export default function Hero() {
             </a>
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-white/15 text-white/75 text-sm font-semibold hover:bg-white/5 hover:border-white/25 hover:text-white transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 hover:text-dark transition-all duration-200"
             >
               Explore Platform
               <ArrowRight size={15} />
@@ -129,14 +129,14 @@ export default function Hero() {
           {/* Stats */}
           <motion.div
             variants={fadeUp}
-            className="mt-16 pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-8"
+            className="mt-16 pt-8 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-8"
           >
             {stats.map((stat) => (
               <div key={stat.label}>
-                <div className="font-heading font-bold text-2xl sm:text-3xl text-white">
+                <div className="font-heading font-bold text-2xl sm:text-3xl text-dark">
                   {stat.value}
                 </div>
-                <div className="text-white/45 text-sm mt-1 font-body">{stat.label}</div>
+                <div className="text-gray-500 text-sm mt-1 font-body">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -146,7 +146,7 @@ export default function Hero() {
 
       {/* Bottom edge fade into white */}
       <div className="absolute bottom-0 inset-x-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent, rgba(13,13,20,0.6))" }} />
+        style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,1))" }} />
     </section>
   )
 }
