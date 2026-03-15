@@ -42,7 +42,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen bg-white overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-screen bg-[#ECECEC] overflow-hidden flex flex-col justify-center">
 
       {/* Dot-grid background */}
       <div className="absolute inset-0 hero-grid pointer-events-none select-none" />

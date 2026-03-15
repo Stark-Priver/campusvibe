@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 transition-shadow duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 bg-[#ECECEC]/95 backdrop-blur border-b border-gray-100 transition-shadow duration-300 ${
         scrolled ? "shadow-[0_8px_24px_-18px_rgba(17,24,39,0.22)]" : ""
       }`}
     >
@@ -93,7 +93,7 @@ export default function Navbar() {
 
       {/* ── Mobile Menu ── */}
       {menuOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white" role="dialog" aria-label="Mobile navigation">
+        <div className="lg:hidden border-t border-gray-100 bg-[#ECECEC]" role="dialog" aria-label="Mobile navigation">
           <nav className="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
             {navLinks.map((link) => (
               <Link
