@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Tag, UserCircle, ShoppingBag, Search, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { marketplaceItems } from "@/lib/data"
@@ -79,7 +80,14 @@ export default function MarketplacePage() {
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full">
                   <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 relative flex items-center justify-center">
-                    <ShoppingBag size={36} className="text-gray-200" />
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-black/10" />
                     <span
                       className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-section font-semibold ${
                         conditionColor[item.condition] ?? "text-gray-600 bg-gray-100"
