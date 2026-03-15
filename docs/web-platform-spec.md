@@ -235,6 +235,7 @@ The web platform is also a business asset. It should support:
 - `ads@campusvibe.co.tz`
 - `editor@campusvibe.co.tz`
 - `director@campusvibe.co.tz`
+    Po box 1498 Mbeya 
 
 ## Success Criteria for the Web Platform
 
