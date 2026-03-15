@@ -31,7 +31,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   color: #1A1A1A;
-  background: #FFFFFF;
+  background: #ECECEC;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
