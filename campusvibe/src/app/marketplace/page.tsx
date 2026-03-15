@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Tag, UserCircle, ShoppingBag, Search, ArrowRight } from "lucide-react"
+import { Tag, UserCircle, Search, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { marketplaceItems } from "@/lib/data"
 import type { Metadata } from "next"
