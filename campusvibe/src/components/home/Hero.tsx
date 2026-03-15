@@ -67,15 +67,15 @@ export default function Hero() {
 
           {/* Live badge */}
           <motion.div variants={fadeUp} className="mb-8">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand/20 bg-brand/5 text-brand text-xs font-section font-medium uppercase tracking-widest">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/20 bg-brand/5 text-brand text-[11px] font-section font-semibold uppercase tracking-[0.16em]">
               <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-              Tanzania&apos;s University Super-App — Live Now
+              Tanzania&apos;s University Super-App · Live Now
             </span>
           </motion.div>
 
           {/* Headline */}
           <motion.div variants={fadeUp}>
-            <h1 className="font-heading font-black text-5xl sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem] text-dark leading-[1.01] tracking-tight">
+            <h1 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-[4.6rem] xl:text-[5.1rem] text-dark leading-[1.04] tracking-tight">
               Your Campus,
               <br />
               <span
@@ -87,7 +87,7 @@ export default function Hero() {
                 }}
               >
                 {words[wordIdx]}
-                <span className="absolute -bottom-2 left-0 h-[6px] w-[74%] rounded-full bg-brand/20" />
+                <span className="absolute -bottom-1.5 left-0 h-[5px] w-[70%] rounded-full bg-brand/18" />
               </span>
             </h1>
           </motion.div>
@@ -95,16 +95,16 @@ export default function Hero() {
           {/* Subheadline */}
           <motion.p
             variants={fadeUp}
-            className="mt-6 text-lg sm:text-xl text-gray-600 max-w-lg leading-relaxed font-body"
+            className="mt-5 text-base sm:text-lg text-gray-600 max-w-xl leading-relaxed font-body"
           >
-            Transport, food, marketplace, events, news, and campus community — one platform
-            built entirely for Tanzanian students.
+            Transport, food, marketplace, events, and campus news in one trusted platform
+            built for Tanzanian students.
           </motion.p>
 
           {/* Brand line */}
           <motion.p
             variants={fadeUp}
-            className="mt-3 text-sm font-section font-semibold uppercase tracking-[0.26em] text-brand"
+            className="mt-3 text-xs sm:text-sm font-section font-semibold uppercase tracking-[0.22em] text-brand"
           >
             Celebrate. Connect. Thrive.
           </motion.p>
