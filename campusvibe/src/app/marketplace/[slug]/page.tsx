@@ -30,14 +30,14 @@ export default async function MarketplaceDetailsPage({ params }: Props) {
   if (!item) notFound()
 
   return (
-    <section className="pt-20 pb-16 bg-white">
+    <section className="pt-20 section-space-tight bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand transition-colors">
           <ArrowLeft size={14} /> Back to Marketplace
         </Link>
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100">
+          <div className="relative aspect-square card-pro">
             <Image src={item.imageUrl} alt={item.title} fill className="object-cover" priority sizes="100vw" />
           </div>
 
