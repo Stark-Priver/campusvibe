@@ -19,28 +19,28 @@ export default function MediaPage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
           <AnimatedSection>
-            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
+            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-3">
               <Tv size={12} className="text-brand" />
               CampusVibe Media Hub
             </span>
-            <h1 className="font-heading font-black text-4xl sm:text-5xl text-dark leading-tight">
-              Watch. Listen.
+            <h1 className="font-heading font-black text-3xl sm:text-4xl text-dark leading-tight">
+              Watch. Listen.{" "}
               <span className="text-brand block">Stay Informed.</span>
             </h1>
-            <p className="mt-4 text-gray-600 text-base font-body max-w-lg">
+            <p className="mt-2.5 text-gray-600 text-sm sm:text-base font-body max-w-xl leading-relaxed">
               Original videos, podcasts, and student creator content produced for and by Tanzania&apos;s
               university community.
             </p>
           </AnimatedSection>
 
           {/* Platform pills */}
-          <AnimatedSection delay={0.1} className="mt-8 flex gap-3">
+          <AnimatedSection delay={0.1} className="mt-5 flex flex-wrap gap-2.5">
             {["CampusVibe TV", "Podcasts", "Student Creators"].map((platform) => (
               <button
                 key={platform}
-                className="px-4 py-2 rounded-full text-xs font-section font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-dark transition-colors first:bg-brand first:text-white first:border-brand"
+                className="px-3.5 py-1.5 rounded-full text-xs font-section font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-dark transition-colors first:bg-brand first:text-white first:border-brand"
               >
                 {platform}
               </button>
@@ -50,9 +50,9 @@ export default function MediaPage() {
       </div>
 
       {/* Videos */}
-      <section className="bg-[#ECECEC] section-space-tight">
+      <section className="bg-[#ECECEC] py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="flex items-center justify-between mb-8">
+          <AnimatedSection className="flex items-center justify-between mb-5 sm:mb-6">
             <div>
               <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
                 CampusVibe TV
@@ -64,7 +64,7 @@ export default function MediaPage() {
             </Link>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             {videos.map((item, i) => (
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <Link
@@ -79,23 +79,23 @@ export default function MediaPage() {
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-black/30" />
-                  <span className="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-xs font-section font-semibold">
+                  <span className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-[11px] font-section font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand" />
                     {item.channel}
                   </span>
-                  <span className="absolute top-3 right-3 px-2 py-0.5 rounded bg-black/50 text-white text-[10px] font-body">
+                  <span className="absolute top-3 right-3 px-2 py-0.5 rounded bg-black/50 text-white text-[11px] font-body">
                     {item.duration}
                   </span>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg">
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg">
                       <Play size={18} className="text-dark fill-dark ml-0.5" />
                     </div>
                   </div>
                   <div
-                    className="absolute bottom-0 inset-x-0 p-4"
+                    className="absolute bottom-0 inset-x-0 p-3.5 sm:p-4"
                     style={{ background: "linear-gradient(to top, rgba(13,13,20,0.9) 0%, transparent 100%)" }}
                   >
-                    <h3 className="font-section font-semibold text-white text-sm leading-snug">
+                    <h3 className="font-section font-semibold text-white text-sm leading-snug line-clamp-2">
                       {item.title}
                     </h3>
                     <div className="flex items-center gap-3 mt-1 text-white/50 text-[11px] font-body">
@@ -112,9 +112,9 @@ export default function MediaPage() {
       </section>
 
       {/* Podcasts */}
-      <section className="bg-surface section-space-tight">
+      <section className="bg-surface py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="flex items-center justify-between mb-8">
+          <AnimatedSection className="flex items-center justify-between mb-5 sm:mb-6">
             <div>
               <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
                 CampusVibe Podcasts
@@ -123,12 +123,12 @@ export default function MediaPage() {
             </div>
           </AnimatedSection>
 
-          <div className="space-y-4">
+          <div className="space-y-3.5">
             {podcasts.map((item, i) => (
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <Link
                   href={`/media/${item.slug}`}
-                  className="group flex items-center gap-5 card-pro p-5 card-hover"
+                  className="group flex items-center gap-4 card-pro p-4 card-hover"
                 >
                   <div className="w-16 h-16 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
                     <Headphones size={22} className="text-brand" />
@@ -161,7 +161,7 @@ export default function MediaPage() {
       </section>
 
       {/* Creator CTA */}
-      <section className="bg-[#ECECEC] section-space-tight border-t border-gray-100">
+      <section className="bg-[#ECECEC] py-8 sm:py-10 border-t border-gray-100">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <AnimatedSection>
             <h2 className="font-section font-bold text-2xl text-dark">Are you a student creator?</h2>
