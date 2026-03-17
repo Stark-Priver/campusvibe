@@ -40,15 +40,18 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center shrink-0 group" aria-label="Campus Vibe Home">
+        <Link href="/" className="flex items-center gap-2 shrink-0 group" aria-label="Campus Vibe Home">
           <Image
             src="/media/logo.jpeg"
             alt="Campus Vibe"
             width={172}
             height={40}
             priority
-            className="h-9 w-auto rounded-sm"
+            className="h-8 sm:h-9 w-auto rounded-sm"
           />
+          <span className="font-section font-bold text-sm sm:text-base tracking-tight text-dark whitespace-nowrap leading-none">
+            Campus <span className="text-brand">Vibe</span>
+          </span>
         </Link>
 
         {/* ── Desktop links ── */}
