@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import { ArrowLeft, ArrowRight, Archive, Camera, Clapperboard, Film, ShieldCheck } from "lucide-react"
+import { ArrowRight, Archive, Camera, Clapperboard, Film, ShieldCheck } from "lucide-react"
 import { dashboardRoles, getDashboardByRole } from "@/lib/dashboardData"
 import { getCurrentMockUser } from "@/lib/auth/session"
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar"
 import AdminRolePanel from "@/components/dashboard/roles/admin/AdminRolePanel"
 import AmbassadorRolePanel from "@/components/dashboard/roles/ambassador/AmbassadorRolePanel"
 import StudentRolePanel from "@/components/dashboard/roles/student/StudentRolePanel"
@@ -60,14 +61,7 @@ export default async function RoleDashboardPage({ params }: Props) {
     <>
       <section className="pt-16 bg-surface border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-muted hover:text-brand transition-colors"
-          >
-            <ArrowLeft size={14} />
-            All Dashboards
-          </Link>
-          <p className="mt-4 text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
+          <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
             {dashboard.roleName} Workspace
           </p>
           <h1 className="mt-2 font-heading font-black text-3xl sm:text-4xl text-dark leading-tight max-w-4xl">
@@ -81,39 +75,32 @@ export default async function RoleDashboardPage({ params }: Props) {
 
       <section className="bg-[#ECECEC] py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-4">
-            {rolePanelMap[dashboard.slug]}
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-5">
+            <DashboardSidebar
+              title={`${dashboard.roleName} Actions`}
+              description="All operational actions for this workspace are listed here for quick execution."
+              links={[
+                { label: "Back to Role Selector", href: "/dashboard" },
+                ...dashboard.quickActions,
+              ]}
+              showSignOut
+            />
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {dashboard.metrics.map((metric) => (
-              <article key={metric.label} className="card-pro p-4 sm:p-5">
-                <p className="text-[11px] text-muted font-body">{metric.label}</p>
-                <p className="mt-1.5 font-heading font-black text-xl sm:text-2xl text-dark">{metric.value}</p>
-                {metric.trend ? <p className="mt-1 text-[11px] text-brand font-body">{metric.trend}</p> : null}
-              </article>
-            ))}
-          </div>
+            <div className="lg:col-span-3 space-y-4 sm:space-y-5">
+              {rolePanelMap[dashboard.slug]}
 
-          <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5">
-            <article className="card-pro p-5 xl:col-span-1">
-              <h2 className="font-section font-bold text-lg text-dark">Quick Actions</h2>
-              <p className="mt-1.5 text-sm text-muted font-body">Immediate commands for this role.</p>
-              <div className="mt-4 space-y-2.5">
-                {dashboard.quickActions.map((action) => (
-                  <a
-                    key={action.label}
-                    href={action.href}
-                    className="flex items-center justify-between rounded-xl border border-gray-200 px-3.5 py-2.5 text-sm font-semibold text-dark hover:border-brand hover:text-brand transition-colors"
-                  >
-                    <span>{action.label}</span>
-                    <ArrowRight size={13} />
-                  </a>
+              <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+                {dashboard.metrics.map((metric) => (
+                  <article key={metric.label} className="card-pro p-4 sm:p-5">
+                    <p className="text-[11px] text-muted font-body">{metric.label}</p>
+                    <p className="mt-1.5 font-heading font-black text-xl sm:text-2xl text-dark">{metric.value}</p>
+                    {metric.trend ? <p className="mt-1 text-[11px] text-brand font-body">{metric.trend}</p> : null}
+                  </article>
                 ))}
               </div>
-            </article>
 
-            <article className="card-pro p-5 xl:col-span-1">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
+                <article className="card-pro p-5 xl:col-span-1">
               <h2 className="font-section font-bold text-lg text-dark">{dashboard.operations.title}</h2>
               <p className="mt-1.5 text-sm text-muted font-body">{dashboard.operations.description}</p>
               <ul className="mt-4 space-y-2.5">
@@ -126,18 +113,20 @@ export default async function RoleDashboardPage({ params }: Props) {
               </ul>
             </article>
 
-            <article className="card-pro p-5 xl:col-span-1">
-              <h2 className="font-section font-bold text-lg text-dark">{dashboard.compliance.title}</h2>
-              <p className="mt-1.5 text-sm text-muted font-body">{dashboard.compliance.description}</p>
-              <ul className="mt-4 space-y-2.5">
-                {dashboard.compliance.items.map((item) => (
-                  <li key={item} className="text-sm text-dark font-body leading-relaxed flex items-start gap-2">
-                    <ShieldCheck size={14} className="text-success mt-0.5 shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
+                <article className="card-pro p-5 xl:col-span-1">
+                  <h2 className="font-section font-bold text-lg text-dark">{dashboard.compliance.title}</h2>
+                  <p className="mt-1.5 text-sm text-muted font-body">{dashboard.compliance.description}</p>
+                  <ul className="mt-4 space-y-2.5">
+                    {dashboard.compliance.items.map((item) => (
+                      <li key={item} className="text-sm text-dark font-body leading-relaxed flex items-start gap-2">
+                        <ShieldCheck size={14} className="text-success mt-0.5 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
       </section>
