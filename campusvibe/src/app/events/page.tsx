@@ -32,17 +32,17 @@ export default function EventsPage() {
     <>
       {/* Page hero */}
       <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
           <AnimatedSection>
-            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
+            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent" />
               Campus Events
             </span>
-            <h1 className="font-heading font-black text-4xl sm:text-5xl text-dark leading-tight">
-              What&apos;s happening
+            <h1 className="font-heading font-black text-3xl sm:text-4xl text-dark leading-tight">
+              What&apos;s happening{" "}
               <span className="text-brand block">on campus.</span>
             </h1>
-            <p className="mt-4 text-gray-600 text-base font-body max-w-lg">
+            <p className="mt-2.5 text-gray-600 text-sm sm:text-base font-body max-w-xl leading-relaxed">
               Discover events, conferences, award ceremonies, and cultural showcases happening
               across universities in Tanzania.
             </p>
@@ -52,18 +52,18 @@ export default function EventsPage() {
 
       {/* Featured event */}
       {featured && (
-        <div className="bg-[#ECECEC] section-space-tight border-b border-gray-100">
+        <div className="bg-[#ECECEC] py-8 sm:py-10 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection>
-              <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted mb-6 block">
+              <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted mb-4 block">
                 Featured Event
               </span>
               <Link
                 href={`/events/${featured.slug}`}
-                className="group grid grid-cols-1 lg:grid-cols-5 gap-8 card-pro card-hover"
+                className="group grid grid-cols-1 lg:grid-cols-5 card-pro card-hover"
               >
                 {/* Visual */}
-                <div className="lg:col-span-2 min-h-[200px] relative flex items-center justify-center">
+                <div className="lg:col-span-2 min-h-[165px] sm:min-h-[185px] relative flex items-center justify-center">
                   <Image
                     src={featured.imageUrl}
                     alt={featured.title}
@@ -72,8 +72,8 @@ export default function EventsPage() {
                     sizes="(max-width: 1024px) 100vw, 40vw"
                   />
                   <div className="absolute inset-0 bg-black/20" />
-                  <div className="text-center p-8">
-                    <div className="text-5xl font-heading font-black text-white/90 leading-none relative z-10">
+                  <div className="text-center p-6">
+                    <div className="text-4xl sm:text-5xl font-heading font-black text-white/90 leading-none relative z-10">
                       APR<br />15
                     </div>
                   </div>
@@ -83,9 +83,9 @@ export default function EventsPage() {
                 </div>
 
                 {/* Info */}
-                <div className="lg:col-span-3 p-6 lg:p-8 flex flex-col justify-center">
+                <div className="lg:col-span-3 p-5 sm:p-6 flex flex-col justify-center">
                   <span
-                    className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-xs font-section font-semibold border mb-4 ${
+                    className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-[11px] font-section font-semibold border mb-3 ${
                       categoryBg[featured.category] ?? "bg-gray-100 text-gray-600 border-gray-200"
                     }`}
                   >
@@ -93,14 +93,14 @@ export default function EventsPage() {
                     {featured.category}
                   </span>
 
-                  <h2 className="font-section font-bold text-2xl sm:text-3xl text-dark group-hover:text-brand transition-colors leading-snug">
+                  <h2 className="font-section font-bold text-xl sm:text-2xl text-dark group-hover:text-brand transition-colors leading-snug">
                     {featured.title}
                   </h2>
-                  <p className="text-muted text-sm mt-3 font-body leading-relaxed max-w-md">
+                  <p className="text-muted text-sm mt-2.5 font-body leading-relaxed max-w-xl line-clamp-3">
                     {featured.description}
                   </p>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 text-sm text-muted font-body">
+                  <div className="mt-4 grid grid-cols-2 gap-2 text-xs sm:text-sm text-muted font-body">
                     <div className="flex items-center gap-2">
                       <Calendar size={13} className="text-brand" />
                       {featured.date}
@@ -119,7 +119,7 @@ export default function EventsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-6 flex gap-3">
+                  <div className="mt-4 flex gap-3">
                     <span className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-semibold">
                       RSVP / Register <ArrowRight size={14} />
                     </span>
@@ -132,13 +132,13 @@ export default function EventsPage() {
       )}
 
       {/* All other events */}
-      <div className="bg-surface section-space-tight">
+      <div className="bg-surface py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-8">
+          <AnimatedSection className="mb-6">
             <h2 className="font-section font-bold text-xl text-dark">More Upcoming Events</h2>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {rest.map((event, i) => (
               <AnimatedSection key={event.id} delay={0.07 * i}>
                 <Link
@@ -156,8 +156,8 @@ export default function EventsPage() {
                     <div className="absolute inset-0 bg-black/10" />
                   </div>
                   <div className={`h-1.5 ${categoryDot[event.category] ?? "bg-gray-200"}`} />
-                  <div className="flex flex-col flex-1 p-5">
-                    <div className="flex items-center justify-between mb-3">
+                  <div className="flex flex-col flex-1 p-4">
+                    <div className="flex items-center justify-between mb-2.5">
                       <span className="text-[10px] uppercase tracking-wide font-section font-semibold text-muted flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${categoryDot[event.category] ?? "bg-gray-400"}`} />
                         {event.category}
@@ -166,8 +166,8 @@ export default function EventsPage() {
                     <h3 className="font-section font-semibold text-dark group-hover:text-brand transition-colors text-base leading-snug">
                       {event.title}
                     </h3>
-                    <p className="text-muted text-xs mt-2 font-body line-clamp-2">{event.description}</p>
-                    <div className="mt-4 space-y-1.5 text-xs text-muted font-body">
+                    <p className="text-muted text-xs mt-1.5 font-body line-clamp-2">{event.description}</p>
+                    <div className="mt-3 space-y-1.5 text-xs text-muted font-body">
                       <div className="flex items-center gap-2">
                         <Calendar size={11} className="text-brand" />
                         {event.date} · {event.time}
@@ -177,7 +177,7 @@ export default function EventsPage() {
                         <span className="line-clamp-1">{event.location}</span>
                       </div>
                     </div>
-                    <div className="mt-4 pt-3 border-t border-gray-50">
+                    <div className="mt-3 pt-2.5 border-t border-gray-50">
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand">
                         View Details <ArrowRight size={11} />
                       </span>
