@@ -1,7 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { ArrowRight, ShieldCheck, Users, Truck, Store, Bike, GraduationCap } from "lucide-react"
-import { dashboardRoles } from "@/lib/dashboardData"
+import { getCurrentMockUser } from "@/lib/auth/session"
+import { getDashboardByRole } from "@/lib/dashboardData"
+import { signOut } from "@/app/login/actions"
 
 export const metadata: Metadata = {
   title: "Role Dashboards | CampusVibe",
@@ -19,6 +22,7 @@ const roleIconMap = {
 } as const
 
 export default function DashboardLandingPage() {
+  
   return (
     <>
       <section className="pt-16 bg-surface border-b border-gray-100">
@@ -30,16 +34,28 @@ export default function DashboardLandingPage() {
             Professional Role Dashboards
           </h1>
           <p className="mt-2.5 text-sm sm:text-base text-muted font-body max-w-3xl leading-relaxed">
-            Select a dashboard role to preview complete system interfaces with mock operational data.
-            Each role is structured for real workflow execution and production readiness.
+            Select one of your assigned roles to open the correct operational workspace.
+            Access is controlled by login session and role mapping.
           </p>
         </div>
       </section>
 
       <section className="bg-[#ECECEC] py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+            <p className="text-sm text-muted font-body">Signed in role workspaces for this account.</p>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-sm font-semibold text-dark hover:border-brand hover:text-brand transition-colors"
+              >
+                Sign Out
+              </button>
+            </form>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {dashboardRoles.map((role) => {
+            {availableRoles.map((role) => {
               const Icon = roleIconMap[role.slug]
               return (
                 <article key={role.slug} className="card-pro card-hover p-5 flex flex-col">
@@ -63,4 +79,15 @@ export default function DashboardLandingPage() {
       </section>
     </>
   )
+}
+
+export default async function DashboardLandingPageWrapper() {
+  const currentUser = await getCurrentMockUser()
+  if (!currentUser) redirect("/login")
+
+  const availableRoles = currentUser.roles
+    .map((role) => getDashboardByRole(role))
+    .filter((role): role is NonNullable<ReturnType<typeof getDashboardByRole>> => Boolean(role))
+
+  return <DashboardLandingPage availableRoles={availableRoles} />
 }
