@@ -4,7 +4,6 @@ import { Twitter, Instagram, Youtube, Linkedin, MapPin } from "lucide-react"
 const footerLinks = {
   Platform: [
     { label: "Download App", href: "#" },
-    { label: "Dashboards", href: "/dashboard" },
     { label: "News", href: "/news" },
     { label: "Events", href: "/events" },
     { label: "Media", href: "/media" },
