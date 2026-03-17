@@ -129,6 +129,24 @@ export default async function RoleDashboardPage({ params }: Props) {
           </div>
         </div>
 
+        {/* Recent Activity */}
+        {dashboard.recentActivity && dashboard.recentActivity.length > 0 && (
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="font-section font-bold text-lg text-dark">Recent Activity</h2>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {dashboard.recentActivity.map((activity) => (
+                <div key={activity} className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                  <p className="text-sm text-dark font-body leading-relaxed">{activity}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  )
+}
+
       {dashboard.campusMemory ? (
         <section className="bg-white py-8 sm:py-10 border-t border-gray-100 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
