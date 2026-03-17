@@ -40,14 +40,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-          <span className="font-section font-bold uppercase tracking-[0.14em] text-[0.72rem] sm:text-[0.78rem] text-gray-700 leading-none">
-            <span className="text-dark">Campus</span>{" "}
-            <span className="text-brand">Vibe</span>
-          </span>
+        <Link href="/" className="flex items-center shrink-0 group" aria-label="Campus Vibe Home">
           <Image
             src="/media/logo.jpeg"
-            alt="CampusVibe"
+            alt="Campus Vibe"
             width={172}
             height={40}
             priority

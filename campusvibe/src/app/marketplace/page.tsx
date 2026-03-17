@@ -24,7 +24,7 @@ export default function MarketplacePage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-8">
           <AnimatedSection>
             <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               Student Marketplace
@@ -39,7 +39,7 @@ export default function MarketplacePage() {
           </AnimatedSection>
 
           {/* Search + Categories */}
-          <AnimatedSection delay={0.1} className="mt-8 space-y-4">
+          <AnimatedSection delay={0.1} className="mt-6 space-y-3.5">
             <div className="relative max-w-md">
               <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
               <input
@@ -67,9 +67,9 @@ export default function MarketplacePage() {
       </div>
 
       {/* Listings */}
-      <section className="bg-[#ECECEC] section-space-tight">
+      <section className="bg-[#ECECEC] py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-8 flex items-center justify-between">
+          <AnimatedSection className="mb-5 flex items-center justify-between">
             <p className="text-sm text-muted font-body">
               Showing <span className="text-dark font-semibold">{marketplaceItems.length}</span> listings (demo preview)
             </p>
