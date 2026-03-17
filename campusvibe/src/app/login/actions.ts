@@ -9,12 +9,12 @@ export async function loginWithCredentials(formData: FormData) {
   const password = String(formData.get("password") ?? "")
 
   if (!email || !password) {
-    redirect("/login")
+    redirect("/login?error=missing")
   }
 
   const user = findMockAuthUserByCredentials(email, password)
   if (!user) {
-    redirect("/login")
+    redirect("/login?error=invalid")
   }
 
   await createMockSession(user.id)
