@@ -101,7 +101,7 @@ export default function AboutPage() {
   return (
     <>
       <section className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
             Campus Vibe Media Profile
           </span>
@@ -120,7 +120,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 sm:py-20">
+      <section className="bg-white section-space">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <article className="rounded-2xl border border-brand/20 bg-brand/5 p-7 sm:p-8">
             <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">Direction</p>
@@ -142,7 +142,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-surface py-16 sm:py-20">
+      <section className="bg-surface section-space">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">Services</p>
           <h2 className="font-section font-bold text-2xl sm:text-3xl text-dark">What We Do</h2>
@@ -151,7 +151,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
             {services.map((service) => (
-              <article key={service.title} className="rounded-2xl border border-gray-200 bg-white p-6 card-hover">
+              <article key={service.title} className="card-pro p-6 card-hover">
                 <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center">
                   <service.icon size={19} />
                 </div>
@@ -163,13 +163,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 sm:py-20">
+      <section className="bg-white section-space">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">Culture</p>
           <h2 className="font-section font-bold text-2xl sm:text-3xl text-dark">Core Values</h2>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {values.map((value) => (
-              <article key={value.title} className="rounded-2xl border border-gray-200 bg-surface p-6">
+              <article key={value.title} className="card-pro bg-surface p-6">
                 <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 text-dark flex items-center justify-center">
                   <value.icon size={18} />
                 </div>
@@ -181,13 +181,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-surface py-16 sm:py-20">
+      <section className="bg-surface section-space">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">Impact</p>
           <h2 className="font-section font-bold text-2xl sm:text-3xl text-dark">Key Projects</h2>
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-5">
             {projects.map((project) => (
-              <article key={project.title} className="rounded-2xl border border-gray-200 bg-white p-6">
+              <article key={project.title} className="card-pro p-6">
                 <div className="w-10 h-10 rounded-xl bg-accent/25 text-dark flex items-center justify-center">
                   <project.icon size={19} />
                 </div>
@@ -199,7 +199,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 sm:py-20 border-t border-gray-100">
+      <section className="bg-white section-space border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-gray-200 bg-surface p-7 sm:p-10">
             <div className="flex items-start gap-4">
