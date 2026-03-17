@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Twitter, Instagram, Youtube, Linkedin, MapPin } from "lucide-react"
 
 const footerLinks = {
@@ -22,12 +21,6 @@ const footerLinks = {
     { label: "Advertise", href: "/get-involved" },
     { label: "Contact", href: "/get-involved" },
   ],
-  Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Use", href: "#" },
-    { label: "Cookie Policy", href: "#" },
-    { label: "Community Rules", href: "#" },
-  ],
 }
 
 const socials = [
@@ -40,27 +33,19 @@ const socials = [
 export default function Footer() {
   return (
     <footer className="bg-[#ECECEC] text-dark border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8">
 
         {/* ── Top Grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 pb-12 border-b border-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 pb-10 sm:pb-12 border-b border-gray-100">
 
           {/* Brand column */}
-          <div className="lg:col-span-2 space-y-5">
-            <Link href="/" className="flex items-center gap-2.5 w-fit group">
-              <span className="font-section font-bold uppercase tracking-[0.14em] text-[0.72rem] sm:text-[0.78rem] text-gray-700 leading-none">
-                <span className="text-dark">Campus</span>{" "}
-                <span className="text-brand">Vibe</span>
+          <div className="col-span-2 lg:col-span-2 space-y-4 sm:space-y-5">
+            <Link href="/" className="inline-flex items-center w-fit group">
+              <span className="font-heading font-black text-xl sm:text-2xl text-dark leading-none tracking-tight">
+                Campus <span className="text-brand">Vibe</span>
               </span>
-              <Image
-                src="/media/logo.jpeg"
-                alt="CampusVibe"
-                width={180}
-                height={42}
-                className="h-10 w-auto rounded-sm"
-              />
             </Link>
-            <p className="text-gray-500 text-sm leading-relaxed max-w-[280px] font-body">
+            <p className="text-gray-500 text-sm leading-relaxed max-w-sm font-body">
               Tanzania&apos;s #1 university super-app. Ride. Eat. Connect. Earn.{" "}
               Everything campus life, in one platform.
             </p>
@@ -80,7 +65,7 @@ export default function Footer() {
 
           {/* Link columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
+            <div key={category} className="col-span-1">
               <h4 className="font-section font-semibold text-[10px] uppercase tracking-widest text-gray-400 mb-4">
                 {category}
               </h4>
@@ -103,11 +88,11 @@ export default function Footer() {
         {/* ── Bottom Row ── */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-gray-400 text-sm font-body">
-            &copy; {new Date().getFullYear()} CampusVibe Limited. All rights reserved.
+            &copy; {new Date().getFullYear()} Campus Vibe. All rights reserved.
           </p>
           <div className="flex items-center gap-1.5 text-gray-400 text-sm font-body">
             <MapPin size={12} />
-            <span>Dar es Salaam, Tanzania</span>
+            <span>Mbeya, Tanzania</span>
           </div>
         </div>
 
