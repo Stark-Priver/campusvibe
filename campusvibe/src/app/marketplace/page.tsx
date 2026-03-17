@@ -24,7 +24,7 @@ export default function MarketplacePage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <AnimatedSection>
             <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               Student Marketplace
@@ -67,7 +67,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Listings */}
-      <section className="bg-[#ECECEC] py-14">
+      <section className="bg-[#ECECEC] section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="mb-8 flex items-center justify-between">
             <p className="text-sm text-muted font-body">
@@ -78,7 +78,7 @@ export default function MarketplacePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {marketplaceItems.map((item, i) => (
               <AnimatedSection key={item.id} delay={0.07 * i}>
-                <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full">
+                <div className="group flex flex-col card-pro card-hover h-full">
                   <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 relative flex items-center justify-center">
                     <Image
                       src={item.imageUrl}
@@ -117,7 +117,7 @@ export default function MarketplacePage() {
           </div>
 
           {/* App CTA */}
-          <AnimatedSection delay={0.3} className="mt-16 bg-surface rounded-2xl p-8 text-center">
+          <AnimatedSection delay={0.3} className="mt-12 bg-surface rounded-2xl p-7 sm:p-8 text-center">
             <h3 className="font-section font-bold text-xl text-dark mb-2">
               Get the full marketplace experience
             </h3>

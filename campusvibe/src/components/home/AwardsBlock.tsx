@@ -5,7 +5,7 @@ import { awardsNominees } from "@/lib/data"
 
 export default function AwardsBlock() {
   return (
-    <section className="py-20 bg-[#ECECEC] overflow-hidden border-y border-gray-100">
+    <section className="section-space bg-[#ECECEC] overflow-hidden border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
@@ -55,7 +55,7 @@ export default function AwardsBlock() {
                 .map((nominee, i) => (
                   <div
                     key={nominee.id}
-                    className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-white transition-colors"
+                    className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-gray-50 border border-gray-100 card-hover hover:bg-white transition-colors"
                   >
                     {/* Rank */}
                     <span

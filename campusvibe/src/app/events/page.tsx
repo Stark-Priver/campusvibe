@@ -32,7 +32,7 @@ export default function EventsPage() {
     <>
       {/* Page hero */}
       <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <AnimatedSection>
             <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-accent" />
@@ -52,7 +52,7 @@ export default function EventsPage() {
 
       {/* Featured event */}
       {featured && (
-        <div className="bg-[#ECECEC] py-14 border-b border-gray-100">
+        <div className="bg-[#ECECEC] section-space-tight border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection>
               <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted mb-6 block">
@@ -60,7 +60,7 @@ export default function EventsPage() {
               </span>
               <Link
                 href={`/events/${featured.slug}`}
-                className="group grid grid-cols-1 lg:grid-cols-5 gap-8 bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover"
+                className="group grid grid-cols-1 lg:grid-cols-5 gap-8 card-pro card-hover"
               >
                 {/* Visual */}
                 <div className="lg:col-span-2 min-h-[200px] relative flex items-center justify-center">
@@ -132,7 +132,7 @@ export default function EventsPage() {
       )}
 
       {/* All other events */}
-      <div className="bg-surface py-14">
+      <div className="bg-surface section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="mb-8">
             <h2 className="font-section font-bold text-xl text-dark">More Upcoming Events</h2>
@@ -143,7 +143,7 @@ export default function EventsPage() {
               <AnimatedSection key={event.id} delay={0.07 * i}>
                 <Link
                   href={`/events/${event.slug}`}
-                  className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
+                  className="group flex flex-col card-pro card-hover h-full"
                 >
                   <div className="relative aspect-video">
                     <Image

@@ -23,7 +23,7 @@ export default function NewsPage() {
     <>
       {/* Page hero */}
       <div className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <AnimatedSection>
             <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               CampusVibe Media
@@ -69,7 +69,7 @@ export default function NewsPage() {
       </div>
 
       {/* Article grid */}
-      <div className="bg-[#ECECEC] py-14">
+      <div className="bg-[#ECECEC] section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {newsArticles.map((article, i) => {
@@ -78,7 +78,7 @@ export default function NewsPage() {
                 <AnimatedSection key={article.id} delay={0.06 * i}>
                   <Link
                     href={`/news/${article.slug}`}
-                    className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
+                    className="group flex flex-col card-pro card-hover h-full"
                   >
                     <div className="aspect-video bg-surface relative">
                       <Image

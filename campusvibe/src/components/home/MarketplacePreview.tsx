@@ -13,7 +13,7 @@ const conditionColor: Record<string, string> = {
 
 export default function MarketplacePreview() {
   return (
-    <section className="py-20 bg-surface">
+    <section className="section-space bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
@@ -41,7 +41,7 @@ export default function MarketplacePreview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {marketplaceItems.map((item, i) => (
             <AnimatedSection key={item.id} delay={0.07 * i}>
-              <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full">
+              <div className="group flex flex-col card-pro card-hover h-full">
 
                 {/* Thumbnail placeholder */}
                 <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-50 relative flex items-center justify-center">

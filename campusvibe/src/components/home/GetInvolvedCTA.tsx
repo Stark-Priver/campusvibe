@@ -40,7 +40,7 @@ const roles = [
 
 export default function GetInvolvedCTA() {
   return (
-    <section className="py-20 bg-surface">
+    <section className="section-space bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
@@ -61,7 +61,7 @@ export default function GetInvolvedCTA() {
           {roles.map((role, i) => (
             <AnimatedSection key={role.title} delay={0.08 * i}>
               <div
-                className={`group flex flex-col h-full bg-white border rounded-2xl p-6 card-hover ${role.accent}`}
+                className={`group flex flex-col h-full card-pro p-6 card-hover ${role.accent}`}
               >
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-5 ${role.iconBg}`}>
                   <role.icon size={20} className={role.iconColor} strokeWidth={2} />
