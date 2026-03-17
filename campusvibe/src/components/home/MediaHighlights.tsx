@@ -8,7 +8,7 @@ export default function MediaHighlights() {
   const [featured, ...rest] = mediaItems
 
   return (
-    <section className="py-20 bg-surface">
+    <section className="section-space bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
@@ -35,7 +35,7 @@ export default function MediaHighlights() {
           <AnimatedSection className="lg:col-span-3" delay={0.05}>
             <Link
               href={`/media/${featured.slug}`}
-              className="group relative block aspect-video rounded-2xl overflow-hidden card-hover"
+              className="group relative block aspect-video card-pro card-hover"
             >
               <Image
                 src={featured.imageUrl}
@@ -83,7 +83,7 @@ export default function MediaHighlights() {
               <AnimatedSection key={item.id} delay={0.1 + i * 0.08}>
                 <Link
                   href={`/media/${item.slug}`}
-                  className="group flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-4 card-hover"
+                  className="group flex items-center gap-4 card-pro p-4 card-hover"
                 >
                   {/* Thumbnail */}
                   <div className="relative shrink-0 w-24 h-16 rounded-xl bg-surface overflow-hidden">

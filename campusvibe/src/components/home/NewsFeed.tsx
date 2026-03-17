@@ -27,7 +27,7 @@ function NewsCard({
     <AnimatedSection delay={delay}>
       <Link
         href={`/news/${article.slug}`}
-        className={`group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover ${
+        className={`group flex flex-col card-pro card-hover ${
           large ? "h-full" : ""
         }`}
       >
@@ -99,7 +99,7 @@ export default function NewsFeed() {
   const [featured, ...rest] = newsArticles
 
   return (
-    <section className="py-20 bg-[#ECECEC]">
+    <section className="section-space bg-[#ECECEC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}

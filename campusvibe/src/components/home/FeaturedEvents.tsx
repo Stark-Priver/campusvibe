@@ -13,7 +13,7 @@ const categoryDot: Record<string, string> = {
 
 export default function FeaturedEvents() {
   return (
-    <section className="py-20 bg-[#ECECEC]">
+    <section className="section-space bg-[#ECECEC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
@@ -40,7 +40,7 @@ export default function FeaturedEvents() {
             <AnimatedSection key={event.id} delay={0.07 * i}>
               <Link
                 href={`/events/${event.slug}`}
-                className="group relative flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden card-hover h-full"
+                className="group relative flex flex-col card-pro card-hover h-full"
               >
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <Image
