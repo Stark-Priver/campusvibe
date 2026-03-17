@@ -59,7 +59,7 @@ function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="flex flex-col items-center justify-center py-10 text-center">
         <div className="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center mb-4">
           <CheckCircle size={28} className="text-success" />
         </div>
@@ -72,8 +72,8 @@ function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="space-y-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         <div>
           <label className="block text-xs font-section font-semibold text-dark mb-1.5">
             Full Name <span className="text-red-400">*</span>
@@ -165,7 +165,7 @@ export default function GetInvolvedPage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
           <AnimatedSection>
             <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               Join CampusVibe
@@ -173,7 +173,7 @@ export default function GetInvolvedPage() {
             <h1 className="mt-2 font-heading font-black text-4xl sm:text-5xl text-dark">
               Get Involved
             </h1>
-            <p className="mt-3 text-muted text-base font-body max-w-lg">
+            <p className="mt-2.5 text-muted text-base font-body max-w-xl leading-relaxed">
               Whether you create content, build partnerships, sponsor campaigns, or represent CampusVibe
               on your campus — your contribution matters.
             </p>
@@ -182,21 +182,21 @@ export default function GetInvolvedPage() {
       </div>
 
       {/* Role cards */}
-      <section className="bg-white section-space-tight">
+      <section className="bg-white py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-10">
+          <AnimatedSection className="mb-6 sm:mb-7">
             <h2 className="font-section font-bold text-2xl text-dark">Choose Your Role</h2>
           </AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6" id="roles">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5" id="roles">
             {roles.map((role, i) => (
               <AnimatedSection key={role.id} delay={0.08 * i} className="scroll-mt-20" >
-                <div id={role.id} className={`flex flex-col h-full card-pro p-6 ${role.accent}`}>
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-5 ${role.iconBg}`}>
+                <div id={role.id} className={`flex flex-col h-full card-pro p-5 ${role.accent}`}>
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${role.iconBg}`}>
                     <role.icon size={20} className={role.iconColor} strokeWidth={2} />
                   </div>
                   <h3 className="font-section font-bold text-dark text-lg mb-2">{role.title}</h3>
-                  <p className="text-muted text-sm leading-relaxed font-body mb-5">{role.description}</p>
-                  <ul className="space-y-2 mb-6">
+                  <p className="text-muted text-sm leading-relaxed font-body mb-4">{role.description}</p>
+                  <ul className="space-y-1.5 mb-5">
                     {role.perks.map((perk) => (
                       <li key={perk} className="flex items-center gap-2 text-sm text-dark font-body">
                         <CheckCircle size={13} className="text-success shrink-0" />
@@ -218,9 +218,9 @@ export default function GetInvolvedPage() {
       </section>
 
       {/* Contact form */}
-      <section id="contact" className="bg-surface section-space-tight scroll-mt-16">
+      <section id="contact" className="bg-surface py-8 sm:py-10 scroll-mt-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-10">
+          <AnimatedSection className="mb-6 sm:mb-7">
             <h2 className="font-section font-bold text-2xl text-dark">Send Us a Message</h2>
             <p className="text-muted text-sm font-body mt-2">
               Fill in the form below and the CampusVibe team will follow up within 48 hours.
