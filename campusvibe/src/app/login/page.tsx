@@ -11,9 +11,21 @@ export const metadata: Metadata = {
   description: "Secure role-based login for Campus Vibe operational dashboards.",
 }
 
-export default async function LoginPage() {
+type LoginPageProps = {
+  searchParams?: Promise<{ error?: string }>
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
   const currentUser = await getCurrentMockUser()
   if (currentUser) redirect("/dashboard")
+
+  const resolvedSearchParams = searchParams ? await searchParams : undefined
+
+  const errorMessage = resolvedSearchParams?.error === "missing"
+    ? "Please enter both email and password."
+    : resolvedSearchParams?.error === "invalid"
+      ? "Invalid credentials. Use one of the demo accounts below."
+      : null
 
   return (
     <>
@@ -38,6 +50,12 @@ export default async function LoginPage() {
             <p className="mt-1.5 text-sm text-muted font-body">
               Use your account credentials to continue.
             </p>
+
+            {errorMessage ? (
+              <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 font-body">
+                {errorMessage}
+              </p>
+            ) : null}
 
             <form action={loginWithCredentials} className="mt-4 space-y-3.5">
               <div>
