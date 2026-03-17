@@ -19,7 +19,7 @@ export default function MediaPage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <AnimatedSection>
             <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-4">
               <Tv size={12} className="text-brand" />
@@ -50,7 +50,7 @@ export default function MediaPage() {
       </div>
 
       {/* Videos */}
-      <section className="bg-[#ECECEC] py-16">
+      <section className="bg-[#ECECEC] section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="flex items-center justify-between mb-8">
             <div>
@@ -69,7 +69,7 @@ export default function MediaPage() {
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <Link
                   href={`/media/${item.slug}`}
-                  className="group relative block aspect-video rounded-2xl overflow-hidden card-hover"
+                  className="group relative block aspect-video card-pro card-hover"
                 >
                   <Image
                     src={item.imageUrl}
@@ -112,7 +112,7 @@ export default function MediaPage() {
       </section>
 
       {/* Podcasts */}
-      <section className="bg-surface py-16">
+      <section className="bg-surface section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="flex items-center justify-between mb-8">
             <div>
@@ -128,7 +128,7 @@ export default function MediaPage() {
               <AnimatedSection key={item.id} delay={0.07 * i}>
                 <Link
                   href={`/media/${item.slug}`}
-                  className="group flex items-center gap-5 bg-white border border-gray-100 rounded-2xl p-5 card-hover"
+                  className="group flex items-center gap-5 card-pro p-5 card-hover"
                 >
                   <div className="w-16 h-16 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
                     <Headphones size={22} className="text-brand" />
@@ -161,7 +161,7 @@ export default function MediaPage() {
       </section>
 
       {/* Creator CTA */}
-      <section className="bg-[#ECECEC] py-14 border-t border-gray-100">
+      <section className="bg-[#ECECEC] section-space-tight border-t border-gray-100">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <AnimatedSection>
             <h2 className="font-section font-bold text-2xl text-dark">Are you a student creator?</h2>
