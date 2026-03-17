@@ -165,7 +165,7 @@ export default function GetInvolvedPage() {
     <>
       {/* Hero */}
       <div className="pt-16 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-space-tight">
           <AnimatedSection>
             <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               Join CampusVibe
@@ -182,7 +182,7 @@ export default function GetInvolvedPage() {
       </div>
 
       {/* Role cards */}
-      <section className="bg-white py-16">
+      <section className="bg-white section-space-tight">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="mb-10">
             <h2 className="font-section font-bold text-2xl text-dark">Choose Your Role</h2>
@@ -190,7 +190,7 @@ export default function GetInvolvedPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6" id="roles">
             {roles.map((role, i) => (
               <AnimatedSection key={role.id} delay={0.08 * i} className="scroll-mt-20" >
-                <div id={role.id} className={`flex flex-col h-full bg-white border rounded-2xl p-6 ${role.accent}`}>
+                <div id={role.id} className={`flex flex-col h-full card-pro p-6 ${role.accent}`}>
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-5 ${role.iconBg}`}>
                     <role.icon size={20} className={role.iconColor} strokeWidth={2} />
                   </div>
@@ -218,7 +218,7 @@ export default function GetInvolvedPage() {
       </section>
 
       {/* Contact form */}
-      <section id="contact" className="bg-surface py-16 scroll-mt-16">
+      <section id="contact" className="bg-surface section-space-tight scroll-mt-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection className="mb-10">
             <h2 className="font-section font-bold text-2xl text-dark">Send Us a Message</h2>
