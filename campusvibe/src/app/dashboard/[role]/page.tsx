@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import { ArrowRight, Archive, Camera, Clapperboard, Film, ShieldCheck } from "lucide-react"
+import { ShieldCheck } from "lucide-react"
 import { dashboardRoles, getDashboardByRole } from "@/lib/dashboardData"
 import { getCurrentMockUser } from "@/lib/auth/session"
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar"
+import DashboardLayout from "@/components/dashboard/DashboardLayoutWrapper"
+import DashboardHeader from "@/components/dashboard/DashboardHeader"
 import AdminRolePanel from "@/components/dashboard/roles/admin/AdminRolePanel"
 import AmbassadorRolePanel from "@/components/dashboard/roles/ambassador/AmbassadorRolePanel"
 import StudentRolePanel from "@/components/dashboard/roles/student/StudentRolePanel"
@@ -58,78 +58,76 @@ export default async function RoleDashboardPage({ params }: Props) {
   } as const
 
   return (
-    <>
-      <section className="pt-16 bg-surface border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
-          <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
-            {dashboard.roleName} Workspace
-          </p>
-          <h1 className="mt-2 font-heading font-black text-3xl sm:text-4xl text-dark leading-tight max-w-4xl">
-            {dashboard.headline}
-          </h1>
-          <p className="mt-2.5 text-sm sm:text-base text-muted font-body leading-relaxed max-w-3xl">
-            {dashboard.description}
-          </p>
-        </div>
-      </section>
+    <DashboardLayout
+      roleName={dashboard.roleName}
+      roleSlug={dashboard.slug}
+      userName={currentUser.fullName}
+      userEmail={currentUser.email}
+      quickActions={[
+        { label: "Back to Role Selector", href: "/dashboard" },
+        ...dashboard.quickActions,
+      ]}
+    >
+      {/* Header */}
+      <DashboardHeader
+        title={dashboard.headline}
+        subtitle={dashboard.description}
+        breadcrumbs={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: dashboard.roleName, href: "#" },
+        ]}
+      />
 
-      <section className="bg-[#ECECEC] py-8 sm:py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-5">
-            <DashboardSidebar
-              title={`${dashboard.roleName} Actions`}
-              description="All operational actions for this workspace are listed here for quick execution."
-              links={[
-                { label: "Back to Role Selector", href: "/dashboard" },
-                ...dashboard.quickActions,
-              ]}
-              showSignOut
-            />
+      {/* Main Content */}
+      <div className="p-6 space-y-6">
+        {/* Role Panel */}
+        {rolePanelMap[dashboard.slug]}
 
-            <div className="lg:col-span-3 space-y-4 sm:space-y-5">
-              {rolePanelMap[dashboard.slug]}
-
-              <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-                {dashboard.metrics.map((metric) => (
-                  <article key={metric.label} className="card-pro p-4 sm:p-5">
-                    <p className="text-[11px] text-muted font-body">{metric.label}</p>
-                    <p className="mt-1.5 font-heading font-black text-xl sm:text-2xl text-dark">{metric.value}</p>
-                    {metric.trend ? <p className="mt-1 text-[11px] text-brand font-body">{metric.trend}</p> : null}
-                  </article>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
-                <article className="card-pro p-5 xl:col-span-1">
-              <h2 className="font-section font-bold text-lg text-dark">{dashboard.operations.title}</h2>
-              <p className="mt-1.5 text-sm text-muted font-body">{dashboard.operations.description}</p>
-              <ul className="mt-4 space-y-2.5">
-                {dashboard.operations.items.map((item) => (
-                  <li key={item} className="text-sm text-dark font-body leading-relaxed flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-                <article className="card-pro p-5 xl:col-span-1">
-                  <h2 className="font-section font-bold text-lg text-dark">{dashboard.compliance.title}</h2>
-                  <p className="mt-1.5 text-sm text-muted font-body">{dashboard.compliance.description}</p>
-                  <ul className="mt-4 space-y-2.5">
-                    {dashboard.compliance.items.map((item) => (
-                      <li key={item} className="text-sm text-dark font-body leading-relaxed flex items-start gap-2">
-                        <ShieldCheck size={14} className="text-success mt-0.5 shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              </div>
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {dashboard.metrics.map((metric) => (
+            <div key={metric.label} className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+              <p className="text-[11px] uppercase tracking-widest font-section font-semibold text-muted">
+                {metric.label}
+              </p>
+              <p className="mt-2 font-heading font-black text-2xl text-dark">{metric.value}</p>
+              {metric.trend && (
+                <p className="mt-1.5 text-[12px] font-semibold text-brand">{metric.trend}</p>
+              )}
             </div>
+          ))}
+        </div>
+
+        {/* Operations & Compliance */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Operations */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="font-section font-bold text-lg text-dark">{dashboard.operations.title}</h2>
+            <p className="mt-2 text-sm text-muted font-body">{dashboard.operations.description}</p>
+            <ul className="mt-4 space-y-3">
+              {dashboard.operations.items.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
+                  <span className="text-sm text-dark font-body">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Compliance */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 className="font-section font-bold text-lg text-dark">{dashboard.compliance.title}</h2>
+            <p className="mt-2 text-sm text-muted font-body">{dashboard.compliance.description}</p>
+            <ul className="mt-4 space-y-3">
+              {dashboard.compliance.items.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <ShieldCheck size={18} className="text-success mt-0 shrink-0" />
+                  <span className="text-sm text-dark font-body">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </section>
 
       {dashboard.campusMemory ? (
         <section className="bg-white py-8 sm:py-10 border-t border-gray-100 border-b border-gray-100">
