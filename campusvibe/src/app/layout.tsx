@@ -38,6 +38,10 @@ export const metadata: Metadata = {
   },
 }
 
+function isClientSide(): boolean {
+  return typeof window !== "undefined"
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
