@@ -1,8 +1,15 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { ArrowLeft, ArrowRight, Archive, Camera, Clapperboard, Film, ShieldCheck } from "lucide-react"
 import { dashboardRoles, getDashboardByRole } from "@/lib/dashboardData"
+import { getCurrentMockUser } from "@/lib/auth/session"
+import AdminRolePanel from "@/components/dashboard/roles/admin/AdminRolePanel"
+import AmbassadorRolePanel from "@/components/dashboard/roles/ambassador/AmbassadorRolePanel"
+import StudentRolePanel from "@/components/dashboard/roles/student/StudentRolePanel"
+import DriverRolePanel from "@/components/dashboard/roles/driver/DriverRolePanel"
+import RestaurantRolePanel from "@/components/dashboard/roles/restaurant/RestaurantRolePanel"
+import DeliveryRolePanel from "@/components/dashboard/roles/delivery/DeliveryRolePanel"
 
 type Props = { params: Promise<{ role: string }> }
 
@@ -29,9 +36,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RoleDashboardPage({ params }: Props) {
   const { role } = await params
+  const currentUser = await getCurrentMockUser()
+  if (!currentUser) redirect("/login")
+
+  if (!currentUser.roles.includes(role as (typeof currentUser.roles)[number])) {
+    redirect("/dashboard")
+  }
+
   const dashboard = getDashboardByRole(role)
 
   if (!dashboard) notFound()
+
+  const rolePanelMap = {
+    administrator: <AdminRolePanel />,
+    ambassador: <AmbassadorRolePanel />,
+    student: <StudentRolePanel />,
+    driver: <DriverRolePanel />,
+    "restaurant-owner": <RestaurantRolePanel />,
+    delivery: <DeliveryRolePanel />,
+  } as const
 
   return (
     <>
@@ -58,6 +81,10 @@ export default async function RoleDashboardPage({ params }: Props) {
 
       <section className="bg-[#ECECEC] py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-4">
+            {rolePanelMap[dashboard.slug]}
+          </div>
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {dashboard.metrics.map((metric) => (
               <article key={metric.label} className="card-pro p-4 sm:p-5">

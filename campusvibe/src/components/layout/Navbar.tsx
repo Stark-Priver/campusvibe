@@ -13,7 +13,6 @@ const navLinks = [
   { href: "/events", label: "Events" },
   { href: "/media", label: "Media" },
   { href: "/marketplace", label: "Marketplace" },
-  { href: "/dashboard", label: "Dashboard" },
   { href: "/get-involved", label: "Get Involved" },
 ]
 
@@ -75,10 +74,10 @@ export default function Navbar() {
         {/* ── Actions ── */}
         <div className="flex items-center gap-3">
           <Link
-            href="/get-involved"
+            href="/login"
             className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-brand text-white hover:bg-[#5a52e0] transition-colors duration-150"
           >
-            Join Now
+            Login
           </Link>
           <button
             onClick={() =>
@@ -116,11 +115,11 @@ export default function Navbar() {
             ))}
             <div className="pt-2 pb-1">
               <Link
-                href="/get-involved"
+                href="/login"
                 onClick={() => setMenuState({ open: false, pathname })}
                 className="flex items-center justify-center w-full py-2.5 rounded-lg text-sm font-semibold bg-brand text-white hover:bg-[#5a52e0] transition-colors"
               >
-                Join Now
+                Login
               </Link>
             </div>
           </nav>
