@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/events", label: "Events" },
   { href: "/media", label: "Media" },
   { href: "/marketplace", label: "Marketplace" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/get-involved", label: "Get Involved" },
 ]
 
