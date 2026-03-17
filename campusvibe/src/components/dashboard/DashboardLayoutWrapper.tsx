@@ -21,20 +21,24 @@ export default function DashboardLayout({
   quickActions,
 }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="h-screen flex overflow-hidden bg-gray-50">
       {/* Sidebar */}
-      <SideNavigation
-        roleName={roleName}
-        roleSlug={roleSlug}
-        userName={userName}
-        userEmail={userEmail}
-        quickActions={quickActions}
-      />
+      <div className="flex-shrink-0">
+        <SideNavigation
+          roleName={roleName}
+          roleSlug={roleSlug}
+          userName={userName}
+          userEmail={userEmail}
+          quickActions={quickActions}
+        />
+      </div>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto lg:ml-0">
-        {children}
-      </main>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
