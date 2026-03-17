@@ -16,6 +16,7 @@ const footerLinks = {
     { label: "Campus Partners", href: "/get-involved" },
   ],
   Company: [
+    { label: "About Us", href: "/about" },
     { label: "Get Involved", href: "/get-involved" },
     { label: "Sponsor Us", href: "/get-involved" },
     { label: "Advertise", href: "/get-involved" },
