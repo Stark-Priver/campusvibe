@@ -37,10 +37,8 @@ class SupabaseRepository {
           },
         )
         .toList();
-    final response = await client
+    await client
         .from('attendance_logs')
-        .insert(data)
-        .execute();
-    if (response.error != null) throw response.error!;
+        .insert(data);
   }
 }
