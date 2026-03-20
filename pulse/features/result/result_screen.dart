@@ -49,7 +49,7 @@ class ResultScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Colors.white.withOpacity(0.60),
+                  color: Colors.white.withAlpha((0.60 * 255).round()),
                 ),
               ),
               Text(
@@ -57,7 +57,7 @@ class ResultScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Colors.white.withOpacity(0.60),
+                  color: Colors.white.withAlpha((0.60 * 255).round()),
                 ),
               ),
               const SizedBox(height: 18),
@@ -94,7 +94,7 @@ class ResultScreen extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.2,
-                  color: Colors.white.withOpacity(0.35),
+                  color: Colors.white.withAlpha((0.35 * 255).round()),
                 ),
               ),
               Text(
@@ -103,7 +103,7 @@ class ResultScreen extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.2,
-                  color: Colors.white.withOpacity(0.35),
+                  color: Colors.white.withAlpha((0.35 * 255).round()),
                 ),
               ),
               const SizedBox(height: 24),
