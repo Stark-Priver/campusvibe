@@ -37,7 +37,10 @@ class ScanScreen extends StatelessWidget {
                 return GlassCard(
                   opacity: 0.16,
                   borderRadius: 24,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 28,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +65,12 @@ class ScanScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Expanded(child: Text(session, style: GoogleFonts.poppins(color: Colors.white))),
+                          Expanded(
+                            child: Text(
+                              session,
+                              style: GoogleFonts.poppins(color: Colors.white),
+                            ),
+                          ),
                         ],
                       ),
                     ],
