@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pulse/features/splash/splash_screen.dart';
-import 'package:pulse/features/dashboard/dashboard_screen.dart';
-import 'package:pulse/features/scan/scan_screen.dart';
-import 'package:pulse/features/result/result_screen.dart';
-import 'package:pulse/features/admin/admin_panel_screen.dart';
-import 'package:pulse/features/logs/attendance_logs_screen.dart';
+import 'features/splash/splash_screen.dart';
+import 'features/dashboard/dashboard_screen.dart';
+import 'features/scan/scan_screen.dart';
+import 'features/result/result_screen.dart';
+import 'features/admin/admin_panel_screen.dart';
+import 'features/logs/attendance_logs_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/',
