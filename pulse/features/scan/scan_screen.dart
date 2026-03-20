@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/widgets/glass_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/providers/student_provider.dart';
+import '../../core/providers/attendance_log_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
@@ -26,39 +30,45 @@ class ScanScreen extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            child: GlassCard(
-              opacity: 0.16,
-              borderRadius: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Align the student ID barcode within the frame',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
+            child: Consumer(
+              builder: (context, ref, _) {
+                // TODO: Replace with real session selection provider
+                final session = 'Exam';
+                return GlassCard(
+                  opacity: 0.16,
+                  borderRadius: 24,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Session:',
+                        'Align the student ID barcode within the frame',
                         style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white.withOpacity(0.60),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(child: _SessionSelector()),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            'Session:',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white.withOpacity(0.60),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(child: Text(session, style: GoogleFonts.poppins(color: Colors.white))),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
