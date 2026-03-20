@@ -33,8 +33,10 @@ class IsarRepository {
   // AttendanceLog
   Future<List<AttendanceLog>> getAllLogs() =>
       isar.attendanceLogs.where().findAll();
-  Future<List<AttendanceLog>> getUnsyncedLogs() =>
-      isar.attendanceLogs.filter().isSyncedEqualTo(false).findAll();
+  Future<List<AttendanceLog>> getUnsyncedLogs() async {
+    final logs = await isar.attendanceLogs.where().findAll();
+    return logs.where((log) => !log.isSynced).toList();
+  }
   Future<void> addAttendanceLog(AttendanceLog log) async {
     await isar.writeTxn(() async {
       await isar.attendanceLogs.put(log);
