@@ -1,0 +1,35 @@
+class AppStrings {
+  static const String appName = 'Pulse';
+  static const String tagline = 'Campus Smart ID System';
+  static const String version = 'v1.0.0';
+  static const String splashSubtitle = 'Campus Smart ID System';
+  static const String scanFast = 'Scan Fast. Work Offline. Stay Accurate.';
+  static const String dashboardTitle = 'Dashboard';
+  static const String startScan = 'Start Scan';
+  static const String viewLogs = 'View Logs';
+  static const String syncData = 'Sync Data';
+  static const String importData = 'Import Data';
+  static const String recentActivity = 'Recent Activity';
+  static const String home = 'Home';
+  static const String scan = 'Scan';
+  static const String logs = 'Logs';
+  static const String settings = 'Settings';
+  static const String eligible = 'Eligible';
+  static const String notEligible = 'Not Eligible';
+  static const String notFound = 'Not Found';
+  static const String adminPanel = 'Admin Panel';
+  static const String importExcel = 'Import Excel';
+  static const String forceSync = 'Force Sync';
+  static const String manageSessions = 'Manage Sessions';
+  static const String attendanceLogs = 'Attendance Logs';
+  static const String search = 'Search';
+  static const String all = 'All';
+  static const String unsynced = 'Unsynced';
+  static const String session = 'Session';
+  static const String scanNext = 'Scan Next';
+  static const String viewDetails = 'View Details';
+  static const String syncProgress = 'Sync Progress';
+  static const String totalStudents = 'Total Students';
+  static const String eligibleCount = 'Eligible Count';
+  static const String lastSync = 'Last Sync';
+}
