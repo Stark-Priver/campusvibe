@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'core/theme/app_theme.dart';
-import 'features/splash/splash_screen.dart';
-import 'features/dashboard/dashboard_screen.dart';
-import 'features/scan/scan_screen.dart';
-import 'features/result/result_screen.dart';
-import 'features/admin/admin_panel_screen.dart';
-import 'features/logs/attendance_logs_screen.dart';
+import 'router.dart';
 
 void main() {
   runApp(const PulseApp());
@@ -17,12 +12,11 @@ class PulseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Pulse',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home: const SplashScreen(),
-      // TODO: Replace with GoRouter for navigation
+      routerConfig: router,
     );
   }
 }
