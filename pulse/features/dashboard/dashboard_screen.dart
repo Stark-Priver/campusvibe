@@ -45,7 +45,9 @@ class DashboardScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.greenAccent.shade400.withAlpha((0.5 * 255).round()),
+                            color: Colors.greenAccent.shade400.withAlpha(
+                              (0.5 * 255).round(),
+                            ),
                             blurRadius: 6,
                             spreadRadius: 1,
                           ),
@@ -54,7 +56,10 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     IconButton(
-                      icon: const Icon(LucideIcons.settings, color: Colors.white),
+                      icon: const Icon(
+                        LucideIcons.settings,
+                        color: Colors.white,
+                      ),
                       onPressed: () {
                         context.go('/admin');
                       },
@@ -135,10 +140,18 @@ class DashboardScreen extends StatelessWidget {
                         return GlassCard(
                           opacity: 0.08,
                           borderRadius: 20,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
                           child: Row(
                             children: [
-                              Icon(LucideIcons.userCheck, color: Colors.white.withAlpha((0.60 * 255).round())),
+                              Icon(
+                                LucideIcons.userCheck,
+                                color: Colors.white.withAlpha(
+                                  (0.60 * 255).round(),
+                                ),
+                              ),
                               const SizedBox(width: 14),
                               Expanded(
                                 child: Column(
@@ -157,7 +170,9 @@ class DashboardScreen extends StatelessWidget {
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
-                                        color: Colors.white.withAlpha((0.60 * 255).round()),
+                                        color: Colors.white.withAlpha(
+                                          (0.60 * 255).round(),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -167,7 +182,9 @@ class DashboardScreen extends StatelessWidget {
                                 width: 10,
                                 height: 10,
                                 decoration: BoxDecoration(
-                                  color: log.isSynced ? const Color(0xFF00C851) : const Color(0xFFFF3547),
+                                  color: log.isSynced
+                                      ? const Color(0xFF00C851)
+                                      : const Color(0xFFFF3547),
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -176,8 +193,14 @@ class DashboardScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (e, _) => Center(child: Text('Error loading logs', style: GoogleFonts.poppins(color: Colors.red))),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(
+                      child: Text(
+                        'Error loading logs',
+                        style: GoogleFonts.poppins(color: Colors.red),
+                      ),
+                    ),
                   );
                 },
               ),
