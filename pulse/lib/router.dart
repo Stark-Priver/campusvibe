@@ -10,18 +10,12 @@ import 'features/logs/attendance_logs_screen.dart';
 final router = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const SplashScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(
       path: '/dashboard',
       builder: (context, state) => const DashboardScreen(),
     ),
-    GoRoute(
-      path: '/scan',
-      builder: (context, state) => const ScanScreen(),
-    ),
+    GoRoute(path: '/scan', builder: (context, state) => const ScanScreen()),
     GoRoute(
       path: '/result',
       builder: (context, state) => ResultScreen(
@@ -30,7 +24,9 @@ final router = GoRouter(
         course: state.extra != null ? (state.extra as Map)['course'] : '',
         status: state.extra != null ? (state.extra as Map)['status'] : '',
         sessionId: state.extra != null ? (state.extra as Map)['sessionId'] : '',
-        timestamp: state.extra != null ? (state.extra as Map)['timestamp'] : DateTime.now(),
+        timestamp: state.extra != null
+            ? (state.extra as Map)['timestamp']
+            : DateTime.now(),
       ),
     ),
     GoRoute(

@@ -8,13 +8,16 @@ class IsarRepository {
   IsarRepository(this.isar);
 
   // StudentRecord
-  Future<List<StudentRecord>> getAllStudents() => isar.studentRecords.where().findAll();
-  Future<StudentRecord?> getStudentById(String studentId) => isar.studentRecords.filter().studentIdEqualTo(studentId).findFirst();
+  Future<List<StudentRecord>> getAllStudents() =>
+      isar.studentRecords.where().findAll();
+  Future<StudentRecord?> getStudentById(String studentId) =>
+      isar.studentRecords.filter().studentIdEqualTo(studentId).findFirst();
   Future<void> upsertStudent(StudentRecord student) async {
     await isar.writeTxn(() async {
       await isar.studentRecords.put(student);
     });
   }
+
   Future<void> upsertStudents(List<StudentRecord> students) async {
     await isar.writeTxn(() async {
       await isar.studentRecords.putAll(students);
@@ -22,13 +25,16 @@ class IsarRepository {
   }
 
   // AttendanceLog
-  Future<List<AttendanceLog>> getAllLogs() => isar.attendanceLogs.where().findAll();
-  Future<List<AttendanceLog>> getUnsyncedLogs() => isar.attendanceLogs.filter().isSyncedEqualTo(false).findAll();
+  Future<List<AttendanceLog>> getAllLogs() =>
+      isar.attendanceLogs.where().findAll();
+  Future<List<AttendanceLog>> getUnsyncedLogs() =>
+      isar.attendanceLogs.filter().isSyncedEqualTo(false).findAll();
   Future<void> addAttendanceLog(AttendanceLog log) async {
     await isar.writeTxn(() async {
       await isar.attendanceLogs.put(log);
     });
   }
+
   Future<void> markLogsSynced(List<int> ids) async {
     await isar.writeTxn(() async {
       for (final id in ids) {
@@ -47,7 +53,9 @@ class IsarRepository {
       await isar.syncQueueItems.put(item);
     });
   }
-  Future<List<SyncQueueItem>> getAllSyncQueueItems() => isar.syncQueueItems.where().findAll();
+
+  Future<List<SyncQueueItem>> getAllSyncQueueItems() =>
+      isar.syncQueueItems.where().findAll();
   Future<void> clearSyncQueue() async {
     await isar.writeTxn(() async {
       await isar.syncQueueItems.clear();
