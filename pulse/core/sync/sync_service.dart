@@ -12,7 +12,7 @@ class SyncService {
 
   Future<void> syncIfConnected() async {
     final connectivity = await Connectivity().checkConnectivity();
-    if (connectivity == ConnectivityResult.none) return;
+    if (connectivity.contains(ConnectivityResult.none)) return;
     await _syncAttendanceLogs();
     await _syncStudentRecords();
   }
