@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen>
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white.withOpacity(0.60),
+                          color: Colors.white.withAlpha((0.60 * 255).round()),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -104,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.2,
-                  color: Colors.white.withOpacity(0.35),
+                  color: Colors.white.withAlpha((0.35 * 255).round()),
                 ),
               ),
             ),
