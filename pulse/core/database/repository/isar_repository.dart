@@ -10,8 +10,14 @@ class IsarRepository {
   // StudentRecord
   Future<List<StudentRecord>> getAllStudents() =>
       isar.studentRecords.where().findAll();
-  Future<StudentRecord?> getStudentById(String studentId) =>
-      isar.studentRecords.filter().studentIdEqualTo(studentId).findFirst();
+  Future<StudentRecord?> getStudentById(String studentId) async {
+    final records = await isar.studentRecords.where().findAll();
+    try {
+      return records.firstWhere((r) => r.studentId == studentId);
+    } catch (e) {
+      return null;
+    }
+  }
   Future<void> upsertStudent(StudentRecord student) async {
     await isar.writeTxn(() async {
       await isar.studentRecords.put(student);
