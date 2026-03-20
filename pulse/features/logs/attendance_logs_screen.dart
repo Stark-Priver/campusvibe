@@ -50,7 +50,11 @@ class AttendanceLogsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 children: [
-                  const Icon(LucideIcons.search, color: Colors.white54, size: 20),
+                  const Icon(
+                    LucideIcons.search,
+                    color: Colors.white54,
+                    size: 20,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextField(
@@ -95,10 +99,16 @@ class AttendanceLogsScreen extends StatelessWidget {
                   itemBuilder: (context, index) => GlassCard(
                     opacity: 0.08,
                     borderRadius: 20,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     child: Row(
                       children: [
-                        Icon(LucideIcons.user, color: Colors.white.withOpacity(0.60)),
+                        Icon(
+                          LucideIcons.user,
+                          color: Colors.white.withOpacity(0.60),
+                        ),
                         const SizedBox(width: 14),
                         Expanded(
                           child: Column(
@@ -127,7 +137,9 @@ class AttendanceLogsScreen extends StatelessWidget {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: index % 2 == 0 ? const Color(0xFF00C851) : const Color(0xFFFF3547),
+                            color: index % 2 == 0
+                                ? const Color(0xFF00C851)
+                                : const Color(0xFFFF3547),
                             shape: BoxShape.circle,
                           ),
                         ),

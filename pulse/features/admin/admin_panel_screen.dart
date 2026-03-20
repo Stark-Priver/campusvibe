@@ -50,12 +50,26 @@ class AdminPanelScreen extends StatelessWidget {
                   child: GlassCard(
                     opacity: 0.10,
                     borderRadius: 20,
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 22,
+                    ),
                     child: Column(
                       children: [
-                        Icon(LucideIcons.fileSpreadsheet, color: const Color(0xFFFFC107), size: 28),
+                        Icon(
+                          LucideIcons.fileSpreadsheet,
+                          color: const Color(0xFFFFC107),
+                          size: 28,
+                        ),
                         const SizedBox(height: 8),
-                        Text('Import Excel', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                        Text(
+                          'Import Excel',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -65,12 +79,26 @@ class AdminPanelScreen extends StatelessWidget {
                   child: GlassCard(
                     opacity: 0.10,
                     borderRadius: 20,
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 22,
+                    ),
                     child: Column(
                       children: [
-                        Icon(LucideIcons.refreshCw, color: const Color(0xFF1E90FF), size: 28),
+                        Icon(
+                          LucideIcons.refreshCw,
+                          color: const Color(0xFF1E90FF),
+                          size: 28,
+                        ),
                         const SizedBox(height: 8),
-                        Text('Force Sync', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                        Text(
+                          'Force Sync',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -80,12 +108,26 @@ class AdminPanelScreen extends StatelessWidget {
                   child: GlassCard(
                     opacity: 0.10,
                     borderRadius: 20,
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 22,
+                    ),
                     child: Column(
                       children: [
-                        Icon(LucideIcons.users, color: const Color(0xFFFFC107), size: 28),
+                        Icon(
+                          LucideIcons.users,
+                          color: const Color(0xFFFFC107),
+                          size: 28,
+                        ),
                         const SizedBox(height: 8),
-                        Text('Manage Sessions', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                        Text(
+                          'Manage Sessions',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -93,7 +135,14 @@ class AdminPanelScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            Text('Sync Progress', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+            Text(
+              'Sync Progress',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
             const SizedBox(height: 10),
             GlassCard(
               opacity: 0.10,
@@ -105,13 +154,22 @@ class AdminPanelScreen extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: 0.7, // Replace with real progress
                       backgroundColor: Colors.white.withOpacity(0.08),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1E90FF)),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFF1E90FF),
+                      ),
                       minHeight: 8,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Text('70%', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                  Text(
+                    '70%',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),

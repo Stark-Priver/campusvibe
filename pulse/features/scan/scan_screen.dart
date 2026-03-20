@@ -20,9 +20,7 @@ class ScanScreen extends StatelessWidget {
             ),
           ),
           // Animated scanning frame
-          Center(
-            child: _AnimatedScanFrame(),
-          ),
+          Center(child: _AnimatedScanFrame()),
           // Glass overlay panel at bottom
           Positioned(
             left: 0,
@@ -56,9 +54,7 @@ class ScanScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
-                        child: _SessionSelector(),
-                      ),
+                      Expanded(child: _SessionSelector()),
                     ],
                   ),
                 ],
@@ -88,9 +84,10 @@ class _AnimatedScanFrameState extends State<_AnimatedScanFrame>
       vsync: this,
       duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
-    _glowAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _glowAnim = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -109,13 +106,12 @@ class _AnimatedScanFrameState extends State<_AnimatedScanFrame>
           height: 240,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: const Color(0xFFFFC107),
-              width: 4,
-            ),
+            border: Border.all(color: const Color(0xFFFFC107), width: 4),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFFFC107).withOpacity(_glowAnim.value * 0.25),
+                color: const Color(
+                  0xFFFFC107,
+                ).withOpacity(_glowAnim.value * 0.25),
                 blurRadius: 32,
                 spreadRadius: 2,
               ),
@@ -143,14 +139,30 @@ class _CornerBracketPainter extends CustomPainter {
     canvas.drawLine(const Offset(0, 0), const Offset(length, 0), paint);
     canvas.drawLine(const Offset(0, 0), const Offset(0, length), paint);
     // Top right
-    canvas.drawLine(Offset(size.width, 0), Offset(size.width - length, 0), paint);
+    canvas.drawLine(
+      Offset(size.width, 0),
+      Offset(size.width - length, 0),
+      paint,
+    );
     canvas.drawLine(Offset(size.width, 0), Offset(size.width, length), paint);
     // Bottom left
     canvas.drawLine(Offset(0, size.height), Offset(length, size.height), paint);
-    canvas.drawLine(Offset(0, size.height), Offset(0, size.height - length), paint);
+    canvas.drawLine(
+      Offset(0, size.height),
+      Offset(0, size.height - length),
+      paint,
+    );
     // Bottom right
-    canvas.drawLine(Offset(size.width, size.height), Offset(size.width - length, size.height), paint);
-    canvas.drawLine(Offset(size.width, size.height), Offset(size.width, size.height - length), paint);
+    canvas.drawLine(
+      Offset(size.width, size.height),
+      Offset(size.width - length, size.height),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width, size.height),
+      Offset(size.width, size.height - length),
+      paint,
+    );
   }
 
   @override
@@ -166,7 +178,11 @@ class _SessionSelector extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
-          Icon(LucideIcons.chevronDown, color: Colors.white.withOpacity(0.60), size: 18),
+          Icon(
+            LucideIcons.chevronDown,
+            color: Colors.white.withOpacity(0.60),
+            size: 18,
+          ),
           const SizedBox(width: 8),
           Text(
             'Exam Session',

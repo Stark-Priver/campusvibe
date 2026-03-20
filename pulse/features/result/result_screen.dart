@@ -62,7 +62,10 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: statusData['color'],
                   borderRadius: BorderRadius.circular(32),

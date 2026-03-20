@@ -50,7 +50,10 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     IconButton(
-                      icon: const Icon(LucideIcons.settings, color: Colors.white),
+                      icon: const Icon(
+                        LucideIcons.settings,
+                        color: Colors.white,
+                      ),
                       onPressed: () {},
                     ),
                   ],
@@ -119,10 +122,16 @@ class DashboardScreen extends StatelessWidget {
                 itemBuilder: (context, index) => GlassCard(
                   opacity: 0.08,
                   borderRadius: 20,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   child: Row(
                     children: [
-                      Icon(LucideIcons.userCheck, color: Colors.white.withOpacity(0.60)),
+                      Icon(
+                        LucideIcons.userCheck,
+                        color: Colors.white.withOpacity(0.60),
+                      ),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
@@ -233,7 +242,11 @@ class _DashboardBottomNav extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _NavItem(icon: LucideIcons.home, label: AppStrings.home, selected: true),
+            _NavItem(
+              icon: LucideIcons.home,
+              label: AppStrings.home,
+              selected: true,
+            ),
             _NavItem(icon: LucideIcons.scanLine, label: AppStrings.scan),
             _NavItem(icon: LucideIcons.bookOpen, label: AppStrings.logs),
             _NavItem(icon: LucideIcons.settings, label: AppStrings.settings),
@@ -260,14 +273,21 @@ class _NavItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: selected ? const Color(0xFF1E90FF) : Colors.white.withOpacity(0.60)),
+        Icon(
+          icon,
+          color: selected
+              ? const Color(0xFF1E90FF)
+              : Colors.white.withOpacity(0.60),
+        ),
         const SizedBox(height: 2),
         Text(
           label,
           style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: selected ? const Color(0xFF1E90FF) : Colors.white.withOpacity(0.60),
+            color: selected
+                ? const Color(0xFF1E90FF)
+                : Colors.white.withOpacity(0.60),
           ),
         ),
       ],
