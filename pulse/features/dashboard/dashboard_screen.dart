@@ -39,13 +39,13 @@ class DashboardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.greenAccent.shade400,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.greenAccent.shade400.withOpacity(0.5),
-                            blurRadius: 6,
-                            spreadRadius: 1,
-                          ),
-                        ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.greenAccent.shade400.withAlpha((0.5 * 255).round()),
+                                blurRadius: 6,
+                                spreadRadius: 1,
+                              ),
+                            ],
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -206,7 +206,7 @@ class _DashboardActionCard extends StatelessWidget {
             Icon(icon, color: color, size: 32),
             const SizedBox(height: 14),
             Text(
-              title,
+                                          color: Colors.white.withAlpha((0.60 * 255).round()),
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -219,7 +219,7 @@ class _DashboardActionCard extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Colors.white.withOpacity(0.60),
+                    color: Colors.white.withAlpha((0.60 * 255).round()),
               ),
               textAlign: TextAlign.center,
             ),
@@ -285,9 +285,7 @@ class _NavItem extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: selected
-                ? const Color(0xFF1E90FF)
-                : Colors.white.withOpacity(0.60),
+                color: selected ? const Color(0xFF1E90FF) : Colors.white.withAlpha((0.60 * 255).round()),
           ),
         ),
       ],
