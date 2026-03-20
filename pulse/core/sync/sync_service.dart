@@ -2,9 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/isar_provider.dart';
 import '../providers/supabase_provider.dart';
-import '../providers/attendance_log_provider.dart';
-import '../database/models/attendance_log.dart';
-import '../database/models/student_record.dart';
 
 class SyncService {
   final Ref ref;
