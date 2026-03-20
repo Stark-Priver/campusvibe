@@ -3,9 +3,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/widgets/glass_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/providers/student_provider.dart';
-import '../../core/providers/attendance_log_provider.dart';
-import 'package:go_router/go_router.dart';
 
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
