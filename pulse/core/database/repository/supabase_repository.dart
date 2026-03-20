@@ -8,9 +8,8 @@ class SupabaseRepository {
 
   // StudentRecord
   Future<List<StudentRecord>> fetchAllStudents() async {
-    final response = await client.from('student_records').select().execute();
-    if (response.error != null) throw response.error!;
-    return (response.data as List)
+    final response = await client.from('student_records').select();
+    return (response as List)
         .map(
           (e) => StudentRecord()
             ..studentId = e['student_id']
