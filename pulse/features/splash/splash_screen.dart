@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import '../../core/widgets/glass_card.dart';
 import '../../core/constants/app_strings.dart';
-import '../../core/theme/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
