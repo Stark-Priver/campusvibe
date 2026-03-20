@@ -216,7 +216,7 @@ class _StatTile extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withOpacity(0.60),
+                color: Colors.white.withAlpha((0.60 * 255).round()),
             ),
           ),
         ],
