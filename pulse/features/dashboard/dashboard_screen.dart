@@ -3,6 +3,10 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/constants/app_strings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/providers/student_provider.dart';
+import '../../core/providers/attendance_log_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -41,9 +45,7 @@ class DashboardScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.greenAccent.shade400.withAlpha(
-                              (0.5 * 255).round(),
-                            ),
+                            color: Colors.greenAccent.shade400.withAlpha((0.5 * 255).round()),
                             blurRadius: 6,
                             spreadRadius: 1,
                           ),
@@ -52,11 +54,10 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     IconButton(
-                      icon: const Icon(
-                        LucideIcons.settings,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {},
+                      icon: const Icon(LucideIcons.settings, color: Colors.white),
+                      onPressed: () {
+                        context.go('/admin');
+                      },
                     ),
                   ],
                 ),
@@ -82,28 +83,32 @@ class DashboardScreen extends StatelessWidget {
                   color: const Color(0xFF1E90FF),
                   title: AppStrings.startScan,
                   description: 'Scan student IDs',
-                  onTap: () {},
+                  onTap: () => context.go('/scan'),
                 ),
                 _DashboardActionCard(
                   icon: LucideIcons.bookOpen,
                   color: const Color(0xFFFFC107),
                   title: AppStrings.viewLogs,
                   description: 'View attendance logs',
-                  onTap: () {},
+                  onTap: () => context.go('/logs'),
                 ),
                 _DashboardActionCard(
                   icon: LucideIcons.refreshCw,
                   color: const Color(0xFF1E90FF),
                   title: AppStrings.syncData,
                   description: 'Sync with cloud',
-                  onTap: () {},
+                  onTap: () {
+                    // TODO: trigger sync logic
+                  },
                 ),
                 _DashboardActionCard(
                   icon: LucideIcons.uploadCloud,
                   color: const Color(0xFFFFC107),
                   title: AppStrings.importData,
                   description: 'Import Excel data',
-                  onTap: () {},
+                  onTap: () {
+                    // TODO: implement Excel import
+                  },
                 ),
               ],
             ),
@@ -118,57 +123,63 @@ class DashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Expanded(
-              child: ListView.separated(
-                itemCount: 3, // Replace with real data
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemBuilder: (context, index) => GlassCard(
-                  opacity: 0.08,
-                  borderRadius: 20,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        LucideIcons.userCheck,
-                        color: Colors.white.withOpacity(0.60),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Student Name $index',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final logsAsync = ref.watch(attendanceLogsProvider);
+                  return logsAsync.when(
+                    data: (logs) => ListView.separated(
+                      itemCount: logs.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final log = logs[index];
+                        return GlassCard(
+                          opacity: 0.08,
+                          borderRadius: 20,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          child: Row(
+                            children: [
+                              Icon(LucideIcons.userCheck, color: Colors.white.withAlpha((0.60 * 255).round())),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      log.studentId,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Session: ${log.sessionType} | ${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white.withAlpha((0.60 * 255).round()),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Session: Exam | 10:30 AM',
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white.withOpacity(0.60),
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: log.isSynced ? const Color(0xFF00C851) : const Color(0xFFFF3547),
+                                  shape: BoxShape.circle,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF00C851),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(child: Text('Error loading logs', style: GoogleFonts.poppins(color: Colors.red))),
+                  );
+                },
               ),
             ),
           ],
