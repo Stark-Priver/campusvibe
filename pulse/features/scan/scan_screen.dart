@@ -109,7 +109,9 @@ class _AnimatedScanFrameState extends State<_AnimatedScanFrame>
             border: Border.all(color: const Color(0xFFFFC107), width: 4),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFFFC107).withAlpha(((_glowAnim.value * 0.25) * 255).round()),
+                color: const Color(
+                  0xFFFFC107,
+                ).withAlpha(((_glowAnim.value * 0.25) * 255).round()),
                 blurRadius: 32,
                 spreadRadius: 2,
               ),

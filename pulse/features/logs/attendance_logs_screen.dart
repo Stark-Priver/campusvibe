@@ -66,7 +66,7 @@ class AttendanceLogsScreen extends StatelessWidget {
                         hintText: 'Search logs...',
                         hintStyle: GoogleFonts.poppins(
                           fontSize: 14,
-                              color: Colors.white.withAlpha((0.35 * 255).round()),
+                          color: Colors.white.withAlpha((0.35 * 255).round()),
                         ),
                         border: InputBorder.none,
                         isDense: true,
@@ -106,8 +106,8 @@ class AttendanceLogsScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                              LucideIcons.user,
-                              color: Colors.white.withAlpha((0.60 * 255).round()),
+                          LucideIcons.user,
+                          color: Colors.white.withAlpha((0.60 * 255).round()),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -127,7 +127,9 @@ class AttendanceLogsScreen extends StatelessWidget {
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
-                                      color: Colors.white.withAlpha((0.60 * 255).round()),
+                                  color: Colors.white.withAlpha(
+                                    (0.60 * 255).round(),
+                                  ),
                                 ),
                               ),
                             ],
