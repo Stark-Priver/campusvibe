@@ -93,172 +93,110 @@ class AttendanceLogsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {},
-                child: ListView.separated(
-                  itemCount: 5, // Replace with real data
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (context, index) => GlassCard(
-                    opacity: 0.08,
-                    borderRadius: 20,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          LucideIcons.user,
-                          color: Colors.white.withAlpha((0.60 * 255).round()),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final logsAsync = ref.watch(attendanceLogsProvider);
+                  return logsAsync.when(
+                    data: (logs) => ListView.separated(
+                      itemCount: logs.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final log = logs[index];
+                        return GlassCard(
+                          opacity: 0.08,
+                          borderRadius: 20,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          child: Row(
                             children: [
-                              Text(
-                                'Student Name $index',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                              Icon(
+                                LucideIcons.user,
+                                color: Colors.white.withAlpha((0.60 * 255).round()),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      log.studentId,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Session: ${log.sessionType} | ${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white.withAlpha((0.60 * 255).round()),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                @override
-                                Widget build(BuildContext context) {
-                                  return Scaffold(
-                                    backgroundColor: const Color(0xFF0A1F44),
-                                    appBar: PreferredSize(
-                                      preferredSize: const Size.fromHeight(64),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 16.0),
-                                        child: GlassCard(
-                                          opacity: 0.10,
-                                          borderRadius: 24,
-                                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Attendance Logs',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.w700,
-                                                  letterSpacing: -0.3,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(LucideIcons.search, color: Colors.white),
-                                                onPressed: () {},
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    body: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          GlassCard(
-                                            opacity: 0.10,
-                                            borderRadius: 20,
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                  LucideIcons.search,
-                                                  color: Colors.white54,
-                                                  size: 20,
-                                                ),
-                                                const SizedBox(width: 10),
-                                                Expanded(
-                                                  child: TextField(
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 14,
-                                                      color: Colors.white,
-                                                    ),
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Search logs...',
-                                                      hintStyle: GoogleFonts.poppins(
-                                                        fontSize: 14,
-                                                        color: Colors.white.withAlpha((0.35 * 255).round()),
-                                                      ),
-                                                      border: InputBorder.none,
-                                                      isDense: true,
-                                                      contentPadding: EdgeInsets.zero,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Expanded(
-                                            child: Consumer(
-                                              builder: (context, ref, _) {
-                                                final logsAsync = ref.watch(attendanceLogsProvider);
-                                                return logsAsync.when(
-                                                  data: (logs) => ListView.separated(
-                                                    itemCount: logs.length,
-                                                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                                                    itemBuilder: (context, index) {
-                                                      final log = logs[index];
-                                                      return GlassCard(
-                                                        opacity: 0.08,
-                                                        borderRadius: 20,
-                                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                                                        child: Row(
-                                                          children: [
-                                                            Icon(LucideIcons.userCheck, color: Colors.white.withAlpha((0.60 * 255).round())),
-                                                            const SizedBox(width: 14),
-                                                            Expanded(
-                                                              child: Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  Text(
-                                                                    log.studentId,
-                                                                    style: GoogleFonts.poppins(
-                                                                      fontSize: 14,
-                                                                      fontWeight: FontWeight.w600,
-                                                                      color: Colors.white,
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    'Session: ${log.sessionType} | ${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')}',
-                                                                    style: GoogleFonts.poppins(
-                                                                      fontSize: 12,
-                                                                      fontWeight: FontWeight.w400,
-                                                                      color: Colors.white.withAlpha((0.60 * 255).round()),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width: 10,
-                                                              height: 10,
-                                                              decoration: BoxDecoration(
-                                                                color: log.isSynced ? const Color(0xFF00C851) : const Color(0xFFFF3547),
-                                                                shape: BoxShape.circle,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  loading: () => const Center(child: CircularProgressIndicator()),
-                                                  error: (e, _) => Center(child: Text('Error loading logs', style: GoogleFonts.poppins(color: Colors.red))),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: log.isSynced
+                                      ? const Color(0xFF00C851)
+                                      : const Color(0xFFFF3547),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(
+                      child: Text(
+                        'Error loading logs',
+                        style: GoogleFonts.poppins(color: Colors.red),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+
+  const _FilterChip({
+    required this.label,
+    this.selected = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      opacity: selected ? 0.20 : 0.08,
+      borderRadius: 16,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: selected
+              ? const Color(0xFF1E90FF)
+              : Colors.white.withAlpha((0.60 * 255).round()),
+        ),
+      ),
+    );
+  }
+}
