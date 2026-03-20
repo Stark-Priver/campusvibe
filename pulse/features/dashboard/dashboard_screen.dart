@@ -242,12 +242,12 @@ class _DashboardActionCard extends StatelessWidget {
             Icon(icon, color: color, size: 32),
             const SizedBox(height: 14),
             Text(
-              color: Colors.white.withAlpha((0.60 * 255).round()),
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+            title,
+            style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            ),
             ),
             const SizedBox(height: 6),
             Text(
