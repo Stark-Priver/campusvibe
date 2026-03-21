@@ -8,6 +8,21 @@ class SyncQueueItem {
 
   late String recordType;
   late int recordId;
-  late String action; // 'insert' or 'update'
+  late String action;
   late DateTime createdAt;
+  late int retryCount;
+  String? lastError;
+
+  static SyncQueueItem create({
+    required String recordType,
+    required int recordId,
+    required String action,
+  }) {
+    return SyncQueueItem()
+      ..recordType = recordType
+      ..recordId = recordId
+      ..action = action
+      ..createdAt = DateTime.now()
+      ..retryCount = 0;
+  }
 }

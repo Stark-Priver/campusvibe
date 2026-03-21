@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'dart:async';
-import '../../core/widgets/glass_card.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/router/app_router.dart';
+import '../../core/widgets/glass_card.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,103 +15,181 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnim;
-  late Animation<double> _fadeAnim;
-
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    );
-    _scaleAnim = Tween<double>(
-      begin: 0.85,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    _fadeAnim = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-    _controller.forward();
-    Timer(const Duration(seconds: 2), _navigateNext);
+    _navigate();
   }
 
-  void _navigateNext() {
-    // Replace with GoRouter navigation to dashboard
-    // context.go('/dashboard');
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _navigate() async {
+    print('[DEBUG] SplashScreen: waiting 2.8s before navigating');
+    await Future.delayed(const Duration(milliseconds: 2800));
+    if (mounted) {
+      print('[DEBUG] SplashScreen: navigating to dashboard');
+      context.go(AppRoutes.dashboard);
+    } else {
+      print('[DEBUG] SplashScreen: not mounted, navigation skipped');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1F44),
-      body: Stack(
-        children: [
-          Center(
-            child: FadeTransition(
-              opacity: _fadeAnim,
-              child: ScaleTransition(
-                scale: _scaleAnim,
-                child: GlassCard(
-                  opacity: 0.16,
-                  borderRadius: 24,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 48,
-                    vertical: 40,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        AppStrings.appName,
-                        style: GoogleFonts.poppins(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        AppStrings.splashSubtitle,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white.withAlpha((0.60 * 255).round()),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Ambient glow decoration
+            Positioned(
+              top: -80,
+              left: -60,
+              child: Container(
+                width: 280,
+                height: 280,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.accentBlue.withOpacity(0.08),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 32,
-            child: Center(
+            Positioned(
+              bottom: 100,
+              right: -80,
+              child: Container(
+                width: 220,
+                height: 220,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.brandYellow.withOpacity(0.06),
+                ),
+              ),
+            ),
+
+            // Center content
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GlassCard(
+                    opacity: 0.12,
+                    borderRadius: 28,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // App icon
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: AppColors.accentBlue.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(
+                              color: AppColors.accentBlue.withOpacity(0.40),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.qr_code_scanner_rounded,
+                            color: AppColors.accentBlue,
+                            size: 38,
+                          ),
+                        )
+                            .animate()
+                            .scale(
+                              begin: const Offset(0.6, 0.6),
+                              duration: const Duration(milliseconds: 600),
+                              curve: Curves.easeOutBack,
+                            )
+                            .fadeIn(
+                                duration: const Duration(milliseconds: 400)),
+
+                        const SizedBox(height: 24),
+
+                        // App name
+                        Text(
+                          AppStrings.appName,
+                          style: const TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                            letterSpacing: -0.5,
+                          ),
+                        )
+                            .animate(delay: const Duration(milliseconds: 300))
+                            .fadeIn(duration: const Duration(milliseconds: 500))
+                            .slideY(
+                              begin: 0.3,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeOut,
+                            ),
+
+                        const SizedBox(height: 8),
+
+                        // Subtitle
+                        Text(
+                          AppStrings.appTagline,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.textSecondary,
+                            letterSpacing: 0.2,
+                          ),
+                        )
+                            .animate(delay: const Duration(milliseconds: 450))
+                            .fadeIn(
+                                duration: const Duration(milliseconds: 500)),
+
+                        const SizedBox(height: 32),
+
+                        // Loading indicator
+                        SizedBox(
+                          width: 120,
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.white.withOpacity(0.10),
+                            color: AppColors.accentBlue,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        )
+                            .animate(delay: const Duration(milliseconds: 600))
+                            .fadeIn(
+                                duration: const Duration(milliseconds: 400)),
+                      ],
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(duration: const Duration(milliseconds: 400))
+                      .scale(
+                        begin: const Offset(0.92, 0.92),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.easeOut,
+                      ),
+                ],
+              ),
+            ),
+
+            // Version number
+            Positioned(
+              bottom: 24,
+              left: 0,
+              right: 0,
               child: Text(
-                AppStrings.version,
-                style: GoogleFonts.poppins(
+                AppStrings.appVersion,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
+                  color: AppColors.textMuted,
                   letterSpacing: 0.2,
-                  color: Colors.white.withAlpha((0.35 * 255).round()),
                 ),
-              ),
+              )
+                  .animate(delay: const Duration(milliseconds: 800))
+                  .fadeIn(duration: const Duration(milliseconds: 400)),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
