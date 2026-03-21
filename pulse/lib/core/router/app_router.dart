@@ -19,6 +19,7 @@ abstract final class AppRoutes {
   static const String result = '/scan/result';
   static const String logs = '/logs';
   static const String admin = '/admin';
+  static const String registerStudent = '/admin/register-student';
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -65,6 +66,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: AppRoutes.registerStudent,
+        builder: (context, state) => const RegisterStudentScreen(),
       ),
       GoRoute(
         path: AppRoutes.result,

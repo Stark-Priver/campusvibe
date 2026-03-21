@@ -49,6 +49,24 @@ class AdminScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
+              // Register Student button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.person_add_alt_1_rounded),
+                  label: const Text('Register Student'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accentBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  ),
+                  onPressed: () => Navigator.of(context).pushNamed('/admin/register-student'),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
               // Stats summary
               statsAsync.when(
                 loading: () => const SizedBox.shrink(),
