@@ -40,9 +40,11 @@ class _RegisterStudentScreenState extends ConsumerState<RegisterStudentScreen> {
       ..isEligible = _isEligible;
     try {
       await IsarService.upsertStudent(student);
+      // Immediately trigger sync
+      await ref.read(syncServiceProvider.notifier).sync();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Student registered successfully!')),
+          const SnackBar(content: Text('Student registered and synced!')),
         );
         Navigator.pop(context);
       }
