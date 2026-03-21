@@ -8,7 +8,8 @@ class RegisterStudentScreen extends ConsumerStatefulWidget {
   const RegisterStudentScreen({super.key});
 
   @override
-  ConsumerState<RegisterStudentScreen> createState() => _RegisterStudentScreenState();
+  ConsumerState<RegisterStudentScreen> createState() =>
+      _RegisterStudentScreenState();
 }
 
 class _RegisterStudentScreenState extends ConsumerState<RegisterStudentScreen> {
@@ -129,7 +130,8 @@ class _RegisterStudentScreenState extends ConsumerState<RegisterStudentScreen> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: _loading ? null : () => Navigator.pop(context),
+                        onPressed:
+                            _loading ? null : () => Navigator.pop(context),
                         child: const Text('Cancel'),
                       ),
                     ),

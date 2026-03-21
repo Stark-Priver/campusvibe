@@ -59,9 +59,11 @@ class AdminScreen extends ConsumerWidget {
                     backgroundColor: AppColors.accentBlue,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    textStyle: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 16),
                   ),
-                  onPressed: () => Navigator.of(context).pushNamed('/admin/register-student'),
+                  onPressed: () => Navigator.of(context)
+                      .pushNamed('/admin/register-student'),
                 ),
               ),
 
@@ -250,12 +252,10 @@ class _ImportCard extends ConsumerWidget {
               ),
             ],
           ),
-
           if (isSuccess || isError) ...[
             const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: isSuccess
                     ? AppColors.success.withOpacity(0.10)
@@ -273,9 +273,7 @@ class _ImportCard extends ConsumerWidget {
                     isSuccess
                         ? Icons.check_circle_outline_rounded
                         : Icons.error_outline_rounded,
-                    color: isSuccess
-                        ? AppColors.success
-                        : AppColors.danger,
+                    color: isSuccess ? AppColors.success : AppColors.danger,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
@@ -284,9 +282,7 @@ class _ImportCard extends ConsumerWidget {
                       state.importMessage ?? '',
                       style: TextStyle(
                         fontSize: 13,
-                        color: isSuccess
-                            ? AppColors.success
-                            : AppColors.danger,
+                        color: isSuccess ? AppColors.success : AppColors.danger,
                       ),
                     ),
                   ),
@@ -294,9 +290,7 @@ class _ImportCard extends ConsumerWidget {
               ),
             ),
           ],
-
           const SizedBox(height: 16),
-
           PrimaryButton(
             label: isLoading ? 'Importing...' : AppStrings.importExcel,
             icon: Icons.folder_open_rounded,
@@ -381,7 +375,6 @@ class _SyncCard extends ConsumerWidget {
               ),
             ],
           ),
-
           if (isLoading) ...[
             const SizedBox(height: 16),
             Column(
@@ -407,12 +400,10 @@ class _SyncCard extends ConsumerWidget {
               ],
             ),
           ],
-
           if (isSuccess || isError) ...[
             const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: isSuccess
                     ? AppColors.success.withOpacity(0.10)
@@ -428,16 +419,12 @@ class _SyncCard extends ConsumerWidget {
                 state.syncMessage ?? '',
                 style: TextStyle(
                   fontSize: 13,
-                  color: isSuccess
-                      ? AppColors.success
-                      : AppColors.danger,
+                  color: isSuccess ? AppColors.success : AppColors.danger,
                 ),
               ),
             ),
           ],
-
           const SizedBox(height: 16),
-
           GlassButton(
             label: isLoading ? 'Syncing...' : AppStrings.forceSync,
             icon: Icons.cloud_upload_rounded,
@@ -543,8 +530,7 @@ class _SessionsCard extends ConsumerWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
                 color: isExam
                     ? AppColors.danger.withOpacity(0.15)
@@ -556,9 +542,7 @@ class _SessionsCard extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
-                  color: isExam
-                      ? AppColors.danger
-                      : AppColors.accentBlue,
+                  color: isExam ? AppColors.danger : AppColors.accentBlue,
                   letterSpacing: 0.5,
                 ),
               ),

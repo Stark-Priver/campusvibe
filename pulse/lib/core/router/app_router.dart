@@ -207,8 +207,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isActive ? const Color(0xFF1E90FF) : const Color(0x99FFFFFF);
+    final color = isActive ? const Color(0xFF1E90FF) : const Color(0x99FFFFFF);
 
     return GestureDetector(
       onTap: onTap,
@@ -228,8 +227,7 @@ class _NavItem extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 11,
-                fontWeight:
-                    isActive ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                 color: color,
               ),
             ),
