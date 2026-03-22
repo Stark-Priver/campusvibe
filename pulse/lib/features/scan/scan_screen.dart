@@ -153,6 +153,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                       color: Colors.white,
                     ),
                   ),
+                  const SizedBox(width: 12),
+                  _ExamModeBadge(),
                   const Spacer(),
                   // Torch toggle
                   _TorchButton(controller: _scannerController),
@@ -598,6 +600,53 @@ class _BottomPanel extends ConsumerWidget {
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeOut,
         );
+  }
+}
+
+class _ExamModeBadge extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider).user;
+    final session = ref.watch(selectedSessionProvider);
+
+    if (user?.role != 'invigilator' || session?.type != 'exam') {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.danger.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: AppColors.danger.withOpacity(0.5),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: AppColors.danger,
+              shape: BoxShape.circle,
+            ),
+          ).animate(onPlay: (c) => c.repeat()).fadeIn(duration: 600.ms).fadeOut(delay: 600.ms),
+          const SizedBox(width: 6),
+          const Text(
+            'EXAM MODE',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: AppColors.danger,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
