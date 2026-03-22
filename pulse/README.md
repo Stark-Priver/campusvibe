@@ -77,17 +77,31 @@ CREATE TABLE attendance_logs (
   id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   student_id   TEXT NOT NULL,
   session_id   TEXT NOT NULL,
-  session_type TEXT NOT NULL CHECK (session_type IN ('exam','class')),
+  session_type TEXT NOT NULL CHECK (session_type IN ('exam','class','gate','library')),
   scanned_at   TIMESTAMPTZ NOT NULL,
   device_log_id TEXT,
+  booklet_number TEXT,
+  is_student_check_in BOOLEAN DEFAULT false,
   created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE sessions (
   id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name         TEXT NOT NULL,
-  session_type TEXT NOT NULL CHECK (session_type IN ('exam','class')),
+  session_type TEXT NOT NULL CHECK (session_type IN ('exam','class','gate','library')),
   is_active    BOOLEAN DEFAULT true,
+  latitude     DOUBLE PRECISION,
+  longitude    DOUBLE PRECISION,
+  radius       DOUBLE PRECISION,
+  created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE app_users (
+  id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  auth_uid     TEXT UNIQUE NOT NULL,
+  email        TEXT UNIQUE NOT NULL,
+  full_name    TEXT NOT NULL,
+  role         TEXT NOT NULL CHECK (role IN ('admin','watchman','invigilator','librarian','student')),
   created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -95,10 +109,12 @@ CREATE TABLE sessions (
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE attendance_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app_users ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow all for anon" ON students FOR ALL TO anon USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all for anon" ON attendance_logs FOR ALL TO anon USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all for anon" ON sessions FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all for anon" ON app_users FOR ALL TO anon USING (true) WITH CHECK (true);
 ```
 
 ### 5. Run the App

@@ -87,6 +87,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         .login(_emailController.text, _passwordController.text);
                     if (success && mounted) {
                       context.go('/dashboard');
+                    } else if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Login failed. Please check your credentials.'),
+                          backgroundColor: AppColors.danger,
+                        ),
+                      );
                     }
                   },
                 ),
