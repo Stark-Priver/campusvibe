@@ -110,7 +110,10 @@ final defaultSessions = [
     ..name = 'Semester 1 Class'
     ..type = 'class'
     ..isActive = true
-    ..isSynced = true,
+    ..isSynced = true
+    ..latitude = -1.2
+    ..longitude = 36.8
+    ..radius = 50.0,
   SessionModel()
     ..remoteId = 'gate_main'
     ..name = 'Main Gate'

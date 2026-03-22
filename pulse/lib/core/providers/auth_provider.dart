@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../database/models/app_user.dart';
 import '../database/isar_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,52 +12,68 @@ class AuthState {
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
+  final SupabaseClient _supabase = Supabase.instance.client;
+
   AuthNotifier() : super(AuthState(isLoading: true)) {
-    _loadUser();
+    _init();
   }
 
-  Future<void> _loadUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final uid = prefs.getString('auth_uid');
-    if (uid != null) {
-      final user = await IsarService.getUserByAuthUid(uid);
-      state = AuthState(user: user, isLoading: false);
+  Future<void> _init() async {
+    // Listen to auth changes
+    _supabase.auth.onAuthStateChange.listen((data) async {
+      final user = data.session?.user;
+      if (user != null) {
+        final appUser = await _getOrCreateAppUser(user);
+        state = AuthState(user: appUser, isLoading: false);
+      } else {
+        state = AuthState(user: null, isLoading: false);
+      }
+    });
+
+    final session = _supabase.auth.currentSession;
+    if (session != null) {
+      final appUser = await _getOrCreateAppUser(session.user);
+      state = AuthState(user: appUser, isLoading: false);
     } else {
       state = AuthState(user: null, isLoading: false);
     }
   }
 
-  Future<bool> login(String email, String password) async {
-    state = AuthState(user: state.user, isLoading: true);
+  Future<AppUser> _getOrCreateAppUser(User user) async {
+    final existing = await IsarService.getUserByAuthUid(user.id);
+    if (existing != null) return existing;
 
-    // Mock login logic - in production use Supabase Auth
-    // We'll search for a user with this email or create a mock one for demo
-
-    // For now, let's assume if email contains 'admin', 'watchman', 'invigilator', 'librarian', or 'student', we assign that role.
+    // Determine role from metadata or mock it for now based on email as requested
     String role = 'student';
+    final email = user.email ?? '';
     if (email.contains('admin')) role = 'admin';
     else if (email.contains('watchman')) role = 'watchman';
     else if (email.contains('invigilator')) role = 'invigilator';
     else if (email.contains('librarian')) role = 'librarian';
 
-    final mockUser = AppUser()
-      ..authUid = 'mock_uid_${email.hashCode}'
+    final newUser = AppUser()
+      ..authUid = user.id
       ..email = email
-      ..fullName = email.split('@')[0].toUpperCase()
+      ..fullName = user.userMetadata?['full_name'] ?? email.split('@')[0].toUpperCase()
       ..role = role;
 
-    await IsarService.upsertUser(mockUser);
+    await IsarService.upsertUser(newUser);
+    return newUser;
+  }
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_uid', mockUser.authUid);
-
-    state = AuthState(user: mockUser, isLoading: false);
-    return true;
+  Future<bool> login(String email, String password) async {
+    state = AuthState(user: state.user, isLoading: true);
+    try {
+      await _supabase.auth.signInWithPassword(email: email, password: password);
+      return true;
+    } catch (e) {
+      state = AuthState(user: null, isLoading: false);
+      return false;
+    }
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_uid');
+    await _supabase.auth.signOut();
     state = AuthState(user: null, isLoading: false);
   }
 }

@@ -1,0 +1,72 @@
+name: Android Release Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: |
+          cd pulse
+          flutter pub get
+
+      - name: Run code generation
+        run: |
+          cd pulse
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build Android APK
+        run: |
+          cd pulse
+          flutter build apk --release --split-per-abi
+
+      - name: Build Android App Bundle
+        run: |
+          cd pulse
+          flutter build appbundle --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk
+          path: pulse/build/app/outputs/flutter-apk/*.apk
+
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-appbundle
+          path: pulse/build/app/outputs/bundle/release/app-release.aab
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            pulse/build/app/outputs/flutter-apk/app-release.apk
+            pulse/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            pulse/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            pulse/build/app/outputs/flutter-apk/app-x86_64-release.apk
+            pulse/build/app/outputs/bundle/release/app-release.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
