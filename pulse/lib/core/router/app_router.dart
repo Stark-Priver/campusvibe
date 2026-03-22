@@ -8,8 +8,7 @@ import '../../features/scan/result_screen.dart';
 import '../../features/logs/logs_screen.dart';
 import '../../features/admin/admin_screen.dart';
 import '../database/models/attendance_log.dart';
-
-part 'app_router.g.dart';
+import '../../features/admin/register_student_screen.dart';
 
 // Route paths
 abstract final class AppRoutes {

@@ -10,6 +10,7 @@ import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/status_badge.dart';
 import '../dashboard/providers/dashboard_provider.dart';
 import 'providers/admin_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
@@ -62,8 +63,7 @@ class AdminScreen extends ConsumerWidget {
                     textStyle: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 16),
                   ),
-                  onPressed: () => Navigator.of(context)
-                      .pushNamed('/admin/register-student'),
+                  onPressed: () => context.push('/admin/register-student'),
                 ),
               ),
 

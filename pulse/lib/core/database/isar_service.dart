@@ -3,6 +3,9 @@ import 'package:path_provider/path_provider.dart';
 import 'models/student_record.dart';
 import 'models/attendance_log.dart';
 import 'models/sync_queue_item.dart';
+import 'models/session_model.dart';
+import 'models/app_user.dart';
+import 'models/booklet_log.dart';
 
 class IsarService {
   IsarService._();
@@ -26,6 +29,9 @@ class IsarService {
         StudentRecordSchema,
         AttendanceLogSchema,
         SyncQueueItemSchema,
+        SessionModelSchema,
+        AppUserSchema,
+        BookletLogSchema,
       ],
       directory: dir.path,
       name: 'pulse_db',
@@ -37,7 +43,7 @@ class IsarService {
     _isar = null;
   }
 
-  // ─── Student Operations ────────────────────────────────────
+  // ─── Student Operations ────────────────────────────────────────────────────
   static Future<StudentRecord?> getStudentById(String studentId) async {
     return instance.studentRecords
         .where()
@@ -72,7 +78,7 @@ class IsarService {
     });
   }
 
-  // ─── Attendance Log Operations ─────────────────────────────
+  // ─── Attendance Log Operations ─────────────────────────────────────────────
   static Future<void> saveAttendanceLog(AttendanceLog log) async {
     await instance.writeTxn(() async {
       await instance.attendanceLogs.put(log);
@@ -133,7 +139,118 @@ class IsarService {
     }).toList();
   }
 
-  // ─── Sync Queue Operations ─────────────────────────────────
+  // ─── Session Operations ────────────────────────────────────────────────────
+  static Future<List<SessionModel>> getAllSessions() async {
+    return instance.sessionModels.where().findAll();
+  }
+
+  static Future<List<SessionModel>> getActiveSessions() async {
+    return instance.sessionModels.filter().isActiveEqualTo(true).findAll();
+  }
+
+  static Future<SessionModel?> getSessionByRemoteId(String remoteId) async {
+    return instance.sessionModels
+        .where()
+        .remoteIdEqualTo(remoteId)
+        .findFirst();
+  }
+
+  static Future<void> upsertSession(SessionModel session) async {
+    await instance.writeTxn(() async {
+      await instance.sessionModels.put(session);
+    });
+  }
+
+  static Future<void> upsertSessions(List<SessionModel> sessions) async {
+    await instance.writeTxn(() async {
+      await instance.sessionModels.putAll(sessions);
+    });
+  }
+
+  static Future<void> deleteSession(int id) async {
+    await instance.writeTxn(() async {
+      await instance.sessionModels.delete(id);
+    });
+  }
+
+  static Future<List<SessionModel>> getUnsyncedSessions() async {
+    return instance.sessionModels.filter().isSyncedEqualTo(false).findAll();
+  }
+
+  static Future<void> markSessionSynced(int id) async {
+    await instance.writeTxn(() async {
+      final session = await instance.sessionModels.get(id);
+      if (session != null) {
+        session.isSynced = true;
+        await instance.sessionModels.put(session);
+      }
+    });
+  }
+
+  // ─── AppUser Operations ────────────────────────────────────────────────────
+  static Future<List<AppUser>> getAllUsers() async {
+    return instance.appUsers.where().findAll();
+  }
+
+  static Future<AppUser?> getUserByAuthUid(String authUid) async {
+    return instance.appUsers
+        .where()
+        .authUidEqualTo(authUid)
+        .findFirst();
+  }
+
+  static Future<void> upsertUser(AppUser user) async {
+    await instance.writeTxn(() async {
+      await instance.appUsers.put(user);
+    });
+  }
+
+  static Future<void> upsertUsers(List<AppUser> users) async {
+    await instance.writeTxn(() async {
+      await instance.appUsers.putAll(users);
+    });
+  }
+
+  static Future<void> deleteUser(int id) async {
+    await instance.writeTxn(() async {
+      await instance.appUsers.delete(id);
+    });
+  }
+
+  // ─── BookletLog Operations ─────────────────────────────────────────────────
+  static Future<void> saveBookletLog(BookletLog log) async {
+    await instance.writeTxn(() async {
+      await instance.bookletLogs.put(log);
+    });
+  }
+
+  static Future<List<BookletLog>> getAllBookletLogs() async {
+    return instance.bookletLogs.where().findAll();
+  }
+
+  static Future<List<BookletLog>> getUnsyncedBookletLogs() async {
+    return instance.bookletLogs.filter().isSyncedEqualTo(false).findAll();
+  }
+
+  static Future<BookletLog?> getBookletLogByStudentId(
+      String studentId) async {
+    return instance.bookletLogs
+        .filter()
+        .studentIdEqualTo(studentId)
+        .findFirst();
+  }
+
+  static Future<void> markBookletLogSynced(int id) async {
+    await instance.writeTxn(() async {
+      final log = await instance.bookletLogs.get(id);
+      if (log != null) {
+        log.isSynced = true;
+        await instance.bookletLogs.put(log);
+      }
+    });
+  }
+
+  // ─── Sync Queue Operations ─────────────────────────────────────────────────
   static Future<void> addToSyncQueue(SyncQueueItem item) async {
     await instance.writeTxn(() async {
       await instance.syncQueueItems.put(item);

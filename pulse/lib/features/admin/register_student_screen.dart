@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/database/isar_service.dart';
 import '../../core/database/models/student_record.dart';
+import '../../core/sync/sync_service.dart';
 
 class RegisterStudentScreen extends ConsumerStatefulWidget {
   const RegisterStudentScreen({super.key});

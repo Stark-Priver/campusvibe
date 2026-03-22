@@ -14,6 +14,8 @@ class StudentRecord {
   late int year;
   late bool isEligible;
 
+  String? photoUrl;
+
   DateTime? syncedAt;
 
   Map<String, dynamic> toJson() => {
@@ -22,6 +24,7 @@ class StudentRecord {
         'course': course,
         'year': year,
         'is_eligible': isEligible,
+        'photo_url': photoUrl,
         'synced_at': syncedAt?.toIso8601String(),
       };
 
@@ -32,6 +35,7 @@ class StudentRecord {
       ..course = json['course'] as String
       ..year = (json['year'] as num).toInt()
       ..isEligible = json['is_eligible'] as bool
+      ..photoUrl = json['photo_url'] as String?
       ..syncedAt = json['synced_at'] != null
           ? DateTime.tryParse(json['synced_at'] as String)
           : null;
@@ -44,12 +48,14 @@ class StudentRecord {
     required String course,
     required int year,
     required bool isEligible,
+    String? photoUrl,
   }) {
     return StudentRecord()
       ..studentId = studentId
       ..fullName = fullName
       ..course = course
       ..year = year
-      ..isEligible = isEligible;
+      ..isEligible = isEligible
+      ..photoUrl = photoUrl;
   }
 }
