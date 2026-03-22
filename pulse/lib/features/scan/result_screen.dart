@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/database/isar_service.dart';
 import '../../core/database/models/attendance_log.dart';
 import '../../core/router/app_router.dart';
 import '../../core/widgets/glass_button.dart';
@@ -177,7 +178,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                             ),
                           ] else ...[
                             Text(
-                              'ID: $scannedId',
+                              'ID: ${widget.scannedId}',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 18,
@@ -198,8 +199,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
                           const SizedBox(height: 24),
                           Divider(
-                              color: Colors.white.withOpacity(0.10),
-                              height: 1),
+                              color: Colors.white.withOpacity(0.10), height: 1),
                           const SizedBox(height: 20),
 
                           // Detail rows
@@ -271,10 +271,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                         Expanded(
                           child: GlassButton(
                             label: AppStrings.viewDetails,
-                            borderColor:
-                                Colors.white.withOpacity(0.25),
-                            onPressed: () =>
-                                context.go(AppRoutes.logs),
+                            borderColor: Colors.white.withOpacity(0.25),
+                            onPressed: () => context.go(AppRoutes.logs),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -288,9 +286,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                                   _bookletController.text.isNotEmpty) {
                                 // Update log with booklet number
                                 log.bookletNumber = _bookletController.text;
-                                // In a real app, you'd save this back to DB
-                                // For now, we've already saved the log in ScanNotifier,
-                                // but we might need to update it.
                                 await IsarService.saveAttendanceLog(log);
                               }
                               if (mounted) {
