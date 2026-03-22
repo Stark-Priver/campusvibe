@@ -61,6 +61,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       return;
     }
 
+    // If it's an exam, we might want to ask for booklet number before or after.
+    // Let's do it after scanning the ID in the ResultScreen for simplicity,
+    // or we can add a prompt here.
+    if (session == null) {
+      _showNoSessionSnackbar();
+      return;
+    }
+
     setState(() => _isProcessing = true);
     await _scannerController.stop();
 

@@ -5,20 +5,13 @@ import '../../../core/constants/app_strings.dart';
 import '../../../core/database/isar_service.dart';
 import '../../../core/database/models/attendance_log.dart';
 import '../../../core/database/models/student_record.dart';
+import '../../../core/database/models/session_model.dart';
 
 const _uuid = Uuid();
 
-class SessionInfo {
-  final String id;
-  final String name;
-  final String type;
-
-  const SessionInfo({
-    required this.id,
-    required this.name,
-    required this.type,
-  });
-}
+// Keep SessionInfo for backward compatibility during migration if needed,
+// but we'll use SessionModel from DB now.
+typedef SessionInfo = SessionModel;
 
 class ScanResult {
   final StudentRecord? student;
@@ -42,6 +35,7 @@ class ScanNotifier extends StateNotifier<AsyncValue<ScanResult?>> {
   Future<ScanResult?> processScan({
     required String barcode,
     required SessionInfo session,
+    String? bookletNumber,
   }) async {
     if (_processing) return null;
     _processing = true;
@@ -63,11 +57,12 @@ class ScanNotifier extends StateNotifier<AsyncValue<ScanResult?>> {
       final log = AttendanceLog.create(
         studentId: student.studentId,
         studentName: student.fullName,
-        sessionId: session.id,
+        sessionId: session.remoteId ?? session.id.toString(),
         sessionName: session.name,
         sessionType: session.type,
         isEligible: student.isEligible,
         localId: _uuid.v4(),
+        bookletNumber: bookletNumber,
       );
 
       await IsarService.saveAttendanceLog(log);
@@ -104,16 +99,30 @@ final scanProvider =
 
 /// Hard-coded default sessions (in production, load from Supabase)
 final defaultSessions = [
-  const SessionInfo(
-      id: 'sem1_exam_2024', name: 'Semester 1 Exam', type: 'exam'),
-  const SessionInfo(
-      id: 'sem1_class_2024', name: 'Semester 1 Class', type: 'class'),
-  const SessionInfo(
-      id: 'sem2_exam_2024', name: 'Semester 2 Exam', type: 'exam'),
-  const SessionInfo(
-      id: 'sem2_class_2024', name: 'Semester 2 Class', type: 'class'),
-  const SessionInfo(
-      id: 'supp_exam_2024', name: 'Supplementary Exam', type: 'exam'),
+  SessionModel()
+    ..remoteId = 'sem1_exam_2024'
+    ..name = 'Semester 1 Exam'
+    ..type = 'exam'
+    ..isActive = true
+    ..isSynced = true,
+  SessionModel()
+    ..remoteId = 'sem1_class_2024'
+    ..name = 'Semester 1 Class'
+    ..type = 'class'
+    ..isActive = true
+    ..isSynced = true,
+  SessionModel()
+    ..remoteId = 'gate_main'
+    ..name = 'Main Gate'
+    ..type = 'gate'
+    ..isActive = true
+    ..isSynced = true,
+  SessionModel()
+    ..remoteId = 'library_main'
+    ..name = 'Main Library'
+    ..type = 'library'
+    ..isActive = true
+    ..isSynced = true,
 ];
 
 class SelectedSessionNotifier extends StateNotifier<SessionInfo?> {
@@ -125,7 +134,9 @@ class SelectedSessionNotifier extends StateNotifier<SessionInfo?> {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getString(AppStrings.prefSelectedSession);
     if (id != null) {
-      final session = defaultSessions.where((s) => s.id == id).firstOrNull;
+      final session = defaultSessions
+          .where((s) => (s.remoteId ?? s.id.toString()) == id)
+          .firstOrNull;
       if (session != null) state = session;
     }
     state ??= defaultSessions.first;
@@ -134,7 +145,8 @@ class SelectedSessionNotifier extends StateNotifier<SessionInfo?> {
   Future<void> select(SessionInfo session) async {
     state = session;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppStrings.prefSelectedSession, session.id);
+    await prefs.setString(
+        AppStrings.prefSelectedSession, session.remoteId ?? session.id.toString());
   }
 }
 

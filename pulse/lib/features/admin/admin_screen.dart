@@ -515,19 +515,21 @@ class _SessionsCard extends ConsumerWidget {
 
   List<Widget> _defaultSessionTiles() {
     final sessions = [
-      ('Semester 1 Exam', 'exam', true),
-      ('Semester 1 Class', 'class', true),
-      ('Semester 2 Exam', 'exam', true),
-      ('Semester 2 Class', 'class', true),
-      ('Supplementary Exam', 'exam', true),
+      ('Semester 1 Exam', 'exam', true, null),
+      ('Semester 1 Class', 'class', true, 'Lat: -1.2, Lon: 36.8, Rad: 50m'),
+      ('Main Gate', 'gate', true, null),
+      ('Main Library', 'library', true, null),
     ];
 
     return sessions.map((item) {
-      final (name, type, active) = item;
+      final (name, type, active, geofence) = item;
       final isExam = type == 'exam';
       return Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -565,6 +567,16 @@ class _SessionsCard extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
             ),
+          ],
+        ),
+        if (geofence != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 62, top: 2),
+            child: Text(
+              geofence,
+              style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+            ),
+          ),
           ],
         ),
       );
