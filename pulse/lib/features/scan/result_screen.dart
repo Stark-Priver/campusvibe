@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/constants/app_colors.dart';
@@ -28,6 +29,7 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 class _ResultScreenState extends ConsumerState<ResultScreen> {
   final _bookletController = TextEditingController();
+  bool _isProcessingBooklet = false;
 
   @override
   void initState() {
@@ -61,249 +63,370 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final log = widget.attendanceLog;
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // App bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-              child: Row(
-                children: [
-                  GlassCard(
-                    opacity: 0.10,
-                    borderRadius: 12,
-                    padding: const EdgeInsets.all(8),
-                    onTap: () => context.go(AppRoutes.scan),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.textPrimary,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Text(
-                    AppStrings.resultTitle,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    // Status glow circle
-                    Container(
-                      width: 96,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _accentColor.withOpacity(0.12),
-                        border: Border.all(
-                          color: _accentColor.withOpacity(0.40),
-                          width: 2,
+      body: Stack(
+        children: [
+          _buildBody(context),
+          if (_showSuccessOverlay)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.7),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: const BoxDecoration(
+                          color: AppColors.success,
+                          shape: BoxShape.circle,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _accentColor.withOpacity(0.30),
-                            blurRadius: 30,
-                            spreadRadius: 4,
+                        child: const Icon(Icons.check_rounded,
+                            size: 64, color: Colors.white),
+                      ).animate().scale(duration: 400.ms, curve: Curves.backOut),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Booklet Scanned!',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ).animate().fadeIn(delay: 200.ms),
+                    ],
+                  ),
+                ),
+              ),
+            ).animate().fadeIn(duration: 300.ms).fadeOut(delay: 1500.ms),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    final log = widget.attendanceLog;
+
+    return SafeArea(
+      child: Column(
+        children: [
+          // App bar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            child: Row(
+              children: [
+                GlassCard(
+                  opacity: 0.10,
+                  borderRadius: 12,
+                  padding: const EdgeInsets.all(8),
+                  onTap: () => context.go(AppRoutes.scan),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: AppColors.textPrimary,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Text(
+                  AppStrings.resultTitle,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  // Status glow circle
+                  Container(
+                    width: 96,
+                    height: 96,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _accentColor.withOpacity(0.12),
+                      border: Border.all(
+                        color: _accentColor.withOpacity(0.40),
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _accentColor.withOpacity(0.30),
+                          blurRadius: 30,
+                          spreadRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      _status == ScanStatus.eligible
+                          ? Icons.check_circle_rounded
+                          : _status == ScanStatus.notEligible
+                              ? Icons.cancel_rounded
+                              : Icons.help_rounded,
+                      color: _accentColor,
+                      size: 46,
+                    ),
+                  )
+                      .animate()
+                      .scale(
+                        begin: const Offset(0.5, 0.5),
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeOutBack,
+                      )
+                      .fadeIn(duration: const Duration(milliseconds: 400)),
+
+                  const SizedBox(height: 24),
+
+                  // Main result card
+                  GlassCard(
+                    opacity: 0.14,
+                    borderRadius: 24,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        // Status badge
+                        StatusBadge(status: _status, large: true),
+                        const SizedBox(height: 24),
+
+                        if (log != null) ...[
+                          // Student name
+                          Text(
+                            log.studentName,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            log.studentId,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textSecondary,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ] else ...[
+                          Text(
+                            'ID: ${widget.scannedId}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            AppStrings.errorStudentNotFound,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ],
-                      ),
-                      child: Icon(
-                        _status == ScanStatus.eligible
-                            ? Icons.check_circle_rounded
-                            : _status == ScanStatus.notEligible
-                                ? Icons.cancel_rounded
-                                : Icons.help_rounded,
-                        color: _accentColor,
-                        size: 46,
-                      ),
-                    )
-                        .animate()
-                        .scale(
-                          begin: const Offset(0.5, 0.5),
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeOutBack,
-                        )
-                        .fadeIn(duration: const Duration(milliseconds: 400)),
 
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 24),
+                        Divider(
+                            color: Colors.white.withOpacity(0.10), height: 1),
+                        const SizedBox(height: 20),
 
-                    // Main result card
-                    GlassCard(
-                      opacity: 0.14,
-                      borderRadius: 24,
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        children: [
-                          // Status badge
-                          StatusBadge(status: _status, large: true),
-                          const SizedBox(height: 24),
-
-                          if (log != null) ...[
-                            // Student name
-                            Text(
-                              log.studentName,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              log.studentId,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.textSecondary,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ] else ...[
-                            Text(
-                              'ID: ${widget.scannedId}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              AppStrings.errorStudentNotFound,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-
-                          const SizedBox(height: 24),
-                          Divider(
-                              color: Colors.white.withOpacity(0.10), height: 1),
-                          const SizedBox(height: 20),
-
-                          // Detail rows
-                          if (log != null) ...[
-                            if (log.sessionType == 'exam') ...[
-                              const SizedBox(height: 12),
-                              _buildBookletField(),
-                              const SizedBox(height: 12),
-                            ],
-                            _DetailRow(
-                              label: AppStrings.course,
-                              value: log.sessionName,
-                            ),
+                        // Detail rows
+                        if (log != null) ...[
+                          if (log.sessionType == 'exam') ...[
                             const SizedBox(height: 12),
-                            _DetailRow(
-                              label: AppStrings.session,
-                              value:
-                                  '${log.sessionName} (${log.sessionType.toUpperCase()})',
-                            ),
+                            _buildBookletField(),
                             const SizedBox(height: 12),
                           ],
                           _DetailRow(
-                            label: AppStrings.scannedAt,
-                            value: log != null
-                                ? DateFormat('dd MMM yyyy · HH:mm:ss')
-                                    .format(log.timestamp)
-                                : DateFormat('dd MMM yyyy · HH:mm:ss')
-                                    .format(DateTime.now()),
+                            label: AppStrings.course,
+                            value: log.sessionName,
                           ),
-                          if (log != null && !log.isSynced) ...[
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 7,
-                                  height: 7,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.brandYellow,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'Pending cloud sync',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.brandYellow,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          const SizedBox(height: 12),
+                          _DetailRow(
+                            label: AppStrings.session,
+                            value:
+                                '${log.sessionName} (${log.sessionType.toUpperCase()})',
+                          ),
+                          const SizedBox(height: 12),
                         ],
-                      ),
-                    )
-                        .animate(delay: const Duration(milliseconds: 200))
-                        .fadeIn(duration: const Duration(milliseconds: 400))
-                        .slideY(
-                          begin: 0.15,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeOut,
+                        _DetailRow(
+                          label: AppStrings.scannedAt,
+                          value: log != null
+                              ? DateFormat('dd MMM yyyy · HH:mm:ss')
+                                  .format(log.timestamp)
+                              : DateFormat('dd MMM yyyy · HH:mm:ss')
+                                  .format(DateTime.now()),
                         ),
-
-                    const SizedBox(height: 32),
-
-                    // Action buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GlassButton(
-                            label: AppStrings.viewDetails,
-                            borderColor: Colors.white.withOpacity(0.25),
-                            onPressed: () => context.go(AppRoutes.logs),
+                        if (log != null && !log.isSynced) ...[
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Container(
+                                width: 7,
+                                height: 7,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.brandYellow,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'Pending cloud sync',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.brandYellow,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: PrimaryButton(
-                            label: AppStrings.scanNext,
-                            icon: Icons.qr_code_scanner_rounded,
-                            onPressed: () async {
-                              if (log != null &&
-                                  log.sessionType == 'exam' &&
-                                  _bookletController.text.isNotEmpty) {
-                                // Update log with booklet number
-                                log.bookletNumber = _bookletController.text;
-                                await IsarService.saveAttendanceLog(log);
-                              }
-                              if (mounted) {
-                                context.go(AppRoutes.scan);
-                              }
-                            },
-                          ),
-                        ),
+                        ],
                       ],
-                    )
-                        .animate(delay: const Duration(milliseconds: 350))
-                        .fadeIn(duration: const Duration(milliseconds: 350)),
+                    ),
+                  )
+                      .animate(delay: const Duration(milliseconds: 200))
+                      .fadeIn(duration: const Duration(milliseconds: 400))
+                      .slideY(
+                        begin: 0.15,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeOut,
+                      ),
 
-                    const SizedBox(height: 32),
-                  ],
+                  const SizedBox(height: 32),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GlassButton(
+                          label: AppStrings.viewDetails,
+                          borderColor: Colors.white.withOpacity(0.25),
+                          onPressed: () => context.go(AppRoutes.logs),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: PrimaryButton(
+                          label: AppStrings.scanNext,
+                          icon: Icons.qr_code_scanner_rounded,
+                          onPressed: () async {
+                            if (log != null &&
+                                log.sessionType == 'exam' &&
+                                _bookletController.text.isNotEmpty) {
+                              // Update log with booklet number
+                              log.bookletNumber = _bookletController.text;
+                              await IsarService.saveAttendanceLog(log);
+                            }
+                            if (mounted) {
+                              context.go(AppRoutes.scan);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                      .animate(delay: const Duration(milliseconds: 350))
+                      .fadeIn(duration: const Duration(milliseconds: 350)),
+
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool _showSuccessOverlay = false;
+
+  void _showBookletScanner() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Scan Exam Booklet',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Align the booklet barcode within the frame',
+              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 32),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: MobileScanner(
+                  onDetect: (capture) {
+                    if (_isProcessingBooklet) return;
+
+                    final barcode = capture.barcodes.firstOrNull;
+                    if (barcode != null && barcode.rawValue != null) {
+                      _isProcessingBooklet = true;
+                      setState(() {
+                        _bookletController.text = barcode.rawValue!;
+                        _showSuccessOverlay = true;
+                      });
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(seconds: 2), () {
+                        if (mounted) {
+                          setState(() {
+                            _showSuccessOverlay = false;
+                            _isProcessingBooklet = false;
+                          });
+                        }
+                      });
+                    }
+                  },
                 ),
               ),
             ),
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: GlassButton(
+                label: 'Cancel',
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
           ],
         ),
       ),
@@ -311,6 +434,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   }
 
   Widget _buildBookletField() {
+    final user = ref.watch(authProvider).user;
+    final isInvigilator = user?.role == 'invigilator';
+    final isEligible = widget.attendanceLog?.isEligible ?? false;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -334,13 +461,20 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.book_outlined,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.book_outlined,
                   color: AppColors.textSecondary, size: 20),
+              suffixIcon: (isInvigilator && isEligible)
+                  ? IconButton(
+                      icon: const Icon(Icons.qr_code_scanner_rounded,
+                          color: AppColors.accentBlue),
+                      onPressed: _showBookletScanner,
+                    )
+                  : null,
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(vertical: 14),
               hintText: 'Enter booklet ID',
-              hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 14),
+              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ),
         ),
