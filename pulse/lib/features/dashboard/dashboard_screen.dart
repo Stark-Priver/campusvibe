@@ -11,12 +11,25 @@ import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/status_badge.dart';
 import '../dashboard/providers/dashboard_provider.dart';
 import '../../core/database/models/attendance_log.dart';
+import '../../core/providers/auth_provider.dart';
+import '../watchman/watchman_dashboard.dart';
+import '../library/library_dashboard.dart';
+import '../invigilator/invigilator_dashboard.dart';
+import '../student/student_dashboard.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final role = authState.user?.role;
+
+    if (role == 'watchman') return const WatchmanDashboard();
+    if (role == 'librarian') return const LibraryDashboard();
+    if (role == 'invigilator') return const InvigilatorDashboard();
+    if (role == 'student') return const StudentDashboard();
+
     final statsAsync = ref.watch(dashboardStatsProvider);
     final recentAsync = ref.watch(recentLogsProvider);
     final syncStatus = ref.watch(syncServiceProvider);

@@ -11,7 +11,7 @@ import '../../core/widgets/glass_button.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/status_badge.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   final AttendanceLog? attendanceLog;
   final String scannedId;
 
@@ -21,9 +21,28 @@ class ResultScreen extends ConsumerWidget {
     required this.scannedId,
   });
 
+  @override
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  final _bookletController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _bookletController.text = widget.attendanceLog?.bookletNumber ?? '';
+  }
+
+  @override
+  void dispose() {
+    _bookletController.dispose();
+    super.dispose();
+  }
+
   ScanStatus get _status {
-    if (attendanceLog == null) return ScanStatus.notFound;
-    return attendanceLog!.isEligible
+    if (widget.attendanceLog == null) return ScanStatus.notFound;
+    return widget.attendanceLog!.isEligible
         ? ScanStatus.eligible
         : ScanStatus.notEligible;
   }
@@ -40,8 +59,8 @@ class ResultScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final log = attendanceLog;
+  Widget build(BuildContext context) {
+    final log = widget.attendanceLog;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -185,6 +204,11 @@ class ResultScreen extends ConsumerWidget {
 
                           // Detail rows
                           if (log != null) ...[
+                            if (log.sessionType == 'exam') ...[
+                              const SizedBox(height: 12),
+                              _buildBookletField(),
+                              const SizedBox(height: 12),
+                            ],
                             _DetailRow(
                               label: AppStrings.course,
                               value: log.sessionName,
@@ -258,7 +282,21 @@ class ResultScreen extends ConsumerWidget {
                           child: PrimaryButton(
                             label: AppStrings.scanNext,
                             icon: Icons.qr_code_scanner_rounded,
-                            onPressed: () => context.go(AppRoutes.scan),
+                            onPressed: () async {
+                              if (log != null &&
+                                  log.sessionType == 'exam' &&
+                                  _bookletController.text.isNotEmpty) {
+                                // Update log with booklet number
+                                log.bookletNumber = _bookletController.text;
+                                // In a real app, you'd save this back to DB
+                                // For now, we've already saved the log in ScanNotifier,
+                                // but we might need to update it.
+                                await IsarService.saveAttendanceLog(log);
+                              }
+                              if (mounted) {
+                                context.go(AppRoutes.scan);
+                              }
+                            },
                           ),
                         ),
                       ],
@@ -274,6 +312,44 @@ class ResultScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBookletField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Booklet Number',
+          style: TextStyle(
+            fontSize: 13,
+            color: AppColors.textMuted,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
+          ),
+          child: TextField(
+            controller: _bookletController,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.book_outlined,
+                  color: AppColors.textSecondary, size: 20),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(vertical: 14),
+              hintText: 'Enter booklet ID',
+              hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 14),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

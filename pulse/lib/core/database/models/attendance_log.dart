@@ -17,6 +17,9 @@ class AttendanceLog {
   late bool isEligible;
   late bool isSynced;
 
+  String? bookletNumber;
+  bool? isStudentCheckIn;
+
   // Local UUID for deduplication when syncing
   @Index(unique: true, replace: true)
   late String localId;
@@ -27,6 +30,8 @@ class AttendanceLog {
         'session_type': sessionType,
         'scanned_at': timestamp.toIso8601String(),
         'device_log_id': localId,
+        'booklet_number': bookletNumber,
+        'is_student_check_in': isStudentCheckIn,
       };
 
   static AttendanceLog create({
@@ -37,6 +42,8 @@ class AttendanceLog {
     required String sessionType,
     required bool isEligible,
     required String localId,
+    String? bookletNumber,
+    bool? isStudentCheckIn,
   }) {
     return AttendanceLog()
       ..studentId = studentId
@@ -47,6 +54,8 @@ class AttendanceLog {
       ..timestamp = DateTime.now()
       ..isEligible = isEligible
       ..isSynced = false
-      ..localId = localId;
+      ..localId = localId
+      ..bookletNumber = bookletNumber
+      ..isStudentCheckIn = isStudentCheckIn;
   }
 }

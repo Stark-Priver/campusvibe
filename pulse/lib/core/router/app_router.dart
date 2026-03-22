@@ -9,10 +9,13 @@ import '../../features/logs/logs_screen.dart';
 import '../../features/admin/admin_screen.dart';
 import '../database/models/attendance_log.dart';
 import '../../features/admin/register_student_screen.dart';
+import '../../features/auth/login_screen.dart';
+import '../providers/auth_provider.dart';
 
 // Route paths
 abstract final class AppRoutes {
   static const String splash = '/';
+  static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String scan = '/scan';
   static const String result = '/scan/result';
@@ -25,14 +28,38 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authProvider);
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: false,
+    redirect: (context, state) {
+      final isLoading = authState.isLoading;
+      final isLoggedIn = authState.user != null;
+      final isGoingToSplash = state.matchedLocation == AppRoutes.splash;
+      final isGoingToLogin = state.matchedLocation == AppRoutes.login;
+
+      if (isLoading) return null;
+
+      if (!isLoggedIn && !isGoingToLogin && !isGoingToSplash) {
+        return AppRoutes.login;
+      }
+
+      if (isLoggedIn && (isGoingToLogin || isGoingToSplash)) {
+        return AppRoutes.dashboard;
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: AppRoutes.splash,
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => const LoginScreen(),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,

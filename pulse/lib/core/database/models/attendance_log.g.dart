@@ -17,48 +17,58 @@ const AttendanceLogSchema = CollectionSchema(
   name: r'AttendanceLog',
   id: 1511539404068289100,
   properties: {
-    r'isEligible': PropertySchema(
+    r'bookletNumber': PropertySchema(
       id: 0,
+      name: r'bookletNumber',
+      type: IsarType.string,
+    ),
+    r'isEligible': PropertySchema(
+      id: 1,
       name: r'isEligible',
       type: IsarType.bool,
     ),
+    r'isStudentCheckIn': PropertySchema(
+      id: 2,
+      name: r'isStudentCheckIn',
+      type: IsarType.bool,
+    ),
     r'isSynced': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'isSynced',
       type: IsarType.bool,
     ),
     r'localId': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'localId',
       type: IsarType.string,
     ),
     r'sessionId': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'sessionId',
       type: IsarType.string,
     ),
     r'sessionName': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'sessionName',
       type: IsarType.string,
     ),
     r'sessionType': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'sessionType',
       type: IsarType.string,
     ),
     r'studentId': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'studentId',
       type: IsarType.string,
     ),
     r'studentName': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'studentName',
       type: IsarType.string,
     ),
     r'timestamp': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'timestamp',
       type: IsarType.dateTime,
     )
@@ -110,6 +120,12 @@ int _attendanceLogEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.bookletNumber;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.localId.length * 3;
   bytesCount += 3 + object.sessionId.length * 3;
   bytesCount += 3 + object.sessionName.length * 3;
@@ -125,15 +141,17 @@ void _attendanceLogSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.isEligible);
-  writer.writeBool(offsets[1], object.isSynced);
-  writer.writeString(offsets[2], object.localId);
-  writer.writeString(offsets[3], object.sessionId);
-  writer.writeString(offsets[4], object.sessionName);
-  writer.writeString(offsets[5], object.sessionType);
-  writer.writeString(offsets[6], object.studentId);
-  writer.writeString(offsets[7], object.studentName);
-  writer.writeDateTime(offsets[8], object.timestamp);
+  writer.writeString(offsets[0], object.bookletNumber);
+  writer.writeBool(offsets[1], object.isEligible);
+  writer.writeBool(offsets[2], object.isStudentCheckIn);
+  writer.writeBool(offsets[3], object.isSynced);
+  writer.writeString(offsets[4], object.localId);
+  writer.writeString(offsets[5], object.sessionId);
+  writer.writeString(offsets[6], object.sessionName);
+  writer.writeString(offsets[7], object.sessionType);
+  writer.writeString(offsets[8], object.studentId);
+  writer.writeString(offsets[9], object.studentName);
+  writer.writeDateTime(offsets[10], object.timestamp);
 }
 
 AttendanceLog _attendanceLogDeserialize(
@@ -143,16 +161,18 @@ AttendanceLog _attendanceLogDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = AttendanceLog();
+  object.bookletNumber = reader.readStringOrNull(offsets[0]);
   object.id = id;
-  object.isEligible = reader.readBool(offsets[0]);
-  object.isSynced = reader.readBool(offsets[1]);
-  object.localId = reader.readString(offsets[2]);
-  object.sessionId = reader.readString(offsets[3]);
-  object.sessionName = reader.readString(offsets[4]);
-  object.sessionType = reader.readString(offsets[5]);
-  object.studentId = reader.readString(offsets[6]);
-  object.studentName = reader.readString(offsets[7]);
-  object.timestamp = reader.readDateTime(offsets[8]);
+  object.isEligible = reader.readBool(offsets[1]);
+  object.isStudentCheckIn = reader.readBoolOrNull(offsets[2]);
+  object.isSynced = reader.readBool(offsets[3]);
+  object.localId = reader.readString(offsets[4]);
+  object.sessionId = reader.readString(offsets[5]);
+  object.sessionName = reader.readString(offsets[6]);
+  object.sessionType = reader.readString(offsets[7]);
+  object.studentId = reader.readString(offsets[8]);
+  object.studentName = reader.readString(offsets[9]);
+  object.timestamp = reader.readDateTime(offsets[10]);
   return object;
 }
 
@@ -164,13 +184,13 @@ P _attendanceLogDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
@@ -180,6 +200,10 @@ P _attendanceLogDeserializeProp<P>(
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readString(offset)) as P;
+    case 10:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -427,6 +451,160 @@ extension AttendanceLogQueryWhere
 
 extension AttendanceLogQueryFilter
     on QueryBuilder<AttendanceLog, AttendanceLog, QFilterCondition> {
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'bookletNumber',
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'bookletNumber',
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bookletNumber',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'bookletNumber',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'bookletNumber',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookletNumber',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      bookletNumberIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'bookletNumber',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -486,6 +664,34 @@ extension AttendanceLogQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isEligible',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      isStudentCheckInIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isStudentCheckIn',
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      isStudentCheckInIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isStudentCheckIn',
+      ));
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterFilterCondition>
+      isStudentCheckInEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isStudentCheckIn',
         value: value,
       ));
     });
@@ -1382,6 +1588,20 @@ extension AttendanceLogQueryLinks
 
 extension AttendanceLogQuerySortBy
     on QueryBuilder<AttendanceLog, AttendanceLog, QSortBy> {
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      sortByBookletNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookletNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      sortByBookletNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookletNumber', Sort.desc);
+    });
+  }
+
   QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy> sortByIsEligible() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEligible', Sort.asc);
@@ -1392,6 +1612,20 @@ extension AttendanceLogQuerySortBy
       sortByIsEligibleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEligible', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      sortByIsStudentCheckIn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStudentCheckIn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      sortByIsStudentCheckInDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStudentCheckIn', Sort.desc);
     });
   }
 
@@ -1501,6 +1735,20 @@ extension AttendanceLogQuerySortBy
 
 extension AttendanceLogQuerySortThenBy
     on QueryBuilder<AttendanceLog, AttendanceLog, QSortThenBy> {
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      thenByBookletNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookletNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      thenByBookletNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookletNumber', Sort.desc);
+    });
+  }
+
   QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1523,6 +1771,20 @@ extension AttendanceLogQuerySortThenBy
       thenByIsEligibleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isEligible', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      thenByIsStudentCheckIn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStudentCheckIn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QAfterSortBy>
+      thenByIsStudentCheckInDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isStudentCheckIn', Sort.desc);
     });
   }
 
@@ -1632,9 +1894,24 @@ extension AttendanceLogQuerySortThenBy
 
 extension AttendanceLogQueryWhereDistinct
     on QueryBuilder<AttendanceLog, AttendanceLog, QDistinct> {
+  QueryBuilder<AttendanceLog, AttendanceLog, QDistinct> distinctByBookletNumber(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bookletNumber',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<AttendanceLog, AttendanceLog, QDistinct> distinctByIsEligible() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isEligible');
+    });
+  }
+
+  QueryBuilder<AttendanceLog, AttendanceLog, QDistinct>
+      distinctByIsStudentCheckIn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isStudentCheckIn');
     });
   }
 
@@ -1701,9 +1978,23 @@ extension AttendanceLogQueryProperty
     });
   }
 
+  QueryBuilder<AttendanceLog, String?, QQueryOperations>
+      bookletNumberProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bookletNumber');
+    });
+  }
+
   QueryBuilder<AttendanceLog, bool, QQueryOperations> isEligibleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isEligible');
+    });
+  }
+
+  QueryBuilder<AttendanceLog, bool?, QQueryOperations>
+      isStudentCheckInProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isStudentCheckIn');
     });
   }
 
