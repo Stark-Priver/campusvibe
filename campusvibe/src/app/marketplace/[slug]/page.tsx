@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Tag, UserCircle, MapPin, MessageCircle, Share2 } from "lucide-react"
+import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
 import { createClient } from "@/lib/supabase/server"
 
 type Props = { params: Promise<{ slug: string }> }
@@ -30,9 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase.from("marketplace_listings").select("slug").eq("is_published", true).eq("is_sold", false)
-  return (data ?? []).map((l) => ({ slug: l.slug }))
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from("marketplace_listings").select("slug").eq("is_published", true).eq("is_sold", false)
+    return (data ?? []).map((l) => ({ slug: l.slug }))
+  } catch {
+    return []
+  }
 }
 
 export const revalidate = 120
@@ -158,12 +163,7 @@ export default async function MarketplaceDetailPage({ params }: Props) {
                     This item has been sold
                   </div>
                 )}
-                <button
-                  onClick={() => navigator.clipboard.writeText(`https://campusvibe.co.tz/marketplace/${listing.slug}`)}
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:border-brand hover:text-brand transition-colors"
-                >
-                  <Share2 size={14} /> Share Listing
-                </button>
+                <CopyLinkButton url={`https://campusvibe.co.tz/marketplace/${listing.slug}`} />
               </div>
 
               <p className="mt-4 text-xs text-gray-400 font-body">

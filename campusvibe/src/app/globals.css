@@ -85,11 +85,11 @@ body {
 .animate-orbit         { animation: orbit 18s linear infinite; }
 .animate-orbit-reverse { animation: orbit-reverse 24s linear infinite; }
 
-/* Shimmer text */
+/* Shimmer text — works on both light and dark backgrounds */
 .text-shimmer {
   background: linear-gradient(
     90deg,
-    #6C63FF 0%, #a78bfa 30%, #FFC845 50%, #a78bfa 70%, #6C63FF 100%
+    #6C63FF 0%, #8b83ff 25%, #5a52e0 50%, #8b83ff 75%, #6C63FF 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -211,6 +211,13 @@ body {
   width: 1rem; height: 1rem;
   border: 2px solid rgba(255,255,255,0.3);
   border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.spinner-dark {
+  width: 1rem; height: 1rem;
+  border: 2px solid rgba(108,99,255,0.2);
+  border-top-color: #6C63FF;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

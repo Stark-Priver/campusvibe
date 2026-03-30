@@ -64,36 +64,36 @@ export default function GetInvolvedCTA() {
 
         {/* Bottom CTA banner */}
         <AnimatedSection delay={0.3} className="mt-10">
-          <div className="rounded-2xl bg-[#0D0D14] p-7 sm:p-10 relative overflow-hidden">
+          <div className="rounded-2xl bg-brand p-7 sm:p-10 relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none" style={{
-              backgroundImage: "linear-gradient(rgba(108,99,255,0.08) 1px,transparent 1px),linear-gradient(to right,rgba(108,99,255,0.08) 1px,transparent 1px)",
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.07) 1px,transparent 1px),linear-gradient(to right,rgba(255,255,255,0.07) 1px,transparent 1px)",
               backgroundSize: "40px 40px"
             }} />
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none" style={{
-              background: "radial-gradient(ellipse, rgba(108,99,255,0.2) 0%, transparent 65%)"
+              background: "radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 65%)"
             }} />
             <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div>
-                <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-brand mb-2">
+                <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-white/70 mb-2">
                   Tanzania&apos;s #1 University Platform
                 </p>
                 <h3 className="font-heading font-black text-white text-2xl sm:text-3xl leading-tight">
                   Ready to join<br />CampusVibe?
                 </h3>
-                <p className="mt-2 text-gray-400 font-body text-sm max-w-md">
+                <p className="mt-2 text-white/75 font-body text-sm max-w-md">
                   12,400+ students already connected. Download the app or sign up today.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-dark transition-colors shadow-lg shadow-brand/30 whitespace-nowrap"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-brand text-sm font-semibold hover:bg-gray-50 transition-colors shadow-lg whitespace-nowrap"
                 >
                   Download App <ArrowRight size={14} />
                 </a>
                 <Link
                   href="/get-involved"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 text-white text-sm font-semibold hover:border-brand/50 transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition-colors whitespace-nowrap"
                 >
                   Get Involved
                 </Link>

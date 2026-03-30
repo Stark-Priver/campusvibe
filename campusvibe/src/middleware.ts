@@ -5,7 +5,13 @@ const PROTECTED_ROUTES = ["/dashboard"]
 const AUTH_ROUTES = ["/login", "/register"]
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
+  // Forward the pathname as a header so Server Components can read it
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-pathname", request.nextUrl.pathname)
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,7 +23,9 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({ request })
+          supabaseResponse = NextResponse.next({
+            request: { headers: requestHeaders },
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -26,7 +34,6 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refresh session — important for Server Components
   const { data: { user } } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
@@ -43,11 +50,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
+  supabaseResponse.headers.set("x-pathname", pathname)
+
   return supabaseResponse
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)).*)",
   ],
 }

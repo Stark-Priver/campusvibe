@@ -99,17 +99,17 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pt-16 bg-[#0D0D14]">
+      <section className="pt-16 bg-surface border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-14 sm:pb-16">
           <AnimatedSection>
-            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-brand">
+            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
               Campus Vibe Media
             </span>
-            <h1 className="mt-3 font-heading font-black text-white leading-tight max-w-3xl"
+            <h1 className="mt-3 font-heading font-black text-dark leading-tight max-w-3xl"
               style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}>
               Connecting Campus Life Across Tanzania
             </h1>
-            <p className="mt-4 text-gray-400 text-base font-body leading-relaxed max-w-2xl">
+            <p className="mt-4 text-muted text-base font-body leading-relaxed max-w-2xl">
               Campus Vibe Media is a leading digital platform dedicated to connecting institutions, university
               students, and opportunity ecosystems across Tanzania. We serve as the bridge between campus life
               and the future through media, technology, and creative execution.
@@ -119,9 +119,9 @@ export default function AboutPage() {
           {/* Stats strip */}
           <AnimatedSection delay={0.15} className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {stats.map((stat) => (
-              <div key={stat.label} className="rounded-xl border border-white/10 bg-white/5 px-5 py-4">
-                <div className="font-heading font-black text-2xl sm:text-3xl text-white">{stat.value}</div>
-                <div className="text-gray-400 text-xs mt-1 font-body">{stat.label}</div>
+              <div key={stat.label} className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+                <div className="font-heading font-black text-2xl sm:text-3xl text-dark">{stat.value}</div>
+                <div className="text-muted text-xs mt-1 font-body">{stat.label}</div>
               </div>
             ))}
           </AnimatedSection>

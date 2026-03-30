@@ -29,12 +29,12 @@ export default async function MediaPage() {
 
   return (
     <>
-      <div className="pt-16 bg-[#0D0D14]">
+      <div className="pt-16 bg-surface border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-12 sm:pb-10">
           <AnimatedSection>
-            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-brand">CampusVibe TV & Podcasts</span>
-            <h1 className="mt-2 font-heading font-black text-4xl sm:text-5xl text-white">Media Hub</h1>
-            <p className="mt-3 text-gray-400 text-base font-body max-w-lg leading-relaxed">
+            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">CampusVibe TV &amp; Podcasts</span>
+            <h1 className="mt-2 font-heading font-black text-4xl sm:text-5xl text-dark">Media Hub</h1>
+            <p className="mt-3 text-muted text-base font-body max-w-lg leading-relaxed">
               Campus stories, student voices, and university highlights through video and audio.
             </p>
           </AnimatedSection>
@@ -42,21 +42,21 @@ export default async function MediaPage() {
       </div>
 
       {featured && (
-        <div className="bg-[#0D0D14] pb-10">
+        <div className="bg-surface pb-10 border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection>
-              <Link href={`/media/${featured.slug}`} className="group relative block rounded-2xl overflow-hidden border border-white/10">
-                <div className="relative aspect-[16/6] min-h-[280px] bg-gray-900">
-                  {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover opacity-60 group-hover:opacity-75 transition-opacity" sizes="100vw" />}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
+              <Link href={`/media/${featured.slug}`} className="group relative block card-pro card-hover overflow-hidden">
+                <div className="relative aspect-[16/6] min-h-[240px] bg-gray-100">
+                  {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover opacity-80 group-hover:opacity-90 transition-opacity" sizes="100vw" />}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/10" />
                   <div className="absolute inset-0 flex items-center p-6 sm:p-10">
                     <div>
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/20 border border-brand/30 text-brand text-xs font-section font-semibold uppercase tracking-wide mb-4">
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/20 border border-brand/30 text-white text-xs font-section font-semibold uppercase tracking-wide mb-4">
                         {featured.type === "podcast" ? <Mic size={11} /> : <Play size={11} />}
                         Featured · {featured.type}
                       </span>
                       <h2 className="font-heading font-black text-2xl sm:text-4xl text-white leading-tight max-w-2xl">{featured.title}</h2>
-                      <p className="mt-2 text-gray-300 font-body text-sm">{featured.channel} · {featured.views_count.toLocaleString()} views{featured.duration && ` · ${featured.duration}`}</p>
+                      <p className="mt-2 text-white/70 font-body text-sm">{featured.channel} · {featured.views_count.toLocaleString()} views{featured.duration && ` · ${featured.duration}`}</p>
                       <div className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-dark text-sm font-semibold group-hover:bg-brand group-hover:text-white transition-colors">
                         {featured.type === "podcast" ? <Mic size={14} /> : <Play size={14} />}
                         {featured.type === "podcast" ? "Listen Now" : "Watch Now"}
