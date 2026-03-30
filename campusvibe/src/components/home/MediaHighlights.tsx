@@ -1,130 +1,47 @@
+"use client"
+// MediaHighlights.tsx
 import Link from "next/link"
 import Image from "next/image"
-import { Play, Headphones, ArrowRight, Eye } from "lucide-react"
+import { Play, Mic, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
-import { mediaItems } from "@/lib/data"
+import type { MediaItem } from "@/types/database"
 
-export default function MediaHighlights() {
-  const [featured, ...rest] = mediaItems
-
+export function MediaHighlights({ items }: { items: MediaItem[] }) {
+  if (!items || items.length === 0) return null
   return (
-    <section className="section-space bg-surface">
+    <section className="bg-surface section-space">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Section header */}
-        <AnimatedSection className="flex items-end justify-between mb-10">
+        <AnimatedSection className="flex items-end justify-between mb-8">
           <div>
-            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
-              CampusVibe Media
-            </span>
-            <h2 className="mt-1.5 font-section font-bold text-2xl sm:text-3xl text-dark">
-              Watch & Listen
-            </h2>
+            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">CampusVibe TV & Podcasts</span>
+            <h2 className="mt-1.5 font-heading font-black text-2xl sm:text-3xl text-dark">Media Highlights</h2>
           </div>
-          <Link
-            href="/media"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:text-[#5a52e0] transition-colors shrink-0"
-          >
-            Media hub <ArrowRight size={14} />
+          <Link href="/media" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:text-brand-dark transition-colors">
+            All media <ArrowRight size={14} />
           </Link>
         </AnimatedSection>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-
-          {/* Featured large card */}
-          <AnimatedSection className="lg:col-span-3" delay={0.05}>
-            <Link
-              href={`/media/${featured.slug}`}
-              className="group relative block aspect-video card-pro card-hover"
-            >
-              <Image
-                src={featured.imageUrl}
-                alt={featured.title}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                sizes="(max-width: 1024px) 100vw, 60vw"
-              />
-
-              {/* Channel label */}
-              <span className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-xs font-section font-semibold uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-                {featured.channel}
-              </span>
-
-              {/* Play button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg">
-                  <Play size={22} className="text-dark fill-dark ml-0.5" />
-                </div>
-              </div>
-
-              {/* Bottom info */}
-              <div className="absolute bottom-0 inset-x-0 p-5"
-                style={{ background: "linear-gradient(to top, rgba(13,13,20,0.85) 0%, transparent 100%)" }}>
-                <h3 className="font-section font-bold text-white text-lg leading-snug">
-                  {featured.title}
-                </h3>
-                <div className="flex items-center gap-3 mt-2 text-white/60 text-xs font-body">
-                  <span>{featured.duration}</span>
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <Eye size={11} /> {featured.views} views
-                  </span>
-                  <span>·</span>
-                  <span>{featured.date}</span>
-                </div>
-              </div>
-            </Link>
-          </AnimatedSection>
-
-          {/* Side cards */}
-          <div className="lg:col-span-2 flex flex-col gap-5">
-            {rest.map((item, i) => (
-              <AnimatedSection key={item.id} delay={0.1 + i * 0.08}>
-                <Link
-                  href={`/media/${item.slug}`}
-                  className="group flex items-center gap-4 card-pro p-4 card-hover"
-                >
-                  {/* Thumbnail */}
-                  <div className="relative shrink-0 w-24 h-16 rounded-xl bg-surface overflow-hidden">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="96px"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-7 h-7 rounded-full bg-black/75 flex items-center justify-center">
-                        {item.type === "video" ? (
-                          <Play size={11} className="text-white fill-white ml-0.5" />
-                        ) : (
-                          <Headphones size={11} className="text-white" />
-                        )}
-                      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {items.map((item, i) => (
+            <AnimatedSection key={item.id} delay={0.07 * i}>
+              <Link href={`/media/${item.slug}`} className="group flex flex-col card-pro card-hover h-full">
+                <div className="relative aspect-video bg-gradient-to-br from-gray-800 to-gray-900">
+                  {item.image_url && <Image src={item.image_url} alt={item.title} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" sizes="25vw" />}
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-white/20 border border-white/40 flex items-center justify-center group-hover:bg-brand/80 transition-colors">
+                      {item.type === "podcast" ? <Mic size={16} className="text-white" /> : <Play size={16} className="text-white ml-0.5" />}
                     </div>
                   </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[10px] uppercase tracking-wider text-muted font-section font-semibold">
-                      {item.type === "video" ? "Video" : "Podcast"} · {item.channel}
-                    </span>
-                    <h4 className="font-section font-semibold text-sm text-dark group-hover:text-brand transition-colors mt-0.5 leading-snug line-clamp-2">
-                      {item.title}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-1.5 text-[11px] text-muted font-body">
-                      <span>{item.duration}</span>
-                      <span>·</span>
-                      <span>{item.views} views</span>
-                    </div>
-                  </div>
-                </Link>
-              </AnimatedSection>
-            ))}
-          </div>
+                  {item.duration && <span className="absolute bottom-2 right-2 text-white text-[10px] font-body bg-black/60 px-1.5 py-0.5 rounded">{item.duration}</span>}
+                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/50 text-white text-[10px] font-section font-semibold capitalize">{item.type}</span>
+                </div>
+                <div className="flex flex-col flex-1 p-4">
+                  <p className="text-[10px] text-muted font-body mb-1.5">{item.channel} · {item.views_count.toLocaleString()} views</p>
+                  <h3 className="font-section font-semibold text-sm text-dark group-hover:text-brand transition-colors leading-snug line-clamp-2">{item.title}</h3>
+                </div>
+              </Link>
+            </AnimatedSection>
+          ))}
         </div>
-
       </div>
     </section>
   )

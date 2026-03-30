@@ -1,183 +1,149 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
-import { Play, Headphones, Eye, ArrowRight, Tv } from "lucide-react"
+import { Play, Mic, ArrowRight } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
-import { mediaItems } from "@/lib/data"
-import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Media — CampusVibe",
-  description:
-    "CampusVibe TV and Podcasts — video and audio content for and by Tanzanian university students.",
+  title: "Media — CampusVibe TV & Podcasts",
+  description: "Watch videos and listen to podcasts from CampusVibe. Student stories, interviews, campus highlights, and more.",
+  alternates: { canonical: "/media" },
 }
 
-export default function MediaPage() {
-  const videos = mediaItems.filter((m) => m.type === "video")
-  const podcasts = mediaItems.filter((m) => m.type === "podcast")
+export const revalidate = 60
+
+export default async function MediaPage() {
+  const supabase = await createClient()
+  const { data: items } = await supabase
+    .from("media_items")
+    .select("*")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(20)
+
+  const featured = items?.find((i) => i.is_featured)
+  const rest = items?.filter((i) => !i.is_featured) ?? []
+  const videos = rest.filter((i) => i.type === "video")
+  const podcasts = rest.filter((i) => i.type === "podcast")
 
   return (
     <>
-      {/* Hero */}
-      <div className="pt-16 bg-[#ECECEC] border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-10 sm:pb-9">
+      <div className="pt-16 bg-[#0D0D14]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-7 sm:pt-12 sm:pb-10">
           <AnimatedSection>
-            <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-section font-semibold text-gray-400 mb-3">
-              <Tv size={12} className="text-brand" />
-              CampusVibe Media Hub
-            </span>
-            <h1 className="font-heading font-black text-3xl sm:text-4xl text-dark leading-tight">
-              Watch. Listen.{" "}
-              <span className="text-brand block">Stay Informed.</span>
-            </h1>
-            <p className="mt-2.5 text-gray-600 text-sm sm:text-base font-body max-w-xl leading-relaxed">
-              Original videos, podcasts, and student creator content produced for and by Tanzania&apos;s
-              university community.
+            <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-brand">CampusVibe TV & Podcasts</span>
+            <h1 className="mt-2 font-heading font-black text-4xl sm:text-5xl text-white">Media Hub</h1>
+            <p className="mt-3 text-gray-400 text-base font-body max-w-lg leading-relaxed">
+              Campus stories, student voices, and university highlights through video and audio.
             </p>
-          </AnimatedSection>
-
-          {/* Platform pills */}
-          <AnimatedSection delay={0.1} className="mt-5 flex flex-wrap gap-2.5">
-            {["CampusVibe TV", "Podcasts", "Student Creators"].map((platform) => (
-              <button
-                key={platform}
-                className="px-3.5 py-1.5 rounded-full text-xs font-section font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-dark transition-colors first:bg-brand first:text-white first:border-brand"
-              >
-                {platform}
-              </button>
-            ))}
           </AnimatedSection>
         </div>
       </div>
 
-      {/* Videos */}
-      <section className="bg-[#ECECEC] py-8 sm:py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="flex items-center justify-between mb-5 sm:mb-6">
-            <div>
-              <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
-                CampusVibe TV
-              </span>
-              <h2 className="mt-1 font-section font-bold text-xl text-dark">Latest Videos</h2>
-            </div>
-            <Link href="/media" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-brand">
-              All videos <ArrowRight size={13} />
-            </Link>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-            {videos.map((item, i) => (
-              <AnimatedSection key={item.id} delay={0.07 * i}>
-                <Link
-                  href={`/media/${item.slug}`}
-                  className="group relative block aspect-video card-pro card-hover"
-                >
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-black/30" />
-                  <span className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white text-[11px] font-section font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand" />
-                    {item.channel}
-                  </span>
-                  <span className="absolute top-3 right-3 px-2 py-0.5 rounded bg-black/50 text-white text-[11px] font-body">
-                    {item.duration}
-                  </span>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-lg">
-                      <Play size={18} className="text-dark fill-dark ml-0.5" />
+      {featured && (
+        <div className="bg-[#0D0D14] pb-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AnimatedSection>
+              <Link href={`/media/${featured.slug}`} className="group relative block rounded-2xl overflow-hidden border border-white/10">
+                <div className="relative aspect-[16/6] min-h-[280px] bg-gray-900">
+                  {featured.image_url && <Image src={featured.image_url} alt={featured.title} fill className="object-cover opacity-60 group-hover:opacity-75 transition-opacity" sizes="100vw" />}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
+                  <div className="absolute inset-0 flex items-center p-6 sm:p-10">
+                    <div>
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/20 border border-brand/30 text-brand text-xs font-section font-semibold uppercase tracking-wide mb-4">
+                        {featured.type === "podcast" ? <Mic size={11} /> : <Play size={11} />}
+                        Featured · {featured.type}
+                      </span>
+                      <h2 className="font-heading font-black text-2xl sm:text-4xl text-white leading-tight max-w-2xl">{featured.title}</h2>
+                      <p className="mt-2 text-gray-300 font-body text-sm">{featured.channel} · {featured.views_count.toLocaleString()} views{featured.duration && ` · ${featured.duration}`}</p>
+                      <div className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-dark text-sm font-semibold group-hover:bg-brand group-hover:text-white transition-colors">
+                        {featured.type === "podcast" ? <Mic size={14} /> : <Play size={14} />}
+                        {featured.type === "podcast" ? "Listen Now" : "Watch Now"}
+                      </div>
                     </div>
                   </div>
-                  <div
-                    className="absolute bottom-0 inset-x-0 p-3.5 sm:p-4"
-                    style={{ background: "linear-gradient(to top, rgba(13,13,20,0.9) 0%, transparent 100%)" }}
-                  >
-                    <h3 className="font-section font-semibold text-white text-sm leading-snug line-clamp-2">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1 text-white/50 text-[11px] font-body">
-                      <Eye size={10} /> {item.views} views
-                      <span>·</span>
-                      {item.date}
-                    </div>
-                  </div>
-                </Link>
-              </AnimatedSection>
-            ))}
+                </div>
+              </Link>
+            </AnimatedSection>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* Podcasts */}
-      <section className="bg-surface py-8 sm:py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="flex items-center justify-between mb-5 sm:mb-6">
+      <div className="bg-[#ECECEC] section-space">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          {videos.length > 0 && (
             <div>
-              <span className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
-                CampusVibe Podcasts
-              </span>
-              <h2 className="mt-1 font-section font-bold text-xl text-dark">Latest Episodes</h2>
-            </div>
-          </AnimatedSection>
-
-          <div className="space-y-3.5">
-            {podcasts.map((item, i) => (
-              <AnimatedSection key={item.id} delay={0.07 * i}>
-                <Link
-                  href={`/media/${item.slug}`}
-                  className="group flex items-center gap-4 card-pro p-4 card-hover"
-                >
-                  <div className="w-16 h-16 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
-                    <Headphones size={22} className="text-brand" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[10px] uppercase tracking-wider text-muted font-section font-semibold">
-                      {item.channel}
-                    </span>
-                    <h3 className="font-section font-semibold text-dark group-hover:text-brand transition-colors text-base leading-snug mt-0.5">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1.5 text-xs text-muted font-body">
-                      <span>{item.duration}</span>
-                      <span>·</span>
-                      <span>{item.views} plays</span>
-                      <span>·</span>
-                      <span>{item.date}</span>
-                    </div>
-                  </div>
-                  <div className="shrink-0 flex items-center">
-                    <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-colors">
-                      <Play size={14} className="text-muted group-hover:text-white fill-current ml-0.5 transition-colors" />
-                    </div>
-                  </div>
-                </Link>
+              <AnimatedSection className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center"><Play size={14} className="text-brand" /></div>
+                  <h2 className="font-section font-bold text-xl text-dark">Videos</h2>
+                </div>
               </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </section>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {videos.map((item, i) => (
+                  <AnimatedSection key={item.id} delay={0.07 * i}>
+                    <Link href={`/media/${item.slug}`} className="group flex flex-col card-pro card-hover h-full">
+                      <div className="relative aspect-video bg-gray-900">
+                        {item.image_url && <Image src={item.image_url} alt={item.title} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" sizes="25vw" />}
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-full bg-white/20 border border-white/40 flex items-center justify-center group-hover:bg-brand/80 transition-colors">
+                            <Play size={16} className="text-white ml-0.5" />
+                          </div>
+                        </div>
+                        {item.duration && <span className="absolute bottom-2 right-2 text-white text-[10px] font-body bg-black/60 px-1.5 py-0.5 rounded">{item.duration}</span>}
+                      </div>
+                      <div className="flex flex-col flex-1 p-4">
+                        <p className="text-[10px] text-muted font-body mb-1.5">{item.channel} · {item.views_count.toLocaleString()} views</p>
+                        <h3 className="font-section font-semibold text-sm text-dark group-hover:text-brand transition-colors leading-snug line-clamp-2">{item.title}</h3>
+                      </div>
+                    </Link>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
+          )}
 
-      {/* Creator CTA */}
-      <section className="bg-[#ECECEC] py-8 sm:py-10 border-t border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <AnimatedSection>
-            <h2 className="font-section font-bold text-2xl text-dark">Are you a student creator?</h2>
-            <p className="text-muted text-base font-body mt-3 leading-relaxed">
-              Submit your videos, podcast episodes, or written pieces to be featured on CampusVibe Media.
-              Reach 12,000+ students across Tanzania.
-            </p>
-            <Link
-              href="/get-involved#contributor"
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-[#5a52e0] transition-colors"
-            >
-              Become a Creator <ArrowRight size={14} />
-            </Link>
-          </AnimatedSection>
+          {podcasts.length > 0 && (
+            <div>
+              <AnimatedSection className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-interactive/10 flex items-center justify-center"><Mic size={14} className="text-interactive" /></div>
+                  <h2 className="font-section font-bold text-xl text-dark">Podcasts</h2>
+                </div>
+              </AnimatedSection>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {podcasts.map((item, i) => (
+                  <AnimatedSection key={item.id} delay={0.07 * i}>
+                    <Link href={`/media/${item.slug}`} className="group flex card-pro card-hover p-4 gap-4">
+                      <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br from-interactive/20 to-brand/20">
+                        {item.image_url && <Image src={item.image_url} alt={item.title} fill className="object-cover" sizes="80px" />}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Mic size={20} className="text-white/80" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-muted font-body mb-1">{item.channel}{item.duration && ` · ${item.duration}`}</p>
+                        <h3 className="font-section font-semibold text-sm text-dark group-hover:text-brand transition-colors leading-snug line-clamp-2">{item.title}</h3>
+                        <p className="text-xs text-muted font-body mt-1.5">{item.views_count.toLocaleString()} listens</p>
+                        <div className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand">
+                          Listen <ArrowRight size={10} />
+                        </div>
+                      </div>
+                    </Link>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(!items || items.length === 0) && (
+            <div className="text-center py-20">
+              <p className="text-muted font-body">No media published yet. Check back soon!</p>
+            </div>
+          )}
         </div>
-      </section>
+      </div>
     </>
   )
 }

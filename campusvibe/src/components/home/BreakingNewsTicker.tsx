@@ -1,42 +1,40 @@
-"use client"
+import { createClient } from "@/lib/supabase/server"
+import { Zap } from "lucide-react"
 
-import { AlertCircle } from "lucide-react"
-import { breakingNews } from "@/lib/data"
+export default async function BreakingNewsTicker() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from("breaking_news")
+    .select("text")
+    .eq("is_active", true)
+    .order("order_index", { ascending: true })
 
-export default function BreakingNewsTicker() {
-  const doubled = [...breakingNews, ...breakingNews]
+  const items = data?.map((r) => r.text) ?? [
+    "Welcome to CampusVibe — Tanzania's #1 university super-app",
+    "CampusVibe Awards 2026 nominations now open",
+  ]
+
+  const doubled = [...items, ...items]
 
   return (
-    <div className="bg-[#ECECEC] border-y border-gray-100 overflow-hidden">
-      <div className="flex items-stretch h-11">
-
-        {/* Label */}
-        <div className="shrink-0 flex items-center gap-2 px-5 bg-accent z-10">
-          <AlertCircle size={13} className="text-dark" strokeWidth={2.5} />
-          <span className="font-section font-bold text-[10px] uppercase tracking-widest text-dark whitespace-nowrap">
+    <div className="bg-brand text-white py-2 overflow-hidden relative z-10">
+      <div className="flex items-center">
+        <div className="shrink-0 px-4 flex items-center gap-2 bg-brand-dark z-10 border-r border-white/20">
+          <Zap size={13} strokeWidth={2.5} />
+          <span className="text-[10px] font-section font-bold uppercase tracking-widest whitespace-nowrap">
             Breaking
           </span>
         </div>
-
-        {/* Ticker */}
-        <div className="relative flex-1 overflow-hidden">
-          {/* Left fade */}
-          <div className="absolute left-0 inset-y-0 w-10 pointer-events-none z-10"
-            style={{ background: "linear-gradient(to right, white, transparent)" }} />
-          {/* Right fade */}
-          <div className="absolute right-0 inset-y-0 w-10 pointer-events-none z-10"
-            style={{ background: "linear-gradient(to left, white, transparent)" }} />
-
-          <div className="flex items-center h-full animate-ticker whitespace-nowrap">
-            {doubled.map((item, i) => (
-              <span key={i} className="inline-flex items-center shrink-0">
-                <span className="text-sm text-dark font-body px-6">{item}</span>
-                <span className="text-gray-300 shrink-0">&#8226;</span>
+        <div className="overflow-hidden flex-1">
+          <div className="animate-ticker flex whitespace-nowrap">
+            {doubled.map((text, i) => (
+              <span key={i} className="inline-flex items-center text-sm font-body px-8">
+                <span className="w-1 h-1 rounded-full bg-white/50 mr-8" />
+                {text}
               </span>
             ))}
           </div>
         </div>
-
       </div>
     </div>
   )

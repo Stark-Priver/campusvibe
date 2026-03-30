@@ -1,125 +1,214 @@
-# CampusVibe Web Platform
+# CampusVibe — Production Build
+**Tanzania's #1 University Super-App** · [campusvibe.co.tz](https://campusvibe.co.tz)
 
-This application contains the Next.js codebase for the public CampusVibe website.
+---
 
-It is intended to serve two connected purposes:
+## 🚀 Quick Start
 
-- The official landing page for the CampusVibe super-app
-- The CampusVibe Media platform for university news, entertainment, events, media, and community engagement
+### 1. Fix dynamic route directories (run once)
+```bash
+chmod +x setup.sh && ./setup.sh
+```
+This renames `slug/` → `[slug]/` and `role/` → `[role]/` for Next.js routing.
 
-This web platform is part of the broader CampusVibe ecosystem and is expected to share the same Supabase backend and database used by the Flutter application in the root workspace.
-
-## Product Role
-
-The web platform exists to:
-
-- Present the CampusVibe brand professionally
-- Explain the product to students, universities, and partners
-- Publish media and campus content
-- Drive installs and signups
-- Support sponsor, contributor, and advertiser inquiries
-
-## Planned Website Sections
-
-- Home
-- News
-- Events
-- Media
-- Marketplace
-- Get Involved
-
-## Key Content and Feature Areas
-
-### Landing Page
-
-- Hero section with product positioning
-- Breaking news slider
-- Latest videos or podcasts
-- Featured events
-- Marketplace preview
-- Community and contribution calls to action
-
-### Campus News
-
-- Academic news
-- Student politics
-- Lifestyle and culture
-- Search, filters, and shareable article pages
-
-### Entertainment and Events
-
-- Campus Vibe Awards
-- Event calendar
-- Nominee and participant profiles
-- Voting and RSVP support
-
-### Media Hub
-
-- Video publishing
-- Podcasts
-- Playlists and featured creators
-
-### Marketplace Preview
-
-- Selected products and student services
-- Discovery funnels into the full app ecosystem
-
-### Get Involved
-
-- Contributor applications
-- Sponsorship inquiries
-- Advertising opportunities
-
-## Shared Backend Direction
-
-The web platform should use the same Supabase project as the app for:
-
-- Authentication
-- Shared content models
-- Events and media data
-- Marketplace previews
-- Contributor and sponsor submissions
-
-## Visual Direction
-
-The website should follow the documented CampusVibe visual system:
-
-- Heading fonts: Poppins and Montserrat
-- Body font: Inter
-- Primary brand color: `#6C63FF`
-- Interaction color: `#3D9BE9`
-- Highlight color: `#FFC845`
-- Success color: `#4CAF50`
-- Neutral text and surfaces: `#1A1A1A`, `#F5F5F5`, and `#FFFFFF`
-
-Implementation constraints:
-
-- Use `lucide-react` as the standard icon library for the website
-- No unnecessary gradients across the website
-- No decorative emoji in UI copy or section headings
-- Favor clean hierarchy, subtle shadows, and flat color surfaces
-- Build mobile-first and ensure the website is fully responsive across phones, tablets, laptops, and large desktop screens
-
-See the workspace docs for the detailed web design system and layout hierarchy.
-
-## Development
-
-Install dependencies and run the development server:
-
+### 2. Install dependencies
 ```bash
 npm install
-npm run dev
 ```
 
-The local app runs on `http://localhost:3000` by default.
+### 3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
+Fill in your Supabase credentials from the [Supabase Dashboard](https://supabase.com/dashboard).
 
-## Reference Documentation
+### 4. Set up Supabase database
+1. Go to your Supabase project → **SQL Editor**
+2. Paste and run the contents of `supabase-schema.sql`
+3. This creates all tables, RLS policies, storage buckets, and seed data
 
-Workspace-level documentation lives in the root `docs/` folder, including the product overview, architecture, and roadmap for the full ecosystem.
+### 5. Run locally
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000)
 
-## Contact Channels
+---
 
-- `info@campusvibe.co.tz`
-- `ads@campusvibe.co.tz`
-- `editor@campusvibe.co.tz`
-- `director@campusvibe.co.tz`
+## 🗄️ Supabase Setup
+
+### Required environment variables
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_APP_URL=https://campusvibe.co.tz
+```
+
+### Storage buckets (auto-created by SQL schema)
+- `media` — Videos, podcasts, news images (public)
+- `avatars` — User profile photos (public)
+- `marketplace-images` — Listing photos (public)
+- `event-images` — Event cover images (public)
+- `news-images` — News article images (public)
+
+### How to upload files to storage
+In your Supabase dashboard → Storage, upload files to the appropriate bucket.
+The public URL format is:
+```
+https://your-project.supabase.co/storage/v1/object/public/[bucket]/[filename]
+```
+
+---
+
+## 📦 Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 15 (App Router) |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth (custom) |
+| Storage | Supabase Storage |
+| Styling | Tailwind CSS v4 |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| Hosting | Vercel |
+| Validation | Zod |
+
+---
+
+## 🗂️ Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx                    # Home page
+│   ├── layout.tsx                  # Root layout + SEO metadata
+│   ├── sitemap.ts                  # Dynamic XML sitemap
+│   ├── robots.ts                   # robots.txt
+│   ├── not-found.tsx               # 404 page
+│   ├── login/page.tsx              # Login (Supabase auth)
+│   ├── register/page.tsx           # Registration
+│   ├── auth/callback/route.ts      # Email verification callback
+│   ├── news/
+│   │   ├── page.tsx                # News listing
+│   │   └── [slug]/page.tsx         # News article detail
+│   ├── events/
+│   │   ├── page.tsx                # Events listing
+│   │   └── [slug]/page.tsx         # Event detail + RSVP
+│   ├── marketplace/
+│   │   ├── page.tsx                # Marketplace listing
+│   │   └── [slug]/page.tsx         # Product detail
+│   ├── media/page.tsx              # Media hub (TV + Podcasts)
+│   ├── about/page.tsx              # About page
+│   ├── get-involved/page.tsx       # Get Involved + contact form
+│   ├── dashboard/
+│   │   ├── page.tsx                # Role selector dashboard
+│   │   └── [role]/page.tsx         # Role-specific dashboard
+│   └── api/
+│       ├── contact/route.ts        # Contact form API
+│       └── auth/callback/          # Auth callback
+├── components/
+│   ├── home/
+│   │   ├── Hero.tsx                # Animated hero (dark theme)
+│   │   ├── BreakingNewsTicker.tsx  # Live news ticker
+│   │   ├── NewsFeed.tsx            # Latest articles
+│   │   ├── FeaturedEvents.tsx      # Upcoming events
+│   │   ├── MediaHighlights.tsx     # Videos + Podcasts
+│   │   ├── MarketplacePreview.tsx  # Latest listings
+│   │   └── GetInvolvedCTA.tsx      # CTA section
+│   ├── layout/
+│   │   ├── Navbar.tsx              # Server component (auth-aware)
+│   │   ├── NavbarClient.tsx        # Interactive navbar
+│   │   ├── Footer.tsx              # Footer with links
+│   │   └── LayoutProvider.tsx      # Conditional layout wrapper
+│   └── ui/
+│       └── AnimatedSection.tsx     # Scroll-triggered animations
+├── lib/
+│   ├── auth/actions.ts             # Login/register/logout server actions
+│   └── supabase/
+│       ├── client.ts               # Browser Supabase client
+│       └── server.ts               # Server + admin Supabase clients
+├── middleware.ts                   # Auth guard + session refresh
+└── types/
+    └── database.ts                 # Full TypeScript types for all tables
+```
+
+---
+
+## 🔐 Authentication Flow
+
+1. User visits `/login` or `/register`
+2. Supabase Auth handles credentials (email + password)
+3. On register: email verification sent → user clicks link → `/auth/callback`
+4. Session stored in cookies via `@supabase/ssr`
+5. `middleware.ts` protects `/dashboard/*` routes
+6. Server Components read user via `createClient().auth.getUser()`
+
+---
+
+## 🎯 Role System
+
+Roles are stored as a `text[]` array on the `profiles` table.
+Supported roles: `administrator`, `ambassador`, `student`, `driver`, `restaurant-owner`, `delivery`
+
+To assign roles to a user (admin action in Supabase):
+```sql
+UPDATE profiles SET roles = array_append(roles, 'administrator') WHERE email = 'admin@campusvibe.co.tz';
+```
+
+---
+
+## 🌐 Deployment to Vercel
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+**Required environment variables in Vercel dashboard:**
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_APP_URL` → `https://campusvibe.co.tz`
+
+**Custom domain:** In Vercel → Project Settings → Domains → Add `campusvibe.co.tz`
+
+---
+
+## 📊 SEO
+
+- Dynamic `sitemap.xml` at `/sitemap.xml` — auto-generated from Supabase data
+- `robots.txt` at `/robots.txt`
+- Full OpenGraph + Twitter Card metadata on every page
+- JSON-LD structured data on news articles, events, and marketplace listings
+- `canonical` URLs set for all pages
+- ISR (Incremental Static Regeneration) on all content pages
+
+---
+
+## 📝 Content Management
+
+All content is managed through Supabase:
+
+| Content | Table | Admin action |
+|---------|-------|-------------|
+| News articles | `news_articles` | Insert row with `is_published = true` |
+| Events | `events` | Insert row with `is_published = true` |
+| Media | `media_items` | Insert row with `is_published = true` |
+| Marketplace | `marketplace_listings` | Sellers post via app |
+| Breaking news | `breaking_news` | Insert row with `is_active = true` |
+| Platform stats | `platform_stats` | Update `value` column |
+
+---
+
+## 📧 Contact
+
+- **General:** info@campusvibe.co.tz
+- **Advertising:** ads@campusvibe.co.tz
+- **Editorial:** editor@campusvibe.co.tz
+- **Director:** director@campusvibe.co.tz
+- **Support:** support@campusvibe.co.tz

@@ -1,146 +1,136 @@
-import type { Metadata } from "next"
+"use client"
+
+import { useActionState } from "react"
 import Link from "next/link"
-import { redirect } from "next/navigation"
-import { Lock, Mail, ShieldCheck } from "lucide-react"
-import { getCurrentMockUser } from "@/lib/auth/session"
-import { mockAuthUsers } from "@/lib/auth/users"
-import { loginWithCredentials } from "./actions"
+import { Lock, Mail, ShieldCheck, ArrowRight, Eye, EyeOff } from "lucide-react"
+import { useState } from "react"
+import { login, type ActionResult } from "@/lib/auth/actions"
 
-export const metadata: Metadata = {
-  title: "Login | CampusVibe",
-  description: "Secure role-based login for Campus Vibe operational dashboards.",
-}
+const initialState: ActionResult = {}
 
-type LoginPageProps = {
-  searchParams?: Promise<{ error?: string }>
-}
-
-export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const currentUser = await getCurrentMockUser()
-  if (currentUser) redirect("/dashboard")
-
-  const resolvedSearchParams = searchParams ? await searchParams : undefined
-
-  const errorMessage = resolvedSearchParams?.error === "missing"
-    ? "Please enter both email and password."
-    : resolvedSearchParams?.error === "invalid"
-      ? "Invalid credentials. Use one of the demo accounts below."
-      : null
+export default function LoginPage() {
+  const [state, formAction, isPending] = useActionState(login, initialState)
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <>
-      <section className="pt-16 bg-surface border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-9 pb-8 sm:pt-11 sm:pb-10">
-          <p className="text-[10px] uppercase tracking-widest font-section font-semibold text-muted">
-            Campus Vibe Access
-          </p>
-          <h1 className="mt-2 font-heading font-black text-3xl sm:text-4xl text-dark leading-tight max-w-3xl">
-            Sign In to Role Dashboards
-          </h1>
-          <p className="mt-2.5 text-sm sm:text-base text-muted font-body leading-relaxed max-w-3xl">
-            Access administrator, student, mobility, and partner workspaces based on your assigned roles.
-          </p>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#0D0D14] flex flex-col">
+      {/* Top nav */}
+      <div className="px-6 py-5">
+        <Link href="/" className="inline-flex items-center gap-2">
+          <span className="font-heading font-black text-xl text-white">Campus <span className="text-brand">Vibe</span></span>
+        </Link>
+      </div>
 
-      <section className="bg-[#ECECEC] py-8 sm:py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
-          <article className="card-pro p-5 lg:col-span-2">
-            <h2 className="font-section font-bold text-lg text-dark">Secure Login</h2>
-            <p className="mt-1.5 text-sm text-muted font-body">
-              Use your account credentials to continue.
-            </p>
+      {/* Main content */}
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
 
-            {errorMessage ? (
-              <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 font-body">
-                {errorMessage}
-              </p>
-            ) : null}
+          {/* Card */}
+          <div className="bg-[#161620] border border-white/10 rounded-2xl p-7 sm:p-8 shadow-2xl">
+            {/* Icon */}
+            <div className="w-12 h-12 rounded-xl bg-brand/15 border border-brand/25 flex items-center justify-center mb-5">
+              <ShieldCheck size={22} className="text-brand" />
+            </div>
 
-            <form action={loginWithCredentials} className="mt-4 space-y-3.5">
+            <h1 className="font-heading font-black text-2xl text-white">Welcome back</h1>
+            <p className="text-gray-400 text-sm font-body mt-1">Sign in to your CampusVibe account</p>
+
+            {/* Error */}
+            {state.error && (
+              <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400 font-body">
+                {state.error}
+              </div>
+            )}
+
+            {/* Success */}
+            {state.success && (
+              <div className="mt-4 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3 text-sm text-green-400 font-body">
+                {state.success}
+              </div>
+            )}
+
+            <form action={formAction} className="mt-6 space-y-4">
+              {/* Email */}
               <div>
-                <label htmlFor="email" className="text-xs font-section font-semibold text-dark block mb-1.5">
-                  Email
+                <label htmlFor="email" className="block text-xs font-section font-semibold text-gray-300 mb-1.5">
+                  Email address
                 </label>
                 <div className="relative">
-                  <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
                   <input
                     id="email"
                     name="email"
                     type="email"
                     required
-                    placeholder="you@campusvibe.co.tz"
-                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm text-dark bg-white placeholder-muted focus:outline-none focus:border-brand"
+                    autoComplete="email"
+                    placeholder="you@university.ac.tz"
+                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand transition-colors font-body"
                   />
                 </div>
               </div>
 
+              {/* Password */}
               <div>
-                <label htmlFor="password" className="text-xs font-section font-semibold text-dark block mb-1.5">
-                  Password
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label htmlFor="password" className="block text-xs font-section font-semibold text-gray-300">
+                    Password
+                  </label>
+                  <Link href="/forgot-password" className="text-xs text-brand hover:text-brand-dark transition-colors font-body">
+                    Forgot password?
+                  </Link>
+                </div>
                 <div className="relative">
-                  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
-                    placeholder="Enter password"
-                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm text-dark bg-white placeholder-muted focus:outline-none focus:border-brand"
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-brand transition-colors font-body"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
                 </div>
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-interactive transition-colors"
+                disabled={isPending}
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand text-white text-sm font-semibold hover:bg-brand-dark disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
-                <ShieldCheck size={15} />
-                Sign In
+                {isPending ? (
+                  <><span className="spinner" />Signing in...</>
+                ) : (
+                  <>Sign In <ArrowRight size={14} /></>
+                )}
               </button>
             </form>
 
-            <p className="mt-4 text-xs text-muted font-body">
-              This is a mock environment. Role assignment is based on demo account data.
-            </p>
-          </article>
-
-          <article className="card-pro p-5 lg:col-span-3">
-            <h2 className="font-section font-bold text-lg text-dark">Demo Accounts</h2>
-            <p className="mt-1.5 text-sm text-muted font-body">
-              Use these credentials to test single-role and multi-role access behavior.
-            </p>
-
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-              {mockAuthUsers.map((user) => (
-                <div key={user.id} className="rounded-xl border border-gray-200 bg-white px-4 py-3">
-                  <p className="font-section font-semibold text-sm text-dark">{user.fullName}</p>
-                  <p className="text-xs text-muted mt-0.5">{user.organization}</p>
-                  <p className="text-xs text-dark mt-2">{user.email}</p>
-                  <p className="text-xs text-dark mt-0.5">{user.password}</p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {user.roles.map((role) => (
-                      <span
-                        key={`${user.id}-${role}`}
-                        className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-brand/10 text-brand font-section font-semibold"
-                      >
-                        {role}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-5 text-sm">
-              <Link href="/" className="text-brand font-semibold hover:text-interactive transition-colors">
-                Back to website
+            {/* Register link */}
+            <p className="mt-5 text-center text-sm text-gray-400 font-body">
+              New to CampusVibe?{" "}
+              <Link href="/register" className="text-brand font-semibold hover:text-brand-dark transition-colors">
+                Create an account
               </Link>
-            </div>
-          </article>
+            </p>
+          </div>
+
+          {/* Back to site */}
+          <p className="mt-5 text-center">
+            <Link href="/" className="text-gray-500 text-sm font-body hover:text-gray-300 transition-colors">
+              ← Back to campusvibe.co.tz
+            </Link>
+          </p>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   )
 }

@@ -1,26 +1,23 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import Navbar from "@/components/layout/Navbar"
-import Footer from "@/components/layout/Footer"
+import Navbar from "./Navbar"
+import Footer from "./Footer"
 
-interface LayoutProviderProps {
-  children: React.ReactNode
-}
-
-export default function LayoutProvider({ children }: LayoutProviderProps) {
+export default function LayoutProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  
-  // Don't show navbar/footer on dashboard and login routes
-  const isDashboardRoute = pathname?.startsWith("/dashboard")
-  const isLoginRoute = pathname?.startsWith("/login")
-  const shouldHideLayout = isDashboardRoute || isLoginRoute
+  const isDashboard = pathname.startsWith("/dashboard")
+  const isAuth = pathname.startsWith("/login") || pathname.startsWith("/register") || pathname.startsWith("/auth")
+
+  if (isDashboard || isAuth) {
+    return <>{children}</>
+  }
 
   return (
     <>
-      {!shouldHideLayout && <Navbar />}
+      <Navbar />
       <main>{children}</main>
-      {!shouldHideLayout && <Footer />}
+      <Footer />
     </>
   )
 }
