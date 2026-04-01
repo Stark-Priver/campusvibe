@@ -3,9 +3,14 @@ import Navbar from "./Navbar"
 import Footer from "./Footer"
 
 export default async function LayoutProvider({ children }: { children: React.ReactNode }) {
-  const headersList = await headers()
-  // x-pathname is set by middleware so server components can read the current path
-  const pathname = headersList.get("x-pathname") ?? ""
+  let pathname = "/"
+
+  try {
+    const headersList = await headers()
+    pathname = headersList.get("x-pathname") ?? "/"
+  } catch {
+    // headers() unavailable in some contexts — use safe default
+  }
 
   const isDashboard = pathname.startsWith("/dashboard")
   const isAuth =
@@ -13,6 +18,7 @@ export default async function LayoutProvider({ children }: { children: React.Rea
     pathname.startsWith("/register") ||
     pathname.startsWith("/auth")
 
+  // Dashboard and auth pages handle their own layout (no navbar/footer)
   if (isDashboard || isAuth) {
     return <>{children}</>
   }

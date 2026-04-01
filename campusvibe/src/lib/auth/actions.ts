@@ -22,7 +22,10 @@ export type ActionResult = {
   success?: string
 }
 
-export async function login(_prevState: ActionResult, formData: FormData): Promise<ActionResult> {
+export async function login(
+  _prevState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   const raw = {
     email: formData.get("email"),
     password: formData.get("password"),
@@ -33,27 +36,37 @@ export async function login(_prevState: ActionResult, formData: FormData): Promi
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" }
   }
 
-  const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
-    password: parsed.data.password,
-  })
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    })
 
-  if (error) {
-    if (error.message.includes("Invalid login credentials")) {
-      return { error: "Incorrect email or password. Please try again." }
+    if (error) {
+      if (error.message.toLowerCase().includes("invalid login")) {
+        return { error: "Incorrect email or password. Please try again." }
+      }
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        return { error: "Please verify your email address before signing in." }
+      }
+      if (error.message.toLowerCase().includes("rate limit")) {
+        return { error: "Too many attempts. Please wait a few minutes and try again." }
+      }
+      return { error: "Sign in failed. Please check your credentials and try again." }
     }
-    if (error.message.includes("Email not confirmed")) {
-      return { error: "Please verify your email address before signing in." }
-    }
-    return { error: "Sign in failed. Please try again." }
+  } catch {
+    return { error: "Unable to connect. Please check your internet connection." }
   }
 
   revalidatePath("/", "layout")
   redirect("/dashboard")
 }
 
-export async function register(_prevState: ActionResult, formData: FormData): Promise<ActionResult> {
+export async function register(
+  _prevState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   const raw = {
     fullName: formData.get("fullName"),
     email: formData.get("email"),
@@ -66,52 +79,61 @@ export async function register(_prevState: ActionResult, formData: FormData): Pr
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" }
   }
 
-  const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: {
-        full_name: parsed.data.fullName,
-        university: parsed.data.university ?? "",
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.signUp({
+      email: parsed.data.email,
+      password: parsed.data.password,
+      options: {
+        data: {
+          full_name: parsed.data.fullName,
+          university: parsed.data.university ?? "",
+        },
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/callback`,
       },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
-    },
-  })
+    })
 
-  if (error) {
-    if (error.message.includes("already registered")) {
-      return { error: "An account with this email already exists. Please sign in." }
+    if (error) {
+      if (error.message.toLowerCase().includes("already registered")) {
+        return { error: "An account with this email already exists. Please sign in." }
+      }
+      return { error: "Registration failed. Please try again." }
     }
-    return { error: "Registration failed. Please try again." }
+  } catch {
+    return { error: "Unable to connect. Please check your internet connection." }
   }
 
-  return { success: "Account created! Please check your email to verify your account." }
+  return {
+    success:
+      "Account created! Please check your email to verify your account, then sign in.",
+  }
 }
 
 export async function logout() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
+  try {
+    const supabase = await createClient()
+    await supabase.auth.signOut()
+  } catch {
+    // Ignore errors during logout — we always redirect
+  }
   revalidatePath("/", "layout")
   redirect("/")
 }
 
-export async function getSession() {
-  const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  return session
-}
-
 export async function getCurrentUser() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return null
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single()
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single()
 
-  return profile
+    return profile
+  } catch {
+    return null
+  }
 }

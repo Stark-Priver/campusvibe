@@ -416,3 +416,30 @@ insert into public.breaking_news (text, is_active, order_index) values
   ('New transport routes added for MUHAS and Ardhi campuses starting April 1st', true, 3),
   ('CampusVibe Marketplace is now live — buy, sell & trade on campus', true, 4)
 on conflict do nothing;
+
+
+-- ── ROLE MANAGEMENT HELPERS ───────────────────────────────────────
+-- Run these in the Supabase SQL Editor to assign roles to users.
+
+-- Assign administrator role to a user (by email):
+-- UPDATE public.profiles
+--   SET roles = ARRAY['administrator', 'student']
+--   WHERE email = 'your-admin@email.com';
+
+-- Assign multiple roles to a user:
+-- UPDATE public.profiles
+--   SET roles = ARRAY['administrator', 'ambassador', 'student']
+--   WHERE email = 'your-admin@email.com';
+
+-- Assign driver role:
+-- UPDATE public.profiles
+--   SET roles = ARRAY['driver', 'student']
+--   WHERE email = 'driver@email.com';
+
+-- Assign restaurant owner role:
+-- UPDATE public.profiles
+--   SET roles = ARRAY['restaurant-owner', 'student']
+--   WHERE email = 'restaurant@email.com';
+
+-- View all users and their roles:
+-- SELECT id, email, full_name, roles, created_at FROM public.profiles ORDER BY created_at DESC;
