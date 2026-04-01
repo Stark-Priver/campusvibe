@@ -402,6 +402,179 @@ create policy "Admins can manage stats"
     )
   );
 
+-- ── COMPANY PROFILE & SOCIAL HANDLES ────────────────────────────
+create table if not exists public.company_profile (
+  id                    uuid primary key default uuid_generate_v4(),
+  company_name          text not null default 'Campus Vibe',
+  tagline               text,
+  website_url           text,
+  support_email         text,
+  contact_phone         text,
+  headquarters          text,
+  registration_number   text,
+  tax_number            text,
+  created_at            timestamptz not null default now(),
+  updated_at            timestamptz not null default now()
+);
+
+create table if not exists public.company_social_handles (
+  id            uuid primary key default uuid_generate_v4(),
+  platform      text not null check (platform in ('x', 'instagram', 'youtube', 'linkedin', 'facebook', 'tiktok', 'whatsapp', 'telegram')),
+  handle        text not null,
+  url           text not null,
+  is_active     boolean not null default true,
+  display_order int not null default 0,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
+create index if not exists idx_company_social_order on public.company_social_handles(display_order, created_at);
+
+alter table public.company_profile enable row level security;
+alter table public.company_social_handles enable row level security;
+
+drop policy if exists "Company profile is publicly readable" on public.company_profile;
+create policy "Company profile is publicly readable"
+  on public.company_profile for select
+  using (true);
+
+drop policy if exists "Admins can manage company profile" on public.company_profile;
+create policy "Admins can manage company profile"
+  on public.company_profile for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id::text = auth.uid()::text and 'administrator' = any(u.roles)
+    )
+  );
+
+drop policy if exists "Social handles are publicly readable" on public.company_social_handles;
+create policy "Social handles are publicly readable"
+  on public.company_social_handles for select
+  using (true);
+
+drop policy if exists "Admins can manage social handles" on public.company_social_handles;
+create policy "Admins can manage social handles"
+  on public.company_social_handles for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id::text = auth.uid()::text and 'administrator' = any(u.roles)
+    )
+  );
+
+drop trigger if exists company_profile_updated_at on public.company_profile;
+create trigger company_profile_updated_at before update on public.company_profile
+  for each row execute procedure public.set_updated_at();
+
+drop trigger if exists company_social_handles_updated_at on public.company_social_handles;
+create trigger company_social_handles_updated_at before update on public.company_social_handles
+  for each row execute procedure public.set_updated_at();
+
+-- ── CAMPUS REGISTRATION & VERIFICATION ───────────────────────────
+create table if not exists public.campuses (
+  id                  uuid primary key default uuid_generate_v4(),
+  name                text not null,
+  short_name          text,
+  city                text,
+  country             text not null default 'Tanzania',
+  status              text not null default 'pending' check (status in ('pending', 'verified', 'rejected')),
+  verification_notes  text,
+  contact_email       text,
+  contact_phone       text,
+  created_by          uuid references public.users(id) on delete set null,
+  verified_by         uuid references public.users(id) on delete set null,
+  verified_at         timestamptz,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+
+create index if not exists idx_campuses_status on public.campuses(status, created_at desc);
+create index if not exists idx_campuses_name on public.campuses(name);
+
+alter table public.campuses enable row level security;
+
+drop policy if exists "Campuses are publicly readable" on public.campuses;
+create policy "Campuses are publicly readable"
+  on public.campuses for select
+  using (true);
+
+drop policy if exists "Admins can manage campuses" on public.campuses;
+create policy "Admins can manage campuses"
+  on public.campuses for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id::text = auth.uid()::text and 'administrator' = any(u.roles)
+    )
+  );
+
+drop trigger if exists campuses_updated_at on public.campuses;
+create trigger campuses_updated_at before update on public.campuses
+  for each row execute procedure public.set_updated_at();
+
+-- ── WEBSITE VISITS & AUDIT LOGS ──────────────────────────────────
+create table if not exists public.site_visits (
+  id            uuid primary key default uuid_generate_v4(),
+  user_id       uuid references public.users(id) on delete set null,
+  visitor_token text,
+  path          text not null,
+  referrer      text,
+  ip_address    text,
+  user_agent    text,
+  created_at    timestamptz not null default now()
+);
+
+create index if not exists idx_site_visits_created_at on public.site_visits(created_at desc);
+create index if not exists idx_site_visits_path on public.site_visits(path);
+
+create table if not exists public.audit_logs (
+  id          uuid primary key default uuid_generate_v4(),
+  actor_id    uuid references public.users(id) on delete set null,
+  actor_email text,
+  action      text not null,
+  entity_type text not null,
+  entity_id   text,
+  details     jsonb not null default '{}'::jsonb,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists idx_audit_logs_created_at on public.audit_logs(created_at desc);
+create index if not exists idx_audit_logs_entity on public.audit_logs(entity_type, entity_id);
+
+alter table public.site_visits enable row level security;
+alter table public.audit_logs enable row level security;
+
+drop policy if exists "Admins can view site visits" on public.site_visits;
+create policy "Admins can view site visits"
+  on public.site_visits for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id::text = auth.uid()::text and 'administrator' = any(u.roles)
+    )
+  );
+
+drop policy if exists "Service can insert site visits" on public.site_visits;
+create policy "Service can insert site visits"
+  on public.site_visits for insert
+  with check (true);
+
+drop policy if exists "Admins can view audit logs" on public.audit_logs;
+create policy "Admins can view audit logs"
+  on public.audit_logs for select
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id::text = auth.uid()::text and 'administrator' = any(u.roles)
+    )
+  );
+
+drop policy if exists "Service can insert audit logs" on public.audit_logs;
+create policy "Service can insert audit logs"
+  on public.audit_logs for insert
+  with check (true);
+
 -- ── STORAGE BUCKETS ───────────────────────────────────────────────
 -- Run these in the Supabase Dashboard > Storage, or via API:
 

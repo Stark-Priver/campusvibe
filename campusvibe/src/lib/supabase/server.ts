@@ -27,7 +27,7 @@ export async function createClient() {
   )
 }
 
-export async function createAdminClient() {
+export async function createAdminClient(): Promise<any> {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(

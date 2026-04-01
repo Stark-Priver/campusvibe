@@ -264,16 +264,18 @@ export default async function RoleDashboardPage({ params }: Props) {
   const user = await getCurrentUser()
   if (!user) redirect("/login")
 
-  // Check the user actually has this role
   if (!user.roles.includes(role)) {
     redirect("/dashboard")
+  }
+
+  if (role === "administrator") {
+    redirect(`/dashboard/${role}/admin/overview`)
   }
 
   const config = roleConfig[role]
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -287,23 +289,14 @@ export default async function RoleDashboardPage({ params }: Props) {
             <span className="text-gray-200">/</span>
             <span className="text-sm font-section font-semibold text-dark">{config.name}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <nav className="hidden lg:flex items-center gap-4 text-sm font-body">
-              <Link href="/about" className="text-muted hover:text-dark transition-colors">About</Link>
-              <Link href="/news" className="text-muted hover:text-dark transition-colors">News</Link>
-              <Link href="/events" className="text-muted hover:text-dark transition-colors">Events</Link>
-              <Link href="/marketplace" className="text-muted hover:text-dark transition-colors">Marketplace</Link>
-            </nav>
-            <form action={logout}>
-              <button type="submit" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-body text-muted hover:text-dark hover:bg-gray-50 transition-colors">
-                <LogOut size={14} /> Sign Out
-              </button>
-            </form>
-          </div>
+          <form action={logout}>
+            <button type="submit" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-body text-muted hover:text-dark hover:bg-gray-50 transition-colors">
+              <LogOut size={14} /> Sign Out
+            </button>
+          </form>
         </div>
       </div>
 
-      {/* Role banner */}
       <div className={`bg-gradient-to-r ${config.accentColor} text-white py-8 px-4 sm:px-6 lg:px-8`}>
         <div className="max-w-7xl mx-auto">
           <p className="text-white/70 text-xs font-section uppercase tracking-widest mb-1">{config.name}</p>
@@ -313,7 +306,6 @@ export default async function RoleDashboardPage({ params }: Props) {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {config.metrics.map((metric) => (
             <div key={metric.label} className="bg-white rounded-xl border border-gray-200 p-5">
@@ -324,7 +316,6 @@ export default async function RoleDashboardPage({ params }: Props) {
           ))}
         </div>
 
-        {/* Quick Actions */}
         <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
           <h2 className="font-section font-bold text-dark mb-4">Quick Actions</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -337,7 +328,6 @@ export default async function RoleDashboardPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Operations + Compliance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h2 className="font-section font-bold text-dark mb-1">{config.operations.title}</h2>

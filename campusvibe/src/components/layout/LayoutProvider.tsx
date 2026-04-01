@@ -13,7 +13,7 @@ export default async function LayoutProvider({ children }: { children: React.Rea
     pathname.startsWith("/register") ||
     pathname.startsWith("/auth")
 
-  if (isAuth) {
+  if (isDashboard || isAuth) {
     return <>{children}</>
   }
 
@@ -21,7 +21,7 @@ export default async function LayoutProvider({ children }: { children: React.Rea
     <>
       <Navbar />
       <main>{children}</main>
-      {!isDashboard && <Footer />}
+      <Footer />
     </>
   )
 }
