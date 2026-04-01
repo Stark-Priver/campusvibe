@@ -42,6 +42,7 @@ export type Database = {
           is_verified?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       news_articles: {
         Row: {
@@ -93,6 +94,7 @@ export type Database = {
           published_at?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       events: {
         Row: {
@@ -147,6 +149,7 @@ export type Database = {
           rsvp_url?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       media_items: {
         Row: {
@@ -190,6 +193,7 @@ export type Database = {
           is_published?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       marketplace_listings: {
         Row: {
@@ -240,6 +244,7 @@ export type Database = {
           is_published?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       contact_submissions: {
         Row: {
@@ -264,6 +269,7 @@ export type Database = {
         Update: {
           is_read?: boolean
         }
+        Relationships: []
       }
       event_rsvps: {
         Row: {
@@ -282,6 +288,7 @@ export type Database = {
           email: string
         }
         Update: Record<string, never>
+        Relationships: []
       }
       breaking_news: {
         Row: {
@@ -302,6 +309,7 @@ export type Database = {
           is_active?: boolean
           order_index?: number
         }
+        Relationships: []
       }
       platform_stats: {
         Row: {
@@ -322,8 +330,46 @@ export type Database = {
           label?: string
           updated_at?: string
         }
+        Relationships: []
+      },
+      users: {
+        Row: {
+          id: string
+          email: string
+          password_hash: string
+          full_name: string
+          university: string | null
+          roles: string[]
+          email_verified: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          password_hash: string
+          full_name: string
+          university?: string | null
+          roles?: string[]
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          password_hash?: string
+          full_name?: string
+          university?: string | null
+          roles?: string[]
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
+
     Views: Record<string, never>
     Functions: Record<string, never>
     Enums: Record<string, never>
@@ -336,6 +382,7 @@ export type Event = Database["public"]["Tables"]["events"]["Row"]
 export type MediaItem = Database["public"]["Tables"]["media_items"]["Row"]
 export type MarketplaceListing = Database["public"]["Tables"]["marketplace_listings"]["Row"]
 export type ContactSubmission = Database["public"]["Tables"]["contact_submissions"]["Row"]
+export type AuthUserRow = Database["public"]["Tables"]["users"]["Row"]
 
 export type DashboardRole =
   | "administrator"

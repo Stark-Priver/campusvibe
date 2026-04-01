@@ -1,9 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { redirect, notFound } from "next/navigation"
-import { ArrowLeft, LogOut, TrendingUp, TrendingDown, Minus } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
-import { logout } from "@/lib/auth/actions"
+import { ArrowLeft, LogOut } from "lucide-react"
+import { logout, getCurrentUser } from "@/lib/auth/actions"
 
 type Props = { params: Promise<{ role: string }> }
 
@@ -262,15 +261,11 @@ export default async function RoleDashboardPage({ params }: Props) {
 
   if (!validRoles.includes(role)) notFound()
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
   if (!user) redirect("/login")
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-  if (!profile) redirect("/login")
-
   // Check the user actually has this role
-  if (!profile.roles?.includes(role)) {
+  if (!user.roles.includes(role)) {
     redirect("/dashboard")
   }
 
@@ -282,17 +277,29 @@ export default async function RoleDashboardPage({ params }: Props) {
       <div className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <Link href="/" className="text-sm font-body text-muted hover:text-dark transition-colors">
+              Home
+            </Link>
+            <span className="text-gray-200">/</span>
             <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-dark transition-colors font-body">
               <ArrowLeft size={14} /> Dashboards
             </Link>
             <span className="text-gray-200">/</span>
             <span className="text-sm font-section font-semibold text-dark">{config.name}</span>
           </div>
-          <form action={logout}>
-            <button type="submit" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-body text-muted hover:text-dark hover:bg-gray-50 transition-colors">
-              <LogOut size={14} /> Sign Out
-            </button>
-          </form>
+          <div className="flex items-center gap-3">
+            <nav className="hidden lg:flex items-center gap-4 text-sm font-body">
+              <Link href="/about" className="text-muted hover:text-dark transition-colors">About</Link>
+              <Link href="/news" className="text-muted hover:text-dark transition-colors">News</Link>
+              <Link href="/events" className="text-muted hover:text-dark transition-colors">Events</Link>
+              <Link href="/marketplace" className="text-muted hover:text-dark transition-colors">Marketplace</Link>
+            </nav>
+            <form action={logout}>
+              <button type="submit" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-body text-muted hover:text-dark hover:bg-gray-50 transition-colors">
+                <LogOut size={14} /> Sign Out
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 

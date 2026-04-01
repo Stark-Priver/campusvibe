@@ -2,8 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ArrowRight, ShieldCheck, Users, Truck, Store, Bike, GraduationCap, LogOut } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
-import { logout } from "@/lib/auth/actions"
+import { logout, getCurrentUser } from "@/lib/auth/actions"
 
 export const metadata: Metadata = {
   title: "Dashboard — CampusVibe",
@@ -38,32 +37,32 @@ const roleNames: Record<string, string> = {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
   if (!user) redirect("/login")
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single()
-
-  if (!profile) redirect("/login")
-
-  const roles: string[] = profile.roles ?? ["student"]
+  const roles: string[] = user.roles ?? ["student"]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-blue-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="font-heading font-black text-xl text-dark">
-            Campus <span className="text-brand">Vibe</span>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link href="/" className="font-heading font-black text-xl text-dark">
+              Campus <span className="text-brand">Vibe</span>
+            </Link>
+            <nav className="hidden md:flex items-center gap-4 text-sm font-body">
+              <Link href="/" className="text-muted hover:text-dark transition-colors">Home</Link>
+              <Link href="/about" className="text-muted hover:text-dark transition-colors">About</Link>
+              <Link href="/news" className="text-muted hover:text-dark transition-colors">News</Link>
+              <Link href="/events" className="text-muted hover:text-dark transition-colors">Events</Link>
+              <Link href="/marketplace" className="text-muted hover:text-dark transition-colors">Marketplace</Link>
+            </nav>
+          </div>
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-xs text-muted font-body">{user.email}</p>
-              <p className="text-sm font-section font-semibold text-dark">{profile.full_name}</p>
+<p className="text-xs text-muted font-body">{user.email}</p>
+              <p className="text-sm font-section font-semibold text-dark">{user.full_name}</p>
             </div>
             <form action={logout}>
               <button type="submit" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-body text-muted hover:text-dark hover:bg-gray-50 transition-colors">
@@ -78,7 +77,7 @@ export default async function DashboardPage() {
         {/* Welcome */}
         <div className="mb-8">
           <h1 className="font-heading font-black text-3xl text-dark">
-            Welcome back, {profile.full_name?.split(" ")[0] ?? "there"} 👋
+            Welcome back, {user.full_name?.split(" ")[0] ?? "there"} 👋
           </h1>
           <p className="text-muted font-body mt-1">Select a role dashboard to get started.</p>
         </div>
@@ -87,8 +86,8 @@ export default async function DashboardPage() {
         <div className="mb-8 p-4 bg-brand/5 border border-brand/20 rounded-xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm text-dark font-section font-semibold">{profile.full_name}</p>
-              <p className="text-xs text-muted font-body">{user.email}{profile.university && ` · ${profile.university}`}</p>
+              <p className="text-sm text-dark font-section font-semibold">{user.full_name}</p>
+              <p className="text-xs text-muted font-body">{user.email}{user.university && ` · ${user.university}`}</p>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {roles.map((role) => (

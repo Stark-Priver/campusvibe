@@ -1,23 +1,24 @@
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server"
+import { getCurrentUser } from "@/lib/auth/custom"
 import NavbarClient from "./NavbarClient"
 
 export default async function Navbar() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
 
   let profile = null
   if (user) {
+    const supabase = await createAdminClient()
     const { data } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url")
+      .from("users")
+      .select("full_name")
       .eq("id", user.id)
-      .single()
+      .maybeSingle()
     profile = data
   }
 
   return (
     <NavbarClient
-      user={user ? { email: user.email ?? "", name: profile?.full_name ?? "" } : null}
+      user={user ? { email: user.email, name: profile?.full_name ?? user.full_name ?? "" } : null}
     />
   )
 }

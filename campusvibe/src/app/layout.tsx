@@ -86,11 +86,7 @@ export const metadata: Metadata = {
     canonical: "https://campusvibe.co.tz",
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/apple-touch-icon.png",
+    icon: "/icon.svg",
   },
   manifest: "/manifest.json",
   verification: {
