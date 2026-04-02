@@ -2,12 +2,12 @@ import AdminShell from "../../AdminShell"
 import { requireAdministrator } from "../../guard"
 import { createAdminClient } from "@/lib/supabase/server"
 import { createEventItem, updateEventItem, deleteEventItem } from "../../actions"
-import type { Database } from "@/types/database"
 
 type Props = { params: Promise<{ role: string }> }
 
-export default async function AdminContentEventsPage({ params }: Props) {
+export default async function AdminContentEventsPage({ params, searchParams }: Props & { searchParams: Promise<{ q?: string; status?: string }> }) {
   const { role } = await params
+  const { q = "", status = "all" } = await searchParams
   const user = await requireAdministrator(role)
   const supabase = await createAdminClient()
 
@@ -17,34 +17,75 @@ export default async function AdminContentEventsPage({ params }: Props) {
     .order("updated_at", { ascending: false })
     .limit(100)
 
+  const filtered = (events ?? []).filter((item) => {
+    const matchesQ = !q || [item.title, item.slug, item.category, item.location ?? "", item.university ?? ""].join(" ").toLowerCase().includes(q.toLowerCase())
+    const matchesStatus = status === "all" || (status === "published" ? item.is_published : !item.is_published)
+    return matchesQ && matchesStatus
+  })
+
   return (
     <AdminShell role={role} section="content-events" user={user} breadcrumb={["Home", "Admin", "Content", "Events"]}>
       <section className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
-        <h2 className="font-section font-bold text-slate-900 mb-3">Create Event</h2>
+        <h2 className="font-section font-bold text-slate-900 mb-1">Create Event</h2>
+        <p className="text-sm text-slate-600 mb-4">Schedule and publish upcoming campus activities with location and timing data.</p>
         <form action={createEventItem.bind(null, role)} className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input name="title" placeholder="Title" className="md:col-span-2 rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
-          <input name="slug" placeholder="Slug" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-          <input name="category" placeholder="Category" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" defaultValue="General" />
-          <input name="date" type="date" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
-          <input name="time" type="time" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-          <input name="location" placeholder="Location" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-          <input name="university" placeholder="University" className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          <label className="md:col-span-2 text-xs text-slate-600">Event title
+            <input name="title" placeholder="Title" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+          </label>
+          <label className="text-xs text-slate-600">Slug
+            <input name="slug" placeholder="Slug" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          </label>
+          <label className="text-xs text-slate-600">Category
+            <input name="category" placeholder="Category" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" defaultValue="General" />
+          </label>
+          <label className="text-xs text-slate-600">Date
+            <input name="date" type="date" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required />
+          </label>
+          <label className="text-xs text-slate-600">Time
+            <input name="time" type="time" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          </label>
+          <label className="text-xs text-slate-600">Location
+            <input name="location" placeholder="Location" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          </label>
+          <label className="text-xs text-slate-600">University
+            <input name="university" placeholder="University" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          </label>
           <label className="inline-flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" name="is_published" /> Published</label>
-          <textarea name="description" placeholder="Description" className="md:col-span-3 rounded-lg border border-slate-300 px-3 py-2 text-sm min-h-24" />
+          <label className="md:col-span-3 text-xs text-slate-600">Description
+            <textarea name="description" placeholder="Description" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm min-h-24" />
+          </label>
           <button className="rounded-lg bg-[#3A22A3] px-3 py-2 text-white text-sm">Create Event</button>
         </form>
       </section>
 
       <section className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm overflow-x-auto">
-        <h2 className="font-section font-bold text-slate-900 mb-3">Events Listing</h2>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between mb-3">
+          <div>
+            <h2 className="font-section font-bold text-slate-900">Events Listing</h2>
+            <p className="text-xs text-slate-500">{filtered.length} of {(events ?? []).length} events shown</p>
+          </div>
+          <form method="get" className="flex flex-wrap gap-2">
+            <input name="q" defaultValue={q} placeholder="Search title, location, university" className="w-[250px] rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            <select name="status" defaultValue={status} className="rounded-lg border border-slate-300 px-3 py-2 text-sm">
+              <option value="all">All statuses</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+            <button className="rounded-lg bg-slate-800 text-white px-3 py-2 text-sm">Apply</button>
+          </form>
+        </div>
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">No events matched your filters.</div>
+        ) : (
+          <div className="max-h-[560px] overflow-auto rounded-xl border border-slate-200">
         <table className="min-w-full text-sm">
-          <thead>
+          <thead className="sticky top-0 bg-slate-50 z-10">
             <tr className="text-left text-xs uppercase text-slate-500 border-b border-slate-100">
               <th className="py-2 pr-3">Event</th><th className="py-2 pr-3">Date</th><th className="py-2 pr-3">Location</th><th className="py-2 pr-3">Status</th><th className="py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {(events ?? []).map((item: Database["public"]["Tables"]["events"]["Row"]) => (
+            {filtered.map((item) => (
               <tr key={item.id} className="border-b border-slate-50 align-top last:border-0">
                 <td className="py-2.5 pr-3">
                   <p className="font-semibold text-slate-900">{item.title}</p>
@@ -77,6 +118,8 @@ export default async function AdminContentEventsPage({ params }: Props) {
             ))}
           </tbody>
         </table>
+          </div>
+        )}
       </section>
     </AdminShell>
   )

@@ -12,14 +12,14 @@ export default async function AdminModerationPage({ params }: Props) {
   const snapshot = await getAdminSnapshot()
 
   const queue = [
-    { name: "News", pending: snapshot.pendingNews, href: "/news", icon: Newspaper },
-    { name: "Events", pending: snapshot.pendingEvents, href: "/events", icon: CalendarDays },
-    { name: "Media", pending: snapshot.pendingMedia, href: "/media", icon: Clapperboard },
-    { name: "Marketplace", pending: snapshot.pendingListings, href: "/marketplace", icon: Store },
+    { name: "News", pending: snapshot.pendingNews, href: `/dashboard/${role}/admin/content/news`, icon: Newspaper },
+    { name: "Events", pending: snapshot.pendingEvents, href: `/dashboard/${role}/admin/content/events`, icon: CalendarDays },
+    { name: "Media", pending: snapshot.pendingMedia, href: `/dashboard/${role}/admin/content/media`, icon: Clapperboard },
+    { name: "Marketplace", pending: snapshot.pendingListings, href: `/dashboard/${role}/admin/content/marketplace`, icon: Store },
   ]
 
   return (
-    <AdminShell role={role} section="moderation" user={user}>
+    <AdminShell role={role} section="moderation" user={user} breadcrumb={["Home", "Admin", "Moderation"]}>
       <section className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
         <h2 className="font-section font-bold text-slate-900 mb-2">Moderation Workbench</h2>
         <p className="text-sm text-slate-600">Prioritize pending approvals and maintain trust/safety standards across modules.</p>
@@ -35,7 +35,7 @@ export default async function AdminModerationPage({ params }: Props) {
                 <span className="text-xs rounded-full px-2.5 py-1 bg-amber-100 text-amber-700">Pending {item.pending}</span>
               </div>
               <p className="text-xs text-slate-500 mt-2">Review unpublished items and compliance before publication.</p>
-              <Link href={item.href} className="mt-4 inline-flex items-center gap-1 text-sm text-[#3A22A3] hover:underline">Open Module</Link>
+              <Link href={item.href} className="mt-4 inline-flex items-center gap-1 text-sm text-[#3A22A3] hover:underline">Open Module Queue</Link>
             </div>
           )
         })}

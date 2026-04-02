@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Clock, Share2, Calendar, TrendingUp } from "lucide-react"
+import { ArrowLeft, Clock, Calendar, TrendingUp } from "lucide-react"
 import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
 import { createClient } from "@/lib/supabase/server"
 

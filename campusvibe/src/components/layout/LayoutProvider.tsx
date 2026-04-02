@@ -1,6 +1,7 @@
 import { headers } from "next/headers"
 import Navbar from "./Navbar"
 import Footer from "./Footer"
+import { ToastProvider } from "../ui/Toast"
 
 export default async function LayoutProvider({ children }: { children: React.ReactNode }) {
   const headersList = await headers()
@@ -14,7 +15,7 @@ export default async function LayoutProvider({ children }: { children: React.Rea
     pathname.startsWith("/auth")
 
   if (isDashboard || isAuth) {
-    return <>{children}</>
+    return <ToastProvider>{children}</ToastProvider>
   }
 
   return (

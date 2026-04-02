@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useActionState } from "react"
+import { useActionState } from "react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 import { Edit3, Briefcase, MapPin, CheckCircle, Send, ArrowRight } from "lucide-react"
 

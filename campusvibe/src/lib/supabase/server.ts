@@ -1,8 +1,16 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/database"
 
-export async function createClient() {
+type SupabaseServerClient = SupabaseClient<
+  Database,
+  "public",
+  "public",
+  Database["public"]
+>
+
+export async function createClient(): Promise<SupabaseServerClient> {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
@@ -13,7 +21,7 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: Record<string, unknown> }>) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
@@ -24,10 +32,10 @@ export async function createClient() {
         },
       },
     }
-  )
+  ) as unknown as SupabaseServerClient
 }
 
-export async function createAdminClient(): Promise<any> {
+export async function createAdminClient(): Promise<SupabaseServerClient> {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
@@ -38,7 +46,7 @@ export async function createAdminClient(): Promise<any> {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: Record<string, unknown> }>) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
@@ -51,5 +59,5 @@ export async function createAdminClient(): Promise<any> {
         persistSession: false,
       },
     }
-  )
+  ) as unknown as SupabaseServerClient
 }

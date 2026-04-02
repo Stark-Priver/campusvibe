@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs"
 import { revalidatePath } from "next/cache"
 import { createAdminClient } from "@/lib/supabase/server"
+import type { Json } from "@/types/database"
 import { getCurrentUser } from "@/lib/auth/actions"
 
 function toSlug(value: string) {
@@ -22,7 +23,7 @@ async function requireAdminActor() {
   return actor
 }
 
-async function logAudit(action: string, entityType: string, entityId?: string, details?: Record<string, unknown>) {
+async function logAudit(action: string, entityType: string, entityId?: string, details?: Json) {
   const actor = await requireAdminActor()
   const supabase = await createAdminClient()
 
@@ -32,7 +33,7 @@ async function logAudit(action: string, entityType: string, entityId?: string, d
     action,
     entity_type: entityType,
     entity_id: entityId ?? null,
-    details: details ?? {},
+    details: details ?? null,
   })
 }
 

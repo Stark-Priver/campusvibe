@@ -16,7 +16,7 @@ export default async function AdminOverviewPage({ params }: Props) {
     snapshot.pendingNews + snapshot.pendingEvents + snapshot.pendingMedia + snapshot.pendingListings
 
   return (
-    <AdminShell role={role} section="overview" user={user}>
+    <AdminShell role={role} section="overview" user={user} breadcrumb={["Home", "Admin", "Overview"]}>
       <section className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <div className="rounded-2xl p-4 border border-indigo-200 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
           <p className="text-xs text-white/80">Total Users</p>
@@ -48,19 +48,19 @@ export default async function AdminOverviewPage({ params }: Props) {
         <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
           <h2 className="font-section font-bold text-slate-900 mb-4">Coverage Snapshot</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link href={`/dashboard/${role}/admin/content`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
+            <Link href={`/dashboard/${role}/admin/content/news`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900"><Newspaper size={14} /> News</p>
               <p className="text-xs text-slate-500 mt-2">Published {snapshot.publishedNews} / Total {snapshot.totalNews}</p>
             </Link>
-            <Link href={`/dashboard/${role}/admin/content`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
+            <Link href={`/dashboard/${role}/admin/content/events`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900"><CalendarDays size={14} /> Events</p>
               <p className="text-xs text-slate-500 mt-2">Published {snapshot.publishedEvents} / Total {snapshot.totalEvents}</p>
             </Link>
-            <Link href={`/dashboard/${role}/admin/content`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
+            <Link href={`/dashboard/${role}/admin/content/media`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900"><Clapperboard size={14} /> Media</p>
               <p className="text-xs text-slate-500 mt-2">Published {snapshot.publishedMedia} / Total {snapshot.totalMedia}</p>
             </Link>
-            <Link href={`/dashboard/${role}/admin/content`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
+            <Link href={`/dashboard/${role}/admin/content/marketplace`} className="rounded-xl border border-slate-200 p-4 hover:border-[#3A22A3]">
               <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900"><Store size={14} /> Marketplace</p>
               <p className="text-xs text-slate-500 mt-2">Published {snapshot.publishedListings} / Total {snapshot.totalListings}</p>
             </Link>

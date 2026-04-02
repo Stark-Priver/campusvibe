@@ -1,12 +1,15 @@
 import AdminShell from "../AdminShell"
 import { requireAdministrator } from "../guard"
 import { createAdminClient } from "@/lib/supabase/server"
-import type { Database } from "@/types/database"
 
-type Props = { params: Promise<{ role: string }> }
+type Props = {
+  params: Promise<{ role: string }>
+  searchParams: Promise<{ q?: string }>
+}
 
-export default async function AdminAnalyticsPage({ params }: Props) {
+export default async function AdminAnalyticsPage({ params, searchParams }: Props) {
   const { role } = await params
+  const { q = "" } = await searchParams
   const user = await requireAdministrator(role)
   const supabase = await createAdminClient()
 
@@ -21,9 +24,12 @@ export default async function AdminAnalyticsPage({ params }: Props) {
     counts.set(p, (counts.get(p) ?? 0) + 1)
   }
   const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10)
+  const filteredVisits = (visits ?? []).filter((v) =>
+    !q || [v.path, v.referrer ?? "", v.ip_address ?? "", v.user_agent ?? ""].join(" ").toLowerCase().includes(q.toLowerCase())
+  )
 
   return (
-    <AdminShell role={role} section="analytics" user={user}>
+    <AdminShell role={role} section="analytics" user={user} breadcrumb={["Home", "Admin", "Analytics"]}>
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm lg:col-span-1">
           <h2 className="font-section font-bold text-slate-900 mb-3">Top Visited Paths</h2>
@@ -37,15 +43,31 @@ export default async function AdminAnalyticsPage({ params }: Props) {
           </ul>
         </div>
         <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm lg:col-span-2 overflow-x-auto">
-          <h2 className="font-section font-bold text-slate-900 mb-3">Recent Visits</h2>
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between mb-3">
+            <div>
+              <h2 className="font-section font-bold text-slate-900">Recent Visits</h2>
+              <p className="text-xs text-slate-500">{filteredVisits.length} of {(visits ?? []).length} records shown</p>
+            </div>
+            <form method="get" className="flex items-center gap-2">
+              <input name="q" defaultValue={q} placeholder="Search path, referrer, IP" className="w-[260px] rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+              <button className="rounded-lg bg-slate-800 text-white px-3 py-2 text-sm">Apply</button>
+            </form>
+          </div>
+
+          {filteredVisits.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">
+              No visit records matched the current filter.
+            </div>
+          ) : (
+            <div className="max-h-[560px] overflow-auto rounded-xl border border-slate-200">
           <table className="min-w-full text-sm">
-            <thead>
+            <thead className="sticky top-0 bg-slate-50 z-10">
               <tr className="text-left text-xs uppercase text-slate-500 border-b border-slate-100">
                 <th className="py-2 pr-3">When</th><th className="py-2 pr-3">Path</th><th className="py-2 pr-3">Referrer</th><th className="py-2 pr-3">IP</th><th className="py-2">User Agent</th>
               </tr>
             </thead>
             <tbody>
-              {(visits ?? []).map((v: Database["public"]["Tables"]["site_visits"]["Row"]) => (
+              {filteredVisits.map((v) => (
                 <tr key={v.id} className="border-b border-slate-50 last:border-0">
                   <td className="py-2.5 pr-3 text-slate-600">{new Date(v.created_at).toLocaleString()}</td>
                   <td className="py-2.5 pr-3 text-slate-900">{v.path}</td>
@@ -56,6 +78,8 @@ export default async function AdminAnalyticsPage({ params }: Props) {
               ))}
             </tbody>
           </table>
+            </div>
+          )}
         </div>
       </section>
     </AdminShell>

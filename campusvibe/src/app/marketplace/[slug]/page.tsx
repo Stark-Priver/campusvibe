@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Tag, UserCircle, MapPin, MessageCircle, Share2 } from "lucide-react"
+import { ArrowLeft, Tag, UserCircle, MapPin, MessageCircle } from "lucide-react"
 import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
 import { createClient } from "@/lib/supabase/server"
 
