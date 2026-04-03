@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Clock, TrendingUp } from "lucide-react"
+import { ArrowRight, Clock, TrendingUp, MessageCircle } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 
 interface Article {
@@ -105,52 +105,71 @@ export function NewsPageClient({ articles }: NewsPageClientProps) {
                       year: "numeric",
                     })
                   : "Not published"
+                
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Check this out: ${article.title}\nhttps://campusvibe.co.tz/news/${article.slug}`)}`
+                
                 return (
                   <AnimatedSection key={article.id} delay={0.05 * i}>
-                    <Link href={`/news/${article.slug}`} className="group flex flex-col card-pro card-hover h-full">
-                      <div className="aspect-video bg-surface relative">
-                        {article.image_url ? (
-                          <Image
-                            src={article.image_url}
-                            alt={article.title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                            sizes="33vw"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-brand/10 to-interactive/10" />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                        <span className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-section font-semibold uppercase tracking-wide ${catClass}`}>
-                          {article.category}
-                        </span>
-                        {article.is_trending && (
-                          <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent text-dark text-[10px] font-section font-semibold">
-                            <TrendingUp size={9} strokeWidth={2.5} /> Trending
+                    <div className="group flex flex-col card-pro card-hover h-full">
+                      <Link href={`/news/${article.slug}`} className="block flex-1">
+                        <div className="aspect-video bg-surface relative">
+                          {article.image_url ? (
+                            <Image
+                              src={article.image_url}
+                              alt={article.title}
+                              fill
+                              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                              sizes="33vw"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 bg-gradient-to-br from-brand/10 to-interactive/10" />
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                          <span className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-section font-semibold uppercase tracking-wide ${catClass}`}>
+                            {article.category}
                           </span>
-                        )}
-                      </div>
-                      <div className="flex flex-col flex-1 p-5">
-                        <div className="flex items-center gap-2 text-[11px] text-muted font-body mb-2.5">
-                          <span>{formattedDate}</span>
-                          {article.read_time && (
-                            <>
-                              <span className="text-gray-200">·</span>
-                              <Clock size={10} />
-                              <span>{article.read_time} read</span>
-                            </>
+                          {article.is_trending && (
+                            <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent text-dark text-[10px] font-section font-semibold">
+                              <TrendingUp size={9} strokeWidth={2.5} /> Trending
+                            </span>
                           )}
                         </div>
-                        <h2 className="font-section font-semibold text-dark group-hover:text-brand transition-colors text-base leading-snug">
-                          {article.title}
-                        </h2>
-                        <p className="text-muted text-sm mt-2 font-body line-clamp-2 leading-relaxed">{article.excerpt}</p>
-                        <div className="mt-auto pt-4 flex items-center justify-between">
-                          <span className="text-xs text-subtle font-body">{article.author_name && `By ${article.author_name}`}</span>
-                          <ArrowRight size={14} className="text-brand opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                        <div className="flex flex-col flex-1 p-5">
+                          <div className="flex items-center gap-2 text-[11px] text-muted font-body mb-2.5">
+                            <span>{formattedDate}</span>
+                            {article.read_time && (
+                              <>
+                                <span className="text-gray-200">·</span>
+                                <Clock size={10} />
+                                <span>{article.read_time} read</span>
+                              </>
+                            )}
+                          </div>
+                          <h2 className="font-section font-semibold text-dark group-hover:text-brand transition-colors text-base leading-snug">
+                            {article.title}
+                          </h2>
+                          <p className="text-muted text-sm mt-2 font-body line-clamp-2 leading-relaxed">{article.excerpt}</p>
+                          <div className="mt-auto pt-4 flex items-center justify-between">
+                            <span className="text-xs text-subtle font-body">{article.author_name && `By ${article.author_name}`}</span>
+                            <ArrowRight size={14} className="text-brand opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                          </div>
                         </div>
+                      </Link>
+                      
+                      {/* Share Button */}
+                      <div className="px-5 pb-4 pt-0 border-t border-gray-100">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault()
+                            window.open(whatsappUrl, "_blank")
+                          }}
+                          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
+                          title="Share on WhatsApp"
+                        >
+                          <MessageCircle size={14} /> Share
+                        </button>
                       </div>
-                    </Link>
+                    </div>
                   </AnimatedSection>
                 )
               })}

@@ -132,25 +132,27 @@ export function NewsCard({
             <Edit2 size={14} /> Edit
           </button>
 
+          <button
+            onClick={() => {
+              window.open(whatsappUrl, "_blank")
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
+            title="Share on WhatsApp"
+          >
+            <MessageCircle size={14} />
+          </button>
+
           <div className="relative">
             <button
               onClick={() => setShareMenuOpen(!shareMenuOpen)}
               className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+              title="More options"
             >
               <Share2 size={14} />
             </button>
 
             {shareMenuOpen && (
               <div className="absolute bottom-full right-0 mb-2 w-48 bg-white rounded-lg border border-slate-200 shadow-xl z-50">
-                <button
-                  onClick={() => {
-                    window.open(whatsappUrl, "_blank")
-                    setShareMenuOpen(false)
-                  }}
-                  className="w-full text-left px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-b border-slate-100"
-                >
-                  <MessageCircle size={16} className="text-green-600" /> WhatsApp
-                </button>
                 <button
                   onClick={() => {
                     handleCopyLink()

@@ -202,12 +202,13 @@ export default async function NewsDetailPage({ params }: Props) {
             <span className="text-sm text-gray-500 font-body">Share this story</span>
             <div className="flex gap-2">
               <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://campusvibe.co.tz/news/${article.slug}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(`Check this out: ${article.title}\nhttps://campusvibe.co.tz/news/${article.slug}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700 hover:border-brand hover:text-brand transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-green-200 text-sm font-semibold text-green-700 hover:border-green-600 hover:text-green-600 hover:bg-green-50 transition-colors"
               >
-                Share on X
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.015-4.724 5.75-3.756 9.118.961 3.369 4.019 5.753 7.518 5.753.955 0 1.888-.18 2.823-.533l6.487 1.694-.86-6.49c.784-1.694 1.156-3.528 1.156-5.423 0-5.537-4.506-10.037-10.009-10.037" /></svg>
+                WhatsApp
               </a>
               <CopyLinkButton url={`https://campusvibe.co.tz/news/${article.slug}`} />
             </div>
