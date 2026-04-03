@@ -112,13 +112,13 @@ export function NewsPageClient({ articles }: NewsPageClientProps) {
                   <AnimatedSection key={article.id} delay={0.05 * i}>
                     <div className="group flex flex-col card-pro card-hover h-full">
                       <Link href={`/news/${article.slug}`} className="block flex-1">
-                        <div className="aspect-video bg-surface relative">
+                        <div className="bg-surface relative overflow-hidden rounded-t-lg aspect-[3/4]">
                           {article.image_url ? (
                             <Image
                               src={article.image_url}
                               alt={article.title}
                               fill
-                              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                              className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
                               sizes="33vw"
                             />
                           ) : (

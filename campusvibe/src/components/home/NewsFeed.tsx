@@ -61,13 +61,13 @@ export default async function NewsFeed() {
                   href={`/news/${article.slug}`}
                   className="group flex flex-col card-pro card-hover h-full"
                 >
-                  <div className="aspect-video bg-surface relative">
+                  <div className="bg-surface relative overflow-hidden rounded-t-lg aspect-[3/4]">
                     {article.image_url ? (
                       <Image
                         src={article.image_url}
                         alt={article.title}
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                         sizes="(max-width: 1024px) 100vw, 33vw"
                       />
                     ) : (

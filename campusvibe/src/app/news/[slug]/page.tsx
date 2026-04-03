@@ -45,14 +45,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// Increment Static Regeneration - revalidate every 5 minutes
-export const revalidate = 300
-
 // Force fully dynamic rendering (don't pre-build static pages)
 // This is necessary because article content changes in real-time via admin
 export const dynamic = 'force-dynamic'
-
-export const revalidate = 300
 
 const categoryColors: Record<string, string> = {
   "Habari za Elimu": "bg-brand/10 text-brand",
@@ -168,7 +163,7 @@ export default async function NewsDetailPage({ params }: Props) {
 
           {/* Cover image */}
           {article.image_url && (
-            <div className="relative mt-8 aspect-[16/9] rounded-2xl overflow-hidden border border-gray-100">
+            <div className="relative mt-8 rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 aspect-[3/4] max-w-md">
               <Image
                 src={article.image_url}
                 alt={article.title}
