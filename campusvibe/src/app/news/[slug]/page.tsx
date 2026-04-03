@@ -45,18 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  try {
-    const supabase = await createAdminClient()
-    const { data } = await supabase
-      .from("news_articles")
-      .select("slug")
-      .eq("is_published", true)
-    return (data ?? []).map((a) => ({ slug: a.slug }))
-  } catch {
-    return []
-  }
-}
+// Increment Static Regeneration - revalidate every 5 minutes
+export const revalidate = 300
+
+// Force fully dynamic rendering (don't pre-build static pages)
+// This is necessary because article content changes in real-time via admin
+export const dynamic = 'force-dynamic'
 
 export const revalidate = 300
 
@@ -72,17 +66,22 @@ export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createAdminClient()
 
-  const { data: article } = await supabase
+  const { data: article, error } = await supabase
     .from("news_articles")
     .select("*")
     .eq("slug", slug)
     .eq("is_published", true)
     .single()
 
+  if (error) {
+    console.error(`Article not found for slug: ${slug}`, error)
+    notFound()
+  }
+
   if (!article) notFound()
 
   // Related articles
-  const { data: related } = await supabase
+  const { data: related, error: relatedError } = await supabase
     .from("news_articles")
     .select("id, title, slug, image_url, category, published_at")
     .eq("is_published", true)
@@ -90,6 +89,10 @@ export default async function NewsDetailPage({ params }: Props) {
     .neq("id", article.id)
     .order("published_at", { ascending: false })
     .limit(3)
+  
+  if (relatedError) {
+    console.error("Failed to fetch related articles:", relatedError)
+  }
 
   const formattedDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString("en-TZ", {
