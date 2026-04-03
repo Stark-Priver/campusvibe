@@ -20,8 +20,10 @@ import {
   PlayCircle,
   Store,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react"
 import { logout } from "@/lib/auth/actions"
+import { NavigationLoader } from "@/components/layout/NavigationLoader"
 
 type Props = {
   role: string
@@ -39,6 +41,7 @@ type Props = {
     | "content-events"
     | "content-media"
     | "content-marketplace"
+    | "content-analytics"
   user: {
     full_name: string
     email: string
@@ -49,12 +52,23 @@ type Props = {
 
 export default function AdminShell({ role, section, user, breadcrumb, children }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [contentOpen, setContentOpen] = useState(false)
+  const [mobileContentOpen, setMobileContentOpen] = useState(false)
   const [lastTick, setLastTick] = useState<Date>(new Date())
 
   useEffect(() => {
     const id = setInterval(() => setLastTick(new Date()), 60000)
     return () => clearInterval(id)
   }, [])
+
+  // Open content dropdown if we're in a content section
+  useEffect(() => {
+    const contentSections = new Set(["content-news", "content-events", "content-media", "content-marketplace", "content-analytics"])
+    if (contentSections.has(section)) {
+      setContentOpen(true)
+      setMobileContentOpen(true)
+    }
+  }, [section])
 
   const updatedLabel = useMemo(() => {
     return `Updated ${lastTick.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
@@ -64,12 +78,10 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
     { key: "overview", label: "Overview", href: `/dashboard/${role}/admin/overview`, icon: LayoutDashboard },
     { key: "moderation", label: "Moderation", href: `/dashboard/${role}/admin/moderation`, icon: ShieldAlert },
     { key: "inbox", label: "Inbox", href: `/dashboard/${role}/admin/inbox`, icon: Inbox },
-    { key: "content", label: "Content", href: `/dashboard/${role}/admin/content`, icon: FolderKanban },
     { key: "users", label: "Users", href: `/dashboard/${role}/admin/users`, icon: Home },
     { key: "campuses", label: "Campuses", href: `/dashboard/${role}/admin/campuses`, icon: LayoutDashboard },
     { key: "company", label: "Company", href: `/dashboard/${role}/admin/company`, icon: Settings },
     { key: "audit", label: "Audit", href: `/dashboard/${role}/admin/audit`, icon: ShieldCheck },
-    { key: "analytics", label: "Analytics", href: `/dashboard/${role}/admin/analytics`, icon: Activity },
   ] as const
 
   const contentNav = [
@@ -77,9 +89,10 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
     { key: "content-events", label: "Events", href: `/dashboard/${role}/admin/content/events`, icon: CalendarDays },
     { key: "content-media", label: "Media", href: `/dashboard/${role}/admin/content/media`, icon: PlayCircle },
     { key: "content-marketplace", label: "Marketplace", href: `/dashboard/${role}/admin/content/marketplace`, icon: Store },
+    { key: "content-analytics", label: "Analytics", href: `/dashboard/${role}/admin/content/analytics`, icon: Activity },
   ] as const
 
-  const contentSections = new Set(["content-news", "content-events", "content-media", "content-marketplace"])
+  const contentSections = new Set(["content-news", "content-events", "content-media", "content-marketplace", "content-analytics"])
   const isContentChild = contentSections.has(section)
   const activeRoot = isContentChild ? "content" : section
 
@@ -92,8 +105,10 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
     breadcrumb ?? ["Home", "Admin", isContentChild ? "Content" : sectionLabel, isContentChild ? sectionLabel : ""]
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#f8fafc_0%,#eef1f8_45%,#e6ebf5_100%)]">
-      <div className="lg:hidden px-4 sm:px-6 pt-4 pb-2 flex items-center justify-between">
+    <>
+      <NavigationLoader />
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,#f8fafc_0%,#eef1f8_45%,#e6ebf5_100%)]">
+        <div className="lg:hidden px-4 sm:px-6 pt-4 pb-2 flex items-center justify-between">
           <button
             onClick={() => setDrawerOpen(true)}
             className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
@@ -103,85 +118,160 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
           <Link href="/" className="text-sm text-slate-600 hover:text-slate-900">Main Site</Link>
         </div>
 
-      <div className="lg:pl-[300px]">
-        <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-[300px] bg-gradient-to-b from-[#321A8D] to-[#4822B2] text-white p-5 shadow-xl shadow-indigo-900/20 overflow-y-auto">
-            <p className="font-heading font-black text-xl">CampusVibe Admin</p>
-            <p className="text-xs text-white/70 mt-1 font-body">System Control Center</p>
-            <nav className="mt-6 space-y-1.5">
-              {nav.map((item) => {
-                const Icon = item.icon
-                const active = item.key === section
-                return (
-                  <Link
-                    key={item.key}
-                    href={item.href}
-                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors ${active ? "bg-white text-[#321A8D] font-semibold" : "text-white/85 hover:bg-white/10"}`}
-                  >
-                    <Icon size={15} /> {item.label}
-                  </Link>
-                )
-              })}
-              <div className="mt-3 rounded-xl border border-white/15 bg-white/5 p-2">
-                <p className="px-2 pb-1 text-[10px] uppercase tracking-[0.18em] text-white/70">Content Modules</p>
-                <div className="space-y-1">
-                  {contentNav.map((item) => {
+        <div className="lg:pl-[320px]">
+          <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-[320px] bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white p-6 shadow-2xl overflow-y-auto border-r border-slate-700">
+          {/* Header */}
+          <div className="mb-8">
+            <p className="font-heading font-black text-lg mb-1">CampusVibe Admin</p>
+            <p className="text-xs text-slate-400 font-body">System Control Center</p>
+          </div>
+
+          {/* Main Navigation */}
+          <nav className="space-y-1 mb-8">
+            {nav.map((item) => {
+              const Icon = item.icon
+              const active = item.key === section
+              return (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                    active
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                      : "text-slate-300 hover:bg-slate-700/50"
+                  }`}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          {/* Content Modules Dropdown */}
+          <div className="mb-8">
+            <button
+              onClick={() => setContentOpen(!contentOpen)}
+              className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                isContentChild || contentOpen
+                  ? "bg-indigo-600/20 text-white border border-indigo-500/30"
+                  : "text-slate-300 hover:bg-slate-700/50"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <FolderKanban size={16} />
+                Content Modules
+              </span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${contentOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {contentOpen && (
+              <div className="mt-2 space-y-1 ml-2 border-l-2 border-slate-600 pl-3">
+                {contentNav.map((item) => {
+                  const Icon = item.icon
+                  const active = item.key === section
+                  return (
+                    <Link
+                      key={item.key}
+                      href={item.href}
+                      className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
+                        active
+                          ? "bg-indigo-500/30 text-white"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+                      }`}
+                    >
+                      <Icon size={14} />
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="mb-4 border-t border-slate-700" />
+
+          {/* User Section */}
+          <div className="mt-auto pt-4">
+            <div className="mb-4">
+              <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Signed in as</p>
+              <p className="text-sm font-semibold text-white truncate mt-1">{user.full_name}</p>
+              <p className="text-xs text-slate-400 truncate">{user.email}</p>
+            </div>
+            <form action={logout} className="mt-3">
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-400 hover:text-red-300 px-3 py-2.5 text-sm font-medium transition-all duration-200 border border-red-600/20"
+              >
+                <LogOut size={14} />
+                Sign Out
+              </button>
+            </form>
+            <Link href="/" className="w-full mt-2 flex items-center justify-center gap-2 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-slate-200 px-3 py-2.5 text-sm font-medium transition-all duration-200">
+              <Home size={14} />
+              Main Site
+            </Link>
+          </div>
+        </aside>
+
+        {drawerOpen && (
+            <div className="lg:hidden fixed inset-0 z-50">
+              <button className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} aria-label="Close sidebar" />
+              <div className="absolute left-0 top-0 h-full w-[320px] bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white p-6 shadow-2xl overflow-y-auto">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <p className="font-heading font-black text-lg">CampusVibe Admin</p>
+                    <p className="text-xs text-slate-400">System Control</p>
+                  </div>
+                  <button onClick={() => setDrawerOpen(false)} className="rounded-lg p-2 hover:bg-slate-700"><X size={16} /></button>
+                </div>
+
+                <nav className="space-y-1 mb-8">
+                  {nav.map((item) => {
                     const Icon = item.icon
                     const active = item.key === section
                     return (
                       <Link
                         key={item.key}
                         href={item.href}
-                        className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors ${active ? "bg-white text-[#321A8D] font-semibold" : "text-white/80 hover:bg-white/10"}`}
-                      >
-                        <Icon size={13} /> {item.label}
-                      </Link>
-                    )
-                  })}
-                </div>
-              </div>
-              <Link href="/" className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-white/85 hover:bg-white/10">
-                <Home size={15} /> Main Site
-              </Link>
-            </nav>
-
-            <div className="mt-8 pt-4 border-t border-white/20">
-              <p className="text-xs text-white/70">Signed in as</p>
-              <p className="text-sm font-semibold truncate mt-1">{user.full_name}</p>
-              <p className="text-xs text-white/75 truncate">{user.email}</p>
-              <form action={logout} className="mt-3">
-                <button type="submit" className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-white/15 px-3 py-2 text-sm hover:bg-white/25">
-                  <LogOut size={14} /> Sign Out
-                </button>
-              </form>
-            </div>
-          </aside>
-
-        {drawerOpen && (
-            <div className="lg:hidden fixed inset-0 z-50">
-              <button className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} aria-label="Close sidebar" />
-              <div className="absolute left-0 top-0 h-full w-[300px] bg-gradient-to-b from-[#321A8D] to-[#4822B2] text-white p-5 shadow-2xl">
-                <div className="flex items-center justify-between">
-                  <p className="font-heading font-black text-xl">CampusVibe Admin</p>
-                  <button onClick={() => setDrawerOpen(false)} className="rounded-lg p-2 hover:bg-white/15"><X size={16} /></button>
-                </div>
-                <nav className="mt-6 space-y-1.5">
-                  {nav.map((item) => {
-                    const Icon = item.icon
-                    const active = item.key === activeRoot
-                    return (
-                      <Link
-                        key={item.key}
-                        href={item.href}
                         onClick={() => setDrawerOpen(false)}
-                        className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors ${active ? "bg-white text-[#321A8D] font-semibold" : "text-white/85 hover:bg-white/10"}`}
+                        className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                          active
+                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                            : "text-slate-300 hover:bg-slate-700/50"
+                        }`}
                       >
-                        <Icon size={15} /> {item.label}
+                        <Icon size={16} />
+                        {item.label}
                       </Link>
                     )
                   })}
-                  <div className="mt-2 rounded-xl border border-white/15 bg-white/5 p-2">
-                    <p className="px-2 pb-1 text-[10px] uppercase tracking-[0.18em] text-white/70">Content Modules</p>
-                    <div className="space-y-1">
+                </nav>
+
+                <div className="mb-8">
+                  <button
+                    onClick={() => setMobileContentOpen(!mobileContentOpen)}
+                    className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                      isContentChild || mobileContentOpen
+                        ? "bg-indigo-600/20 text-white border border-indigo-500/30"
+                        : "text-slate-300 hover:bg-slate-700/50"
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <FolderKanban size={16} />
+                      Content Modules
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${mobileContentOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+
+                  {mobileContentOpen && (
+                    <div className="mt-2 space-y-1 ml-2 border-l-2 border-slate-600 pl-3">
                       {contentNav.map((item) => {
                         const Icon = item.icon
                         const active = item.key === section
@@ -190,15 +280,20 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
                             key={item.key}
                             href={item.href}
                             onClick={() => setDrawerOpen(false)}
-                            className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors ${active ? "bg-white text-[#321A8D] font-semibold" : "text-white/80 hover:bg-white/10"}`}
+                            className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-xs font-medium transition-all duration-200 ${
+                              active
+                                ? "bg-indigo-500/30 text-white"
+                                : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+                            }`}
                           >
-                            <Icon size={13} /> {item.label}
+                            <Icon size={14} />
+                            {item.label}
                           </Link>
                         )
                       })}
                     </div>
-                  </div>
-                </nav>
+                  )}
+                </div>
               </div>
             </div>
         )}
@@ -233,7 +328,8 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
             </div>
             {children}
           </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

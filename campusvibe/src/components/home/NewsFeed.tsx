@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Clock, TrendingUp } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server"
 import { AnimatedSection } from "@/components/ui/AnimatedSection"
 
 const categoryColors: Record<string, string> = {
@@ -13,13 +13,17 @@ const categoryColors: Record<string, string> = {
 }
 
 export default async function NewsFeed() {
-  const supabase = await createClient()
-  const { data: articles } = await supabase
+  const supabase = await createAdminClient()
+  const { data: articles, error } = await supabase
     .from("news_articles")
     .select("id, title, slug, excerpt, category, author_name, image_url, is_trending, read_time, published_at")
     .eq("is_published", true)
     .order("published_at", { ascending: false })
     .limit(6)
+  
+  if (error) {
+    console.error("NewsFeed query error:", error)
+  }
 
   if (!articles || articles.length === 0) return null
 

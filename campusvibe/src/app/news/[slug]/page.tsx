@@ -4,14 +4,14 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Clock, Calendar, TrendingUp } from "lucide-react"
 import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/server"
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     const { data: article } = await supabase
       .from("news_articles")
       .select("title, excerpt, image_url, author_name, published_at")
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   try {
-    const supabase = await createClient()
+    const supabase = await createAdminClient()
     const { data } = await supabase
       .from("news_articles")
       .select("slug")
@@ -70,7 +70,7 @@ const categoryColors: Record<string, string> = {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = await createAdminClient()
 
   const { data: article } = await supabase
     .from("news_articles")

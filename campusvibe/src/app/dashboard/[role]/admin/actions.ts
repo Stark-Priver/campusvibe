@@ -38,15 +38,21 @@ async function logAudit(action: string, entityType: string, entityId?: string, d
 }
 
 function revalidateAdmin(role: string) {
+  // Revalidate admin pages
   revalidatePath(`/dashboard/${role}/admin/overview`)
   revalidatePath(`/dashboard/${role}/admin/moderation`)
   revalidatePath(`/dashboard/${role}/admin/inbox`)
   revalidatePath(`/dashboard/${role}/admin/content`)
+  revalidatePath(`/dashboard/${role}/admin/content/news`)
   revalidatePath(`/dashboard/${role}/admin/users`)
   revalidatePath(`/dashboard/${role}/admin/campuses`)
   revalidatePath(`/dashboard/${role}/admin/company`)
   revalidatePath(`/dashboard/${role}/admin/audit`)
   revalidatePath(`/dashboard/${role}/admin/analytics`)
+  
+  // Revalidate public news pages
+  revalidatePath("/", "layout")
+  revalidatePath("/news")
 }
 
 export async function upsertCompanyProfile(role: string, formData: FormData) {
@@ -243,13 +249,38 @@ export async function createNews(role: string, formData: FormData) {
   const supabase = await createAdminClient()
   const title = String(formData.get("title") || "")
   const slug = toSlug(String(formData.get("slug") || title))
+  
+  let imageUrl: string | null = null
+  const imageFile = formData.get("image_file") as File | null
+  
+  if (imageFile && imageFile.size > 0) {
+    try {
+      const fileName = `${Date.now()}-${imageFile.name}`
+      const { data, error: uploadError } = await supabase.storage
+        .from("news-images")
+        .upload(fileName, imageFile, { cacheControl: "3600", upsert: false })
+      
+      if (uploadError) throw new Error(uploadError.message)
+      
+      const { data: { publicUrl } } = supabase.storage
+        .from("news-images")
+        .getPublicUrl(fileName)
+      
+      imageUrl = publicUrl
+    } catch (err) {
+      console.error("Image upload failed:", err)
+      // Continue without image on upload failure
+    }
+  }
+  
   const payload = {
     title,
     slug,
-    category: String(formData.get("category") || "general"),
+    category: String(formData.get("category") || "Habari za Elimu"),
     excerpt: String(formData.get("excerpt") || "") || null,
     content: String(formData.get("content") || "") || null,
     author_name: String(formData.get("author_name") || "Admin"),
+    image_url: imageUrl,
     is_published: formData.get("is_published") === "on",
     published_at: formData.get("is_published") === "on" ? new Date().toISOString() : null,
   }
@@ -266,20 +297,61 @@ export async function updateNews(role: string, formData: FormData) {
   const id = String(formData.get("id") || "")
   const title = String(formData.get("title") || "")
   const slug = toSlug(String(formData.get("slug") || title))
-  const payload = {
+  const isPublished = formData.get("is_published") === "on"
+  
+  // Get current article to preserve published_at if already published
+  const { data: currentArticle } = await supabase
+    .from("news_articles")
+    .select("is_published, published_at")
+    .eq("id", id)
+    .single()
+  
+  let imageUrl: string | undefined
+  const imageFile = formData.get("image_file") as File | null
+  
+  if (imageFile && imageFile.size > 0) {
+    try {
+      const fileName = `${Date.now()}-${imageFile.name}`
+      const { data, error: uploadError } = await supabase.storage
+        .from("news-images")
+        .upload(fileName, imageFile, { cacheControl: "3600", upsert: false })
+      
+      if (uploadError) throw new Error(uploadError.message)
+      
+      const { data: { publicUrl } } = supabase.storage
+        .from("news-images")
+        .getPublicUrl(fileName)
+      
+      imageUrl = publicUrl
+    } catch (err) {
+      console.error("Image upload failed:", err)
+    }
+  }
+  
+  // Calculate published_at: preserve if already published, or set to now if publishing for first time
+  let publishedAt: string | null = null
+  if (isPublished) {
+    publishedAt = currentArticle?.published_at || new Date().toISOString()
+  }
+  
+  const payload: any = {
     title,
     slug,
-    category: String(formData.get("category") || "general"),
+    category: String(formData.get("category") || "Habari za Elimu"),
     excerpt: String(formData.get("excerpt") || "") || null,
     content: String(formData.get("content") || "") || null,
     author_name: String(formData.get("author_name") || "Admin"),
-    is_published: formData.get("is_published") === "on",
-    published_at: formData.get("is_published") === "on" ? new Date().toISOString() : null,
+    is_published: isPublished,
+    published_at: publishedAt,
+  }
+  
+  if (imageUrl !== undefined) {
+    payload.image_url = imageUrl
   }
 
   const { error } = await supabase.from("news_articles").update(payload).eq("id", id)
   if (error) throw new Error(error.message)
-  await logAudit("update", "news_articles", id, { title, slug })
+  await logAudit("update", "news_articles", id, { title, slug, is_published: isPublished })
   revalidateAdmin(role)
 }
 
