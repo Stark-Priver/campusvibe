@@ -4,6 +4,16 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
+import type { User } from "./custom"
+import { registerUser, loginUser, setAuthCookie, clearAuthCookie, getCurrentUser as getJwtUser } from "./custom"
+
+type UserProfileRow = {
+  id: string
+  email: string
+  full_name: string
+  university: string | null
+  roles: string[]
+}
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -33,22 +43,12 @@ export async function login(_prevState: ActionResult, formData: FormData): Promi
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" }
   }
 
-  const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
-    password: parsed.data.password,
-  })
-
-  if (error) {
-    if (error.message.includes("Invalid login credentials")) {
-      return { error: "Incorrect email or password. Please try again." }
-    }
-    if (error.message.includes("Email not confirmed")) {
-      return { error: "Please verify your email address before signing in." }
-    }
-    return { error: "Sign in failed. Please try again." }
+  const user = await loginUser(parsed.data.email, parsed.data.password)
+  if (!user) {
+    return { error: "Incorrect email or password. Please try again." }
   }
 
+  await setAuthCookie(user)
   revalidatePath("/", "layout")
   redirect("/dashboard")
 }
@@ -66,52 +66,54 @@ export async function register(_prevState: ActionResult, formData: FormData): Pr
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" }
   }
 
-  const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: {
-        full_name: parsed.data.fullName,
-        university: parsed.data.university ?? "",
-      },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
-    },
-  })
-
-  if (error) {
-    if (error.message.includes("already registered")) {
+  try {
+    const user = await registerUser(
+      parsed.data.email,
+      parsed.data.password,
+      parsed.data.fullName,
+      parsed.data.university || undefined
+    )
+    if (!user) {
       return { error: "An account with this email already exists. Please sign in." }
     }
+
+    await setAuthCookie(user)
+    revalidatePath("/", "layout")
+    redirect("/dashboard")
+  } catch {
     return { error: "Registration failed. Please try again." }
   }
-
-  return { success: "Account created! Please check your email to verify your account." }
 }
 
 export async function logout() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
+  await clearAuthCookie()
   revalidatePath("/", "layout")
   redirect("/")
 }
 
 export async function getSession() {
-  const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-  return session
+  return (await getJwtUser()) ? { user: { id: "" } } : null  // Stub for compatibility
 }
 
-export async function getCurrentUser() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export async function getCurrentUser(): Promise<User | null> {
+  const user = await getJwtUser()
   if (!user) return null
 
+  // Fetch full profile from DB
+  const supabase = await createClient()
   const { data: profile } = await supabase
-    .from("profiles")
+    .from("users")
     .select("*")
     .eq("id", user.id)
     .single()
 
-  return profile
+  const typedProfile = profile as UserProfileRow | null
+
+  return typedProfile ? {
+    id: typedProfile.id,
+    email: typedProfile.email,
+    full_name: typedProfile.full_name,
+    university: typedProfile.university,
+    roles: typedProfile.roles
+  } : null
 }

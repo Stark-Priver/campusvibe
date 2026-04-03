@@ -4,9 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 const BASE_URL = "https://campusvibe.co.tz"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient()
-
-  // Static routes
+  // Static routes always included
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
@@ -17,6 +15,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/get-involved`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/login`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
   ]
+
+  try {
+    const supabase = await createClient()
 
   // Dynamic news routes
   const { data: articles } = await supabase
@@ -59,5 +60,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
-  return [...staticRoutes, ...newsRoutes, ...eventRoutes, ...marketplaceRoutes]
+    return [...staticRoutes, ...newsRoutes, ...eventRoutes, ...marketplaceRoutes]
+  } catch {
+    // If Supabase is not configured (e.g. during build), return only static routes
+    return staticRoutes
+  }
 }

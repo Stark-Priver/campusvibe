@@ -42,6 +42,7 @@ export type Database = {
           is_verified?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       news_articles: {
         Row: {
@@ -93,6 +94,7 @@ export type Database = {
           published_at?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       events: {
         Row: {
@@ -147,6 +149,7 @@ export type Database = {
           rsvp_url?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       media_items: {
         Row: {
@@ -190,6 +193,7 @@ export type Database = {
           is_published?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       marketplace_listings: {
         Row: {
@@ -240,6 +244,7 @@ export type Database = {
           is_published?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       contact_submissions: {
         Row: {
@@ -264,6 +269,7 @@ export type Database = {
         Update: {
           is_read?: boolean
         }
+        Relationships: []
       }
       event_rsvps: {
         Row: {
@@ -282,6 +288,7 @@ export type Database = {
           email: string
         }
         Update: Record<string, never>
+        Relationships: []
       }
       breaking_news: {
         Row: {
@@ -302,6 +309,7 @@ export type Database = {
           is_active?: boolean
           order_index?: number
         }
+        Relationships: []
       }
       platform_stats: {
         Row: {
@@ -322,11 +330,239 @@ export type Database = {
           label?: string
           updated_at?: string
         }
+        Relationships: []
+      },
+      company_profile: {
+        Row: {
+          id: string
+          company_name: string
+          tagline: string | null
+          website_url: string | null
+          support_email: string | null
+          contact_phone: string | null
+          headquarters: string | null
+          registration_number: string | null
+          tax_number: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          company_name?: string
+          tagline?: string | null
+          website_url?: string | null
+          support_email?: string | null
+          contact_phone?: string | null
+          headquarters?: string | null
+          registration_number?: string | null
+          tax_number?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          company_name?: string
+          tagline?: string | null
+          website_url?: string | null
+          support_email?: string | null
+          contact_phone?: string | null
+          headquarters?: string | null
+          registration_number?: string | null
+          tax_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_social_handles: {
+        Row: {
+          id: string
+          platform: string
+          handle: string
+          url: string
+          is_active: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          platform: string
+          handle: string
+          url: string
+          is_active?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          platform?: string
+          handle?: string
+          url?: string
+          is_active?: boolean
+          display_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      campuses: {
+        Row: {
+          id: string
+          name: string
+          short_name: string | null
+          city: string | null
+          country: string
+          status: string
+          verification_notes: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_by: string | null
+          verified_by: string | null
+          verified_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          short_name?: string | null
+          city?: string | null
+          country?: string
+          status?: string
+          verification_notes?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_by?: string | null
+          verified_by?: string | null
+          verified_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          short_name?: string | null
+          city?: string | null
+          country?: string
+          status?: string
+          verification_notes?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_by?: string | null
+          verified_by?: string | null
+          verified_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_visits: {
+        Row: {
+          id: string
+          user_id: string | null
+          visitor_token: string | null
+          path: string
+          referrer: string | null
+          ip_address: string | null
+          user_agent: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          visitor_token?: string | null
+          path: string
+          referrer?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          visitor_token?: string | null
+          path?: string
+          referrer?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          id: string
+          actor_id: string | null
+          actor_email: string | null
+          action: string
+          entity_type: string
+          entity_id: string | null
+          details: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          actor_id?: string | null
+          actor_email?: string | null
+          action: string
+          entity_type: string
+          entity_id?: string | null
+          details?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          actor_id?: string | null
+          actor_email?: string | null
+          action?: string
+          entity_type?: string
+          entity_id?: string | null
+          details?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          id: string
+          email: string
+          password_hash: string
+          full_name: string
+          university: string | null
+          roles: string[]
+          email_verified: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          password_hash: string
+          full_name: string
+          university?: string | null
+          roles?: string[]
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          password_hash?: string
+          full_name?: string
+          university?: string | null
+          roles?: string[]
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
+
     Views: Record<string, never>
     Functions: Record<string, never>
     Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }
 
@@ -336,6 +572,7 @@ export type Event = Database["public"]["Tables"]["events"]["Row"]
 export type MediaItem = Database["public"]["Tables"]["media_items"]["Row"]
 export type MarketplaceListing = Database["public"]["Tables"]["marketplace_listings"]["Row"]
 export type ContactSubmission = Database["public"]["Tables"]["contact_submissions"]["Row"]
+export type AuthUserRow = Database["public"]["Tables"]["users"]["Row"]
 
 export type DashboardRole =
   | "administrator"

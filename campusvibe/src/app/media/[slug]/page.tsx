@@ -2,7 +2,8 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Play, Mic, Eye, Share2 } from "lucide-react"
+import { ArrowLeft, Play, Mic, Eye } from "lucide-react"
+import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
 import { createClient } from "@/lib/supabase/server"
 
 type Props = { params: Promise<{ slug: string }> }
@@ -29,9 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase.from("media_items").select("slug").eq("is_published", true)
-  return (data ?? []).map((m) => ({ slug: m.slug }))
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from("media_items").select("slug").eq("is_published", true)
+    return (data ?? []).map((m) => ({ slug: m.slug }))
+  } catch {
+    return []
+  }
 }
 
 export const revalidate = 300
@@ -49,12 +54,11 @@ export default async function MediaDetailPage({ params }: Props) {
 
   if (!item) notFound()
 
-  // Increment views (fire and forget)
-  supabase
+  // Increment views (non-blocking)
+  void supabase
     .from("media_items")
     .update({ views_count: item.views_count + 1 })
     .eq("id", item.id)
-    .then(() => {})
 
   const isVideo = item.type === "video"
   const isPodcast = item.type === "podcast"
@@ -128,12 +132,7 @@ export default async function MediaDetailPage({ params }: Props) {
                 >
                   Share on X
                 </a>
-                <button
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700 hover:border-brand hover:text-brand transition-colors"
-                  onClick={() => { }}
-                >
-                  <Share2 size={14} /> Copy Link
-                </button>
+                <CopyLinkButton url={`https://campusvibe.co.tz/media/${item.slug}`} />
               </div>
             </div>
           </div>

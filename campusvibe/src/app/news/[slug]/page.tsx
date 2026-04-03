@@ -2,22 +2,24 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, Clock, Share2, Calendar, TrendingUp } from "lucide-react"
+import { ArrowLeft, Clock, Calendar, TrendingUp } from "lucide-react"
+import { CopyLinkButton } from "@/components/ui/CopyLinkButton"
 import { createClient } from "@/lib/supabase/server"
 
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
-  const { data: article } = await supabase
-    .from("news_articles")
-    .select("title, excerpt, image_url, author_name, published_at")
-    .eq("slug", slug)
-    .eq("is_published", true)
-    .single()
+  try {
+    const supabase = await createClient()
+    const { data: article } = await supabase
+      .from("news_articles")
+      .select("title, excerpt, image_url, author_name, published_at")
+      .eq("slug", slug)
+      .eq("is_published", true)
+      .single()
 
-  if (!article) return { title: "News — CampusVibe" }
+    if (!article) return { title: "News — CampusVibe" }
 
   return {
     title: article.title,
@@ -37,16 +39,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: article.image_url ? [article.image_url] : [],
     },
     alternates: { canonical: `/news/${slug}` },
+    }
+  } catch {
+    return { title: "News — CampusVibe" }
   }
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("news_articles")
-    .select("slug")
-    .eq("is_published", true)
-  return (data ?? []).map((a) => ({ slug: a.slug }))
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from("news_articles")
+      .select("slug")
+      .eq("is_published", true)
+    return (data ?? []).map((a) => ({ slug: a.slug }))
+  } catch {
+    return []
+  }
 }
 
 export const revalidate = 300
@@ -200,12 +209,7 @@ export default async function NewsDetailPage({ params }: Props) {
               >
                 Share on X
               </a>
-              <button
-                onClick={() => navigator.clipboard.writeText(`https://campusvibe.co.tz/news/${article.slug}`)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-semibold text-gray-700 hover:border-brand hover:text-brand transition-colors"
-              >
-                <Share2 size={14} /> Copy Link
-              </button>
+              <CopyLinkButton url={`https://campusvibe.co.tz/news/${article.slug}`} />
             </div>
           </div>
 

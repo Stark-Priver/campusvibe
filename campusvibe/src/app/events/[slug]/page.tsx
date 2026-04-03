@@ -9,31 +9,39 @@ type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
-  const { data: event } = await supabase
-    .from("events")
-    .select("title, description, image_url, date")
-    .eq("slug", slug)
-    .single()
+  try {
+    const supabase = await createClient()
+    const { data: event } = await supabase
+      .from("events")
+      .select("title, description, image_url, date")
+      .eq("slug", slug)
+      .single()
 
-  if (!event) return { title: "Events — CampusVibe" }
-  return {
-    title: event.title,
-    description: event.description ?? undefined,
-    openGraph: {
+    if (!event) return { title: "Events — CampusVibe" }
+    return {
       title: event.title,
       description: event.description ?? undefined,
-      type: "website",
-      images: event.image_url ? [{ url: event.image_url }] : [],
-    },
-    alternates: { canonical: `/events/${slug}` },
+      openGraph: {
+        title: event.title,
+        description: event.description ?? undefined,
+        type: "website",
+        images: event.image_url ? [{ url: event.image_url }] : [],
+      },
+      alternates: { canonical: `/events/${slug}` },
+    }
+  } catch {
+    return { title: "Events — CampusVibe" }
   }
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase.from("events").select("slug").eq("is_published", true)
-  return (data ?? []).map((e) => ({ slug: e.slug }))
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from("events").select("slug").eq("is_published", true)
+    return (data ?? []).map((e) => ({ slug: e.slug }))
+  } catch {
+    return []
+  }
 }
 
 export const revalidate = 300
