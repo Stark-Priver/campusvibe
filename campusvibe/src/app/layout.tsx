@@ -3,6 +3,7 @@ import { Poppins, Montserrat, Inter } from "next/font/google"
 import "./globals.css"
 import LayoutProvider from "@/components/layout/LayoutProvider"
 import VisitTracker from "@/components/analytics/VisitTracker"
+import { Analytics } from "@vercel/analytics/next"
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -207,6 +208,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased bg-[#ECECEC] text-dark">
         <VisitTracker />
         <LayoutProvider>{children}</LayoutProvider>
+        <Analytics />
       </body>
     </html>
   )
