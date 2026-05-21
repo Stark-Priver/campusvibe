@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Heart, Filter, Award, MapPin, CheckCircle2, BarChart3 } from "lucide-react"
-import Toast from "@/components/ui/Toast"
 
 interface Nominee {
   id: string

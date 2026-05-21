@@ -39,6 +39,7 @@ type Props = {
     | "audit"
     | "analytics"
     | "awards"
+    | "campus-memory"
     | "content-news"
     | "content-events"
     | "content-media"
@@ -81,7 +82,8 @@ export default function AdminShell({ role, section, user, breadcrumb, breadcrumb
     { key: "overview", label: "Overview", href: `/dashboard/${role}/admin/overview`, icon: LayoutDashboard },
     { key: "moderation", label: "Moderation", href: `/dashboard/${role}/admin/moderation`, icon: ShieldAlert },
     { key: "inbox", label: "Inbox", href: `/dashboard/${role}/admin/inbox`, icon: Inbox },
-    { key: "awards", label: "Awards", href: `/dashboard/${role}/admin/awards`, icon: Trophy },
+    { key: "campus-memory", label: "Campus Memory", href: `/dashboard/${role}/admin/campus-memory`, icon: Store },
+    { key: "awards", label: "Awards", href: `/dashboard/${role}/admin/awards-management`, icon: Trophy },
     { key: "users", label: "Users", href: `/dashboard/${role}/admin/users`, icon: Home },
     { key: "campuses", label: "Campuses", href: `/dashboard/${role}/admin/campuses`, icon: LayoutDashboard },
     { key: "company", label: "Company", href: `/dashboard/${role}/admin/company`, icon: Settings },

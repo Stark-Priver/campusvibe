@@ -126,7 +126,7 @@ export function AwardsLeaderboard({ eventId, eventTitle }: AwardsLeaderboardProp
           <Trophy className="text-yellow-500" size={36} />
           Live Results & Leaderboard
         </h2>
-        <p className="text-gray-600">See who's winning in real-time</p>
+        <p className="text-gray-600">See who&apos;s winning in real-time</p>
       </div>
 
       {/* Category Filter */}

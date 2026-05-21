@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Toast from "@/components/ui/Toast"
-import { Trash2, Edit2 } from "lucide-react"
+import { Trash2, Edit2, Plus, Upload } from "lucide-react"
 
 interface Category {
   id: string

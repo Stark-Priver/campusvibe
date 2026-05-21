@@ -9,7 +9,7 @@ import { logout } from "@/lib/auth/actions"
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/news", label: "News" },
+  { href: "/campus-memory", label: "Campus Memory" },
   { href: "/events", label: "Events" },
   { href: "/media", label: "Media" },
   { href: "/marketplace", label: "Marketplace" },
