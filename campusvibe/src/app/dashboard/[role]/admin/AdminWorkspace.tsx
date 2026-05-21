@@ -15,6 +15,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock3,
+  Trophy,
 } from "lucide-react"
 import type { User } from "@/lib/auth/custom"
 import { logout } from "@/lib/auth/actions"
@@ -77,6 +78,7 @@ export default async function AdminWorkspace({ user }: Props) {
     { label: "Events", href: "/events", icon: CalendarDays },
     { label: "Media", href: "/media", icon: Clapperboard },
     { label: "Marketplace", href: "/marketplace", icon: Store },
+    { label: "Awards", href: "/dashboard/administrator/awards", icon: Trophy },
     { label: "Get Involved", href: "/get-involved", icon: ArrowRight },
   ]
 

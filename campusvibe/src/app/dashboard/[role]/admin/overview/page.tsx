@@ -7,13 +7,39 @@ import { DashboardSection } from "@/components/admin/DashboardSection"
 import { GridCard } from "@/components/admin/GridCard"
 import { getAdminSnapshot } from "../data"
 import { requireAdministrator } from "../guard"
+import type { AdminSnapshot } from "../types"
 
 type Props = { params: Promise<{ role: string }> }
 
 export default async function AdminOverviewPage({ params }: Props) {
   const { role } = await params
   const user = await requireAdministrator(role)
-  const snapshot = await getAdminSnapshot()
+  
+  let snapshot: AdminSnapshot
+  try {
+    snapshot = await getAdminSnapshot()
+  } catch (error) {
+    console.error("Failed to load admin snapshot:", error)
+    snapshot = {
+      totalUsers: 0,
+      adminUsers: 0,
+      totalNews: 0,
+      publishedNews: 0,
+      totalEvents: 0,
+      publishedEvents: 0,
+      totalMedia: 0,
+      publishedMedia: 0,
+      totalListings: 0,
+      publishedListings: 0,
+      unreadContacts: 0,
+      activeBreakingNews: 0,
+      pendingNews: 0,
+      pendingEvents: 0,
+      pendingMedia: 0,
+      pendingListings: 0,
+      recentContacts: [],
+    }
+  }
 
   const moderationBacklog =
     snapshot.pendingNews + snapshot.pendingEvents + snapshot.pendingMedia + snapshot.pendingListings

@@ -268,6 +268,7 @@ export default async function RoleDashboardPage({ params }: Props) {
     redirect("/dashboard")
   }
 
+  // Admins go directly to admin control panel
   if (role === "administrator") {
     redirect(`/dashboard/${role}/admin/overview`)
   }

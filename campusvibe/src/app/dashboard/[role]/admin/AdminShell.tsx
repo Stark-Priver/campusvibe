@@ -21,6 +21,7 @@ import {
   Store,
   ChevronRight,
   ChevronDown,
+  Trophy,
 } from "lucide-react"
 import { logout } from "@/lib/auth/actions"
 import { NavigationLoader } from "@/components/layout/NavigationLoader"
@@ -37,6 +38,7 @@ type Props = {
     | "company"
     | "audit"
     | "analytics"
+    | "awards"
     | "content-news"
     | "content-events"
     | "content-media"
@@ -47,10 +49,11 @@ type Props = {
     email: string
   }
   breadcrumb?: string[]
+  breadcrumbItems?: { label: string; href?: string }[]
   children: React.ReactNode
 }
 
-export default function AdminShell({ role, section, user, breadcrumb, children }: Props) {
+export default function AdminShell({ role, section, user, breadcrumb, breadcrumbItems: passedBreadcrumbItems, children }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [contentOpen, setContentOpen] = useState(false)
   const [mobileContentOpen, setMobileContentOpen] = useState(false)
@@ -78,6 +81,7 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
     { key: "overview", label: "Overview", href: `/dashboard/${role}/admin/overview`, icon: LayoutDashboard },
     { key: "moderation", label: "Moderation", href: `/dashboard/${role}/admin/moderation`, icon: ShieldAlert },
     { key: "inbox", label: "Inbox", href: `/dashboard/${role}/admin/inbox`, icon: Inbox },
+    { key: "awards", label: "Awards", href: `/dashboard/${role}/admin/awards`, icon: Trophy },
     { key: "users", label: "Users", href: `/dashboard/${role}/admin/users`, icon: Home },
     { key: "campuses", label: "Campuses", href: `/dashboard/${role}/admin/campuses`, icon: LayoutDashboard },
     { key: "company", label: "Company", href: `/dashboard/${role}/admin/company`, icon: Settings },
@@ -305,10 +309,10 @@ export default function AdminShell({ role, section, user, breadcrumb, children }
                   <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Administrator Workspace</p>
                   <h1 className="font-heading font-black text-2xl text-slate-900">System Governance Dashboard</h1>
                   <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-                    {breadcrumbItems.filter(Boolean).map((item, index) => (
-                      <span key={`${item}-${index}`} className="inline-flex items-center gap-1">
+                    {(passedBreadcrumbItems || []).filter(Boolean).map((item, index) => (
+                      <span key={`${item.label}-${index}`} className="inline-flex items-center gap-1">
                         {index > 0 ? <ChevronRight size={12} className="text-slate-400" /> : null}
-                        <span>{item}</span>
+                        <span>{item.label}</span>
                       </span>
                     ))}
                   </div>

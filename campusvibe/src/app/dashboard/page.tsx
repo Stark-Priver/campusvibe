@@ -41,6 +41,8 @@ export default async function DashboardPage() {
   if (!user) redirect("/login")
 
   const roles: string[] = user.roles ?? ["student"]
+  
+  console.log("Dashboard - User:", { email: user.email, roles, rolesLength: roles.length })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-blue-50">

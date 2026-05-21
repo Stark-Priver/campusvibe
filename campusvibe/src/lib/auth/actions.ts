@@ -101,19 +101,30 @@ export async function getCurrentUser(): Promise<User | null> {
 
   // Fetch full profile from DB
   const supabase = await createClient()
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", user.id)
     .single()
 
+  if (error) {
+    console.error("Error fetching user profile:", error)
+    // Fallback to JWT data if DB fetch fails
+    return user
+  }
+
   const typedProfile = profile as UserProfileRow | null
 
-  return typedProfile ? {
+  if (!typedProfile) {
+    console.error("User profile not found in database")
+    return user
+  }
+
+  return {
     id: typedProfile.id,
     email: typedProfile.email,
     full_name: typedProfile.full_name,
     university: typedProfile.university,
-    roles: typedProfile.roles
-  } : null
+    roles: typedProfile.roles && typedProfile.roles.length > 0 ? typedProfile.roles : ["student"]
+  }
 }

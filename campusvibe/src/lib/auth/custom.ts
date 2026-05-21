@@ -142,7 +142,7 @@ export async function loginUser(
     email: userData.email,
     full_name: userData.full_name,
     university: userData.university,
-    roles: userData.roles
+    roles: userData.roles && userData.roles.length > 0 ? userData.roles : ["student"]
   }
 }
 
@@ -184,7 +184,7 @@ export async function getCurrentUser(): Promise<User | null> {
       email: decoded.email,
       full_name: "",
       university: null,
-      roles: decoded.roles
+      roles: decoded.roles && decoded.roles.length > 0 ? decoded.roles : ["student"]
     }
   } catch {
     return null

@@ -513,6 +513,189 @@ drop trigger if exists campuses_updated_at on public.campuses;
 create trigger campuses_updated_at before update on public.campuses
   for each row execute procedure public.set_updated_at();
 
+-- ── AWARDS EVENTS ─────────────────────────────────────────────────
+create table if not exists public.awards_events (
+  id              uuid primary key default uuid_generate_v4(),
+  title           text not null,
+  slug            text not null unique,
+  description     text,
+  status          text not null default 'draft' check (status in ('draft', 'nominations_open', 'voting_open', 'voting_closed', 'completed')),
+  nominations_start_at timestamptz,
+  nominations_end_at   timestamptz,
+  voting_start_at      timestamptz,
+  voting_end_at        timestamptz,
+  university      text,
+  image_url       text,
+  banner_url      text,
+  created_by      uuid references public.users(id) on delete set null,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+alter table public.awards_events enable row level security;
+
+drop policy if exists "Public awards are readable" on public.awards_events;
+create policy "Public awards are readable"
+  on public.awards_events for select
+  using (status != 'draft');
+
+drop policy if exists "Admins can manage awards events" on public.awards_events;
+create policy "Admins can manage awards events"
+  on public.awards_events for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id = auth.uid()::uuid and 'administrator' = any(u.roles)
+    )
+  );
+
+create index if not exists idx_awards_events_slug on public.awards_events(slug);
+create index if not exists idx_awards_events_status on public.awards_events(status);
+create index if not exists idx_awards_events_created_at on public.awards_events(created_at desc);
+
+drop trigger if exists awards_events_updated_at on public.awards_events;
+create trigger awards_events_updated_at before update on public.awards_events
+  for each row execute procedure public.set_updated_at();
+
+-- ── AWARD CATEGORIES ──────────────────────────────────────────────
+create table if not exists public.award_categories (
+  id              uuid primary key default uuid_generate_v4(),
+  awards_event_id uuid references public.awards_events(id) on delete cascade not null,
+  name            text not null,
+  description     text,
+  icon            text,
+  display_order   int not null default 0,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+alter table public.award_categories enable row level security;
+
+drop policy if exists "Public award categories are readable" on public.award_categories;
+create policy "Public award categories are readable"
+  on public.award_categories for select
+  using (
+    exists (
+      select 1 from public.awards_events ae
+      where ae.id = award_categories.awards_event_id and ae.status != 'draft'
+    )
+  );
+
+drop policy if exists "Admins can manage award categories" on public.award_categories;
+create policy "Admins can manage award categories"
+  on public.award_categories for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id = auth.uid()::uuid and 'administrator' = any(u.roles)
+    )
+  );
+
+create index if not exists idx_award_categories_event on public.award_categories(awards_event_id);
+
+drop trigger if exists award_categories_updated_at on public.award_categories;
+create trigger award_categories_updated_at before update on public.award_categories
+  for each row execute procedure public.set_updated_at();
+
+-- ── NOMINEES ──────────────────────────────────────────────────────
+create table if not exists public.nominees (
+  id              uuid primary key default uuid_generate_v4(),
+  awards_event_id uuid references public.awards_events(id) on delete cascade not null,
+  category_id     uuid references public.award_categories(id) on delete cascade not null,
+  full_name       text not null,
+  bio             text,
+  image_url       text,
+  achievement     text,
+  university      text,
+  email           text,
+  phone           text,
+  votes_count     int not null default 0,
+  created_by      uuid references public.users(id) on delete set null,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+alter table public.nominees enable row level security;
+
+drop policy if exists "Public nominees are readable" on public.nominees;
+create policy "Public nominees are readable"
+  on public.nominees for select
+  using (
+    exists (
+      select 1 from public.awards_events ae
+      where ae.id = nominees.awards_event_id and ae.status in ('nominations_open', 'voting_open', 'voting_closed', 'completed')
+    )
+  );
+
+drop policy if exists "Admins can manage nominees" on public.nominees;
+create policy "Admins can manage nominees"
+  on public.nominees for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id = auth.uid()::uuid and 'administrator' = any(u.roles)
+    )
+  );
+
+create index if not exists idx_nominees_event on public.nominees(awards_event_id);
+create index if not exists idx_nominees_category on public.nominees(category_id);
+create index if not exists idx_nominees_votes on public.nominees(votes_count desc);
+create index if not exists idx_nominees_created_at on public.nominees(created_at desc);
+
+drop trigger if exists nominees_updated_at on public.nominees;
+create trigger nominees_updated_at before update on public.nominees
+  for each row execute procedure public.set_updated_at();
+
+-- ── VOTES ─────────────────────────────────────────────────────────
+create table if not exists public.votes (
+  id              uuid primary key default uuid_generate_v4(),
+  awards_event_id uuid references public.awards_events(id) on delete cascade not null,
+  nominee_id      uuid references public.nominees(id) on delete cascade not null,
+  voter_id        uuid references public.users(id) on delete set null,
+  voter_email     text,
+  ip_address      text,
+  created_at      timestamptz not null default now(),
+  unique(awards_event_id, nominee_id, voter_id)
+);
+
+alter table public.votes enable row level security;
+
+drop policy if exists "Users can view votes in open events" on public.votes;
+create policy "Users can view votes in open events"
+  on public.votes for select
+  using (
+    exists (
+      select 1 from public.awards_events ae
+      where ae.id = votes.awards_event_id and ae.status in ('voting_open', 'voting_closed', 'completed')
+    )
+  );
+
+drop policy if exists "Authenticated users can vote" on public.votes;
+create policy "Authenticated users can vote"
+  on public.votes for insert
+  with check (
+    auth.uid() is not null and
+    exists (
+      select 1 from public.awards_events ae
+      where ae.id = awards_event_id and ae.status = 'voting_open'
+    )
+  );
+
+drop policy if exists "Admins can manage votes" on public.votes;
+create policy "Admins can manage votes"
+  on public.votes for all
+  using (
+    exists (
+      select 1 from public.users u
+      where u.id = auth.uid()::uuid and 'administrator' = any(u.roles)
+    )
+  );
+
+create index if not exists idx_votes_event on public.votes(awards_event_id);
+create index if not exists idx_votes_nominee on public.votes(nominee_id);
+create index if not exists idx_votes_voter on public.votes(voter_id);
+create index if not exists idx_votes_created_at on public.votes(created_at desc);
+
 -- ── WEBSITE VISITS & AUDIT LOGS ──────────────────────────────────
 create table if not exists public.site_visits (
   id            uuid primary key default uuid_generate_v4(),
@@ -583,6 +766,7 @@ insert into storage.buckets (id, name, public) values ('avatars', 'avatars', tru
 insert into storage.buckets (id, name, public) values ('marketplace-images', 'marketplace-images', true) on conflict do nothing;
 insert into storage.buckets (id, name, public) values ('event-images', 'event-images', true) on conflict do nothing;
 insert into storage.buckets (id, name, public) values ('news-images', 'news-images', true) on conflict do nothing;
+insert into storage.buckets (id, name, public) values ('awards-images', 'awards-images', true) on conflict do nothing;
 
 -- Storage policies
 drop policy if exists "Public media bucket read" on storage.objects;
@@ -632,6 +816,14 @@ create policy "Public news images read" on storage.objects for select
 drop policy if exists "Admins upload news images" on storage.objects;
 create policy "Admins upload news images" on storage.objects for insert
   with check (bucket_id = 'news-images' and auth.role() = 'authenticated');
+
+drop policy if exists "Public awards images read" on storage.objects;
+create policy "Public awards images read" on storage.objects for select
+  using (bucket_id = 'awards-images');
+
+drop policy if exists "Admins upload awards images" on storage.objects;
+create policy "Admins upload awards images" on storage.objects for insert
+  with check (bucket_id = 'awards-images' and auth.role() = 'authenticated');
 
 -- ── SEED DATA ─────────────────────────────────────────────────────
 insert into public.platform_stats (key, value, label) values
